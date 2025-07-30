@@ -1,0 +1,75 @@
+.toolbar-mini {
+  display: flex;
+  margin-bottom: 1px;
+
+  vertical-align: middle;
+  height: 20px;
+  caret-color: transparent;
+  user-select: none;
+  flex-wrap: wrap;
+}
+
+.toolbar-mini button.toolbar-item {
+  border: 0;
+  display: flex;
+  background: none;
+  border-radius: 5px;
+  padding: 2px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.toolbar-mini button.toolbar-item:disabled {
+  cursor: not-allowed;
+}
+
+.toolbar-mini button.toolbar-item.spaced {
+}
+
+.toolbar-mini button.toolbar-item i.format {
+  background-size: contain;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+
+  display: flex;
+  opacity: 0.6;
+}
+
+.toolbar-mini button.toolbar-item:hover i.format {
+  opacity: 1;
+}
+
+.toolbar-mini button.toolbar-item:disabled i.format {
+  opacity: 0.2;
+}
+
+.toolbar-mini button.toolbar-item.active {
+  background-color: #e2e8f0;
+  border: solid 1px #9ca3af;
+  opacity: 1;
+}
+
+.toolbar-mini button.toolbar-item.active i {
+  opacity: 1;
+}
+
+.toolbar-mini .toolbar-item:hover:not([disabled]) {
+  background-color: #eee;
+  opacity: 1;
+}
+
+.toolbar-mini .divider {
+  width: 1px;
+  background-color: #eee;
+  margin: 0 4px;
+}
+
+.toolbar-mini .toolbar-item .icon {
+  display: flex;
+  width: 16px;
+  height: 16px;
+  user-select: none;
+  opacity: 1;
+  background-size: contain;
+}
