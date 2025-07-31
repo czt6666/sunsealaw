@@ -9,8 +9,8 @@ import { getUserID, clearCookies } from '@/cookies/user';
 const router = useRouter();
 
 const BASEURL = {
-  apiUrl: 'http://211.68.36.45:8000', //学校机房production
-  // apiUrl: 'https://testapi.pythonkaoshi.com', //阿里云
+  // apiUrl: 'http://211.68.36.45:8000', //学校机房production
+  apiUrl: 'https://testapi.pythonkaoshi.com', //阿里云
   // apiUrl: 'http://127.0.0.1:9100', //dev
 
   sysuser: '/sysuser/v1/', //用户管理

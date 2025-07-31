@@ -9,13 +9,7 @@ import {
   serverContactUsUpdate,
   serverGetContactUsPage,
 } from "@/server/ContactUs";
-import {
-  IServerContactUs,
-  Pageable,
-  Page,
-  SimplePage,
-  convertPage,
-} from "@/server/ServerType";
+import { IServerContactUs, Pageable, Page, SimplePage, convertPage } from "@/server/ServerType";
 import {
   clearCookies,
   setUserCookies,
@@ -32,13 +26,7 @@ import LexicalRichTextEditor from "@/components/lexical/LexicalRichTextEditor.vu
 import RenderHtml from "@/components/lexical/RenderHtml.vue";
 import { useI18n } from "vue-i18n";
 import type { FormInstance, FormRules } from "element-plus";
-import type {
-  UploadInstance,
-  UploadProps,
-  UploadRawFile,
-  UploadUserFile,
-  UploadRequestOptions,
-} from "element-plus";
+import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from "element-plus";
 
 import { IServerNews } from "@/server/ServerType";
 import {
@@ -113,8 +101,6 @@ const onOk = async () => {
     return;
   }
 
-  
-
   if (!htmlString.value) {
     ElMessageBox.alert("Please input content", "Warning", {
       confirmButtonText: "OK",
@@ -157,10 +143,7 @@ const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const upload = ref<UploadInstance>();
 
-const handleRemove: UploadProps["onRemove"] = async (
-  uploadFile,
-  uploadFiles
-) => {
+const handleRemove: UploadProps["onRemove"] = async (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 
   if (form.titlePhoto) {
@@ -197,10 +180,7 @@ const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
  * @param uploadFile
  * @param uploadFiles
  */
-const handleUploadImageChange: UploadProps["onChange"] = (
-  uploadFile,
-  uploadFiles
-) => {
+const handleUploadImageChange: UploadProps["onChange"] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 };
 
@@ -218,11 +198,9 @@ const beforeUpload = (rawFile: UploadRawFile) => {
  * @param uploadFiles
  */
 const beforeRemove: UploadProps["beforeRemove"] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(
-    `Cancel the transfert of ${uploadFile.name} ?`
-  ).then(
+  return ElMessageBox.confirm(`Cancel the transfert of ${uploadFile.name} ?`).then(
     () => true,
-    () => false
+    () => false,
   );
 };
 
@@ -267,9 +245,7 @@ const onGenerateBrief = async () => {
     <div style="width: 160px; margin-top: 20px">Brief</div>
     <div style="margin-left: 20px">
       <el-input v-model="form.brief" placeholder="Please input brief" />
-      <el-button type="primary" @click="onGenerateBrief"
-        >Auto Generate Brief</el-button
-      >
+      <el-button type="primary" @click="onGenerateBrief">Auto Generate Brief</el-button>
     </div>
 
     <div style="width: 160px; margin-top: 20px">Title Photo</div>
@@ -304,14 +280,7 @@ const onGenerateBrief = async () => {
       />
     </div>
 
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 10px;
-      "
-    >
+    <div style="display: flex; justify-content: center; align-items: center; margin: 10px">
       <el-button type="primary" @click="onOk">{{ t("app.ok") }} </el-button>
       <el-button @click="resetForm">{{ t("app.reset") }}</el-button>
     </div>

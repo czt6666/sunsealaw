@@ -76,8 +76,7 @@ const routes: Array<RouteRecordRaw> = [
   //服务:Healthcare & Life Sciences Compliance
   {
     path: "/service/healthcare-life-sciences-compliance",
-    component: () =>
-      import("@/views/service/HealthcareLifeSciencesCompliance.vue"),
+    component: () => import("@/views/service/HealthcareLifeSciencesCompliance.vue"),
   },
 
   //服务:Intellectual Property
@@ -114,7 +113,6 @@ const routes: Array<RouteRecordRaw> = [
   //律师团队成员详细信息
   {
     path: "/team-member/:id",
-
     component: () => import("@/views/lawyer/TeamMemberDetail.vue"),
   },
 
@@ -182,6 +180,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     component: () => import("@/views/index.vue"),
+  },
+
+  //测试
+  {
+    path: "/test",
+    component: () => import("@/views/manage/news/AddNews2.vue"),
   },
 ];
 
