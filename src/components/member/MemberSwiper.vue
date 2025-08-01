@@ -6,19 +6,15 @@
 
     <div class="lawyer-carousel">
       <div
-        class="lawyer-track"
-        :style="{ transform: `translateX(${currentPosition}px)` }"
+        class="lawyer-track transition"
+        :style="trackStyle"
         @mouseenter="pauseAutoPlay"
         @mouseleave="resumeAutoPlay"
+        @transitionend="handleTransitionEnd"
       >
-        <div
-          v-for="(user, index) in displayUsers"
-          :key="index"
-          class="lawyer-card"
-          :class="{ active: isActive(index) }"
-        >
+        <div v-for="(user, index) in loopedUsers" :key="index" class="lawyer-card">
           <div class="lawyer-image-container">
-            <img :src="getPhotoUrl(user)" :alt="user.sysUser.realName" class="lawyer-image" @error="handleImageError" />
+            <img :src="user.photoBase64" :alt="user.sysUser.realName" class="lawyer-image" />
             <div class="lawyer-badge" v-if="user.sysUser.licensedInfo">
               <i class="fas fa-balance-scale"></i>
             </div>
@@ -32,207 +28,86 @@
     <button class="nav-btn next-btn" @click="nextSlide" aria-label="Next">
       <i class="fas fa-chevron-right"></i>
     </button>
-
-    <div class="carousel-dots" v-if="users.length > visibleCards">
-      <button
-        v-for="(dot, index) in dotCount"
-        :key="index"
-        class="dot"
-        :class="{ active: currentDot === index }"
-        @click="goToSlide(index)"
-      ></button>
-    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { IServerUserWithPhotoView } from '@/server/ServerType';
-import { defineComponent, PropType, ref, computed, onMounted, onBeforeUnmount } from 'vue';
+<script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref, computed, watch } from "vue";
+import type { IServerUserWithPhotoView } from "@/server/ServerType";
 
-export default defineComponent({
-  name: 'LawyerCarousel',
-  props: {
-    users: {
-      type: Array as PropType<IServerUserWithPhotoView[]>,
-      required: true,
-      default: () => [],
-    },
-    visibleCards: {
-      type: Number,
-      default: 3,
-    },
-    autoPlay: {
-      type: Boolean,
-      default: true,
-    },
-    interval: {
-      type: Number,
-      default: 5000,
-    },
-  },
-  setup(props) {
-    const currentPosition = ref(0);
-    const currentIndex = ref(0);
-    const isPlaying = ref(props.autoPlay);
-    let autoPlayInterval: number | null = null;
+const props = defineProps<{
+  users: IServerUserWithPhotoView[];
+  visibleCards?: number;
+  interval?: number;
+}>();
 
-    // 卡片宽度（包括间距）
-    const cardWidth = 320;
-    const cardMargin = 20;
-    const totalCardWidth = cardWidth + cardMargin * 2;
+const visibleCards = props.visibleCards ?? 3;
+const interval = props.interval ?? 5000;
+const cardWidth = 320 + 20 * 2;
 
-    // 处理循环显示的用户列表
-    const displayUsers = computed(() => {
-      if (props.users.length <= props.visibleCards) {
-        return props.users;
-      }
+const currentIndex = ref(visibleCards);
+const isPlaying = ref(true);
 
-      // 为了实现无缝循环，复制首尾元素
-      return [...props.users.slice(-props.visibleCards), ...props.users, ...props.users.slice(0, props.visibleCards)];
-    });
+let autoTimer: number | null = null;
 
-    // 计算圆点数量
-    const dotCount = computed(() => Math.ceil(props.users.length / props.visibleCards));
-    const currentDot = computed(() => {
-      if (currentIndex.value >= props.users.length) {
-        return 0;
-      }
-      if (currentIndex.value < 0) {
-        return dotCount.value - 1;
-      }
-      return Math.floor(currentIndex.value / props.visibleCards);
-    });
+// 拼接前后元素，实现首尾循环
+const loopedUsers = computed(() => {
+  if (props.users.length <= visibleCards) return props.users;
+  return [...props.users.slice(-visibleCards), ...props.users, ...props.users.slice(0, visibleCards)];
+});
 
-    // 获取照片URL
-    const getPhotoUrl = (user: IServerUserWithPhotoView) => {
-      if (user.photoBase64) {
-        return user.photoBase64;
-      }
-      return user.sysUser.photo || 'https://www.whitehouse.gov/administration/donald-j-trump/';
-    };
+const totalItems = computed(() => props.users.length);
+const maxIndex = computed(() => totalItems.value + visibleCards - 1);
 
-    // 图片加载失败处理
-    const handleImageError = (event: Event) => {
-      const img = event.target as HTMLImageElement;
-      img.src = 'https://www.whitehouse.gov/administration/donald-j-trump/';
-    };
+const trackStyle = computed(() => ({
+  transform: `translateX(${-currentIndex.value * cardWidth}px)`,
+}));
 
-    // 截断过长的详细信息
-    const truncateDetails = (details: string, maxLength = 100) => {
-      if (details.length > maxLength) {
-        return details.substring(0, maxLength) + '...';
-      }
-      return details;
-    };
+function nextSlide() {
+  if (totalItems.value <= visibleCards) return;
+  currentIndex.value++;
+}
 
-    // 检查卡片是否处于激活状态
-    const isActive = (index: number) => {
-      const adjustedIndex = index - props.visibleCards;
-      return adjustedIndex >= currentIndex.value && adjustedIndex < currentIndex.value + props.visibleCards;
-    };
+function prevSlide() {
+  if (totalItems.value <= visibleCards) return;
+  currentIndex.value--;
+}
 
-    // 下一组
-    const nextSlide = () => {
-      if (props.users.length <= props.visibleCards) return;
+function handleTransitionEnd() {
+  // 循环平滑跳转
+  if (currentIndex.value === totalItems.value + visibleCards) {
+    currentIndex.value = visibleCards;
+  } else if (currentIndex.value === 0) {
+    currentIndex.value = totalItems.value;
+  }
+}
 
-      currentIndex.value++;
+function pauseAutoPlay() {
+  isPlaying.value = false;
+  if (autoTimer) {
+    clearInterval(autoTimer);
+    autoTimer = null;
+  }
+}
 
-      // 如果到达实际数据的末尾，平滑过渡到复制的开头部分
-      if (currentIndex.value > props.users.length) {
-        setTimeout(() => {
-          currentIndex.value = 0;
-          currentPosition.value = -props.visibleCards * totalCardWidth;
-        }, 500);
-      }
+function resumeAutoPlay() {
+  isPlaying.value = true;
+  startAutoPlay();
+}
 
-      currentPosition.value = -(currentIndex.value + props.visibleCards) * totalCardWidth;
-    };
+function startAutoPlay() {
+  if (autoTimer) clearInterval(autoTimer);
+  autoTimer = setInterval(() => {
+    if (isPlaying.value) nextSlide();
+  }, interval);
+}
 
-    // 上一组
-    const prevSlide = () => {
-      if (props.users.length <= props.visibleCards) return;
+onMounted(() => {
+  startAutoPlay();
+});
 
-      currentIndex.value--;
-
-      // 如果到达实际数据的开头，平滑过渡到复制的末尾部分
-      if (currentIndex.value < -props.visibleCards) {
-        setTimeout(() => {
-          currentIndex.value = props.users.length - props.visibleCards;
-          currentPosition.value = -(props.users.length + props.visibleCards) * totalCardWidth;
-        }, 500);
-      }
-
-      currentPosition.value = -(currentIndex.value + props.visibleCards) * totalCardWidth;
-    };
-
-    // 跳转到指定幻灯片
-    const goToSlide = (dotIndex: number) => {
-      currentIndex.value = dotIndex * props.visibleCards;
-      currentPosition.value = -(currentIndex.value + props.visibleCards) * totalCardWidth;
-    };
-
-    // 暂停自动播放
-    const pauseAutoPlay = () => {
-      isPlaying.value = false;
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-        autoPlayInterval = null;
-      }
-    };
-
-    // 恢复自动播放
-    const resumeAutoPlay = () => {
-      if (props.autoPlay) {
-        isPlaying.value = true;
-        startAutoPlay();
-      }
-    };
-
-    // 启动自动播放
-    const startAutoPlay = () => {
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-      }
-      autoPlayInterval = window.setInterval(() => {
-        if (isPlaying.value) {
-          nextSlide();
-        }
-      }, props.interval);
-    };
-
-    onMounted(() => {
-      if (props.autoPlay) {
-        startAutoPlay();
-      }
-
-      // 初始化位置（跳过前面复制的元素）
-      if (props.users.length > props.visibleCards) {
-        currentPosition.value = -props.visibleCards * totalCardWidth;
-      }
-    });
-
-    onBeforeUnmount(() => {
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-      }
-    });
-
-    return {
-      currentPosition,
-      displayUsers,
-      dotCount,
-      currentDot,
-      getPhotoUrl,
-      handleImageError,
-      truncateDetails,
-      isActive,
-      nextSlide,
-      prevSlide,
-      goToSlide,
-      pauseAutoPlay,
-      resumeAutoPlay,
-    };
-  },
+onBeforeUnmount(() => {
+  if (autoTimer) clearInterval(autoTimer);
 });
 </script>
 
@@ -240,6 +115,7 @@ export default defineComponent({
 .lawyer-carousel-container {
   position: relative;
   max-width: 1200px;
+  height: 500px;
   margin: 0 auto;
   padding: 20px 60px;
   display: flex;
@@ -257,7 +133,7 @@ export default defineComponent({
 
 .lawyer-card {
   position: relative;
-  min-width: 300px;
+  /* width: 320px; */
   margin: 0 20px;
   background: white;
   transition: all 0.3s ease;
@@ -274,6 +150,7 @@ export default defineComponent({
   position: relative;
   overflow: hidden;
   width: 100%;
+  height: 100%;
 }
 
 .lawyer-image {
@@ -401,66 +278,5 @@ export default defineComponent({
 
 .next-btn {
   right: 0;
-}
-
-.carousel-dots {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ccc;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.dot.active {
-  background: #d4af37;
-  transform: scale(1.2);
-}
-
-@media (max-width: 1024px) {
-  .lawyer-card {
-    min-width: 280px;
-  }
-}
-
-@media (max-width: 768px) {
-  .lawyer-carousel-container {
-    padding: 20px 40px;
-  }
-
-  .lawyer-card {
-    min-width: 250px;
-    margin: 0 10px;
-  }
-
-  .nav-btn {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-@media (max-width: 576px) {
-  .lawyer-carousel-container {
-    padding: 20px 30px;
-  }
-
-  .lawyer-card {
-    min-width: 220px;
-  }
-
-  .lawyer-name {
-    font-size: 1.3rem;
-  }
 }
 </style>

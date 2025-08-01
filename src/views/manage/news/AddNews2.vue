@@ -151,33 +151,30 @@ const initEditor = async () => {
       paragraph: {
         class: Paragraph as any,
         inlineToolbar: true,
-        // 设置段落默认左对齐
-        config: {
-          defaultAlignment: "left",
-        },
+        // config: {
+        //   defaultAlignment: "left",
+        // },
       },
-      list: {
-        class: List as any,
-        inlineToolbar: true,
-      },
-      quote: {
-        class: Quote,
-        inlineToolbar: true,
-        config: {
-          quotePlaceholder: "输入引用内容...",
-          captionPlaceholder: "引用来源",
-          // 引用块左对齐
-          defaultAlignment: "left",
-        },
-      },
+      // list: {
+      //   class: List as any,
+      //   inlineToolbar: true,
+      //   config: {
+      //     defaultStyle: "unordered",
+      //   },
+      // },
+      // quote: {
+      //   class: Quote,
+      //   inlineToolbar: true,
+      //   config: {
+      //     quotePlaceholder: "输入引用内容...",
+      //     captionPlaceholder: "引用来源",
+      //     defaultAlignment: "left",
+      //   },
+      // },
       delimiter: Delimiter,
-      table: {
-        class: Table as any,
-        inlineToolbar: true,
-      },
-      code: CodeTool,
       embed: Embed as any,
     },
+
     onChange: async () => {
       await saveEditorContent();
     },

@@ -75,21 +75,7 @@ const getNewsDataFromSever = async (id: number) => {
 
 <template>
   <!--新闻信息-->
-  <div
-    style="
-      background-color: #0c162f;
-      margin: 0px;
-      color: white;
-      font-family: &quot;Instrument Serif&quot;, serif;
-      font-size: 20px;
-      font-weight: 400;
-      letter-spacing: 1.2px;
-      line-height: 1.08;
-
-      padding-top: 40px;
-      padding-bottom: 40px;
-    "
-  >
+  <div class="news-title-container">
     <!--图像
     <div
       v-if="newsData.titlePhoto"
@@ -134,13 +120,33 @@ const getNewsDataFromSever = async (id: number) => {
   >
     {{ newsData.brief }}
   </div>---->
-  <div style="display: flex; margin: 10px; padding: 20px; width: 1300px; margin: auto; text-align: left">
+  <div class="news-info">
     <!--详细信息-->
     <RenderHtml :html-content="newsData.contentHtml" />
   </div>
 </template>
 
 <style scoped>
+.news-title-container {
+  background-color: #0c162f;
+  margin: 0px;
+  color: white;
+  font-family: "Instrument Serif", serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 1.2px;
+  line-height: 1.08;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.news-info {
+  padding: 20px;
+  width: 800px;
+  margin: 0 auto;
+}
+:deep(.image-block p) {
+  text-align: center !important;
+}
 .news-container-outer {
   display: flex;
   align-items: center;

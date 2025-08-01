@@ -36,6 +36,11 @@ const routes: Array<RouteRecordRaw> = [
 
     component: () => import("@/views/news/NewsDetail.vue"),
   },
+  {
+    path: "/news-detail2/:id",
+
+    component: () => import("@/views/news/NewsDetail2.vue"),
+  },
 
   //新闻管理
   {

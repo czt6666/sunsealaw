@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, Ref, h } from 'vue';
+import { computed, onMounted, reactive, ref, Ref, h } from "vue";
+import { UserInfo } from "@/components/member/data";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 import {
   clearCookies,
@@ -12,8 +13,8 @@ import {
   getUserName,
   getUserRealName,
   isAdmin,
-} from '@/cookies/user';
-import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from '@/server/Carousel';
+} from "@/cookies/user";
+import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from "@/server/Carousel";
 
 import {
   IServerNewsWithPhotoView,
@@ -21,14 +22,14 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
-} from '@/server/ServerType';
-import { serverGetNewsPhotoView } from '@/server/News';
-import { serverGetAllUserWithPhotoView } from '@/server/SysUser';
-import UserPhoto from '@/components/member/UserPhoto.vue';
-import NewsPhoto from '@/components/news/NewsPhoto.vue';
-import { formatDate0, formatDate01 } from '@/utils/utils';
-import Carousel from '@/components/carousel/Carousel.vue';
-import MemberSwiper from '@/components/member/MemberSwiper.vue';
+} from "@/server/ServerType";
+import { serverGetNewsPhotoView } from "@/server/News";
+import { serverGetAllUserWithPhotoView } from "@/server/SysUser";
+import UserPhoto from "@/components/member/UserPhoto.vue";
+import NewsPhoto from "@/components/news/NewsPhoto.vue";
+import { formatDate0, formatDate01 } from "@/utils/utils";
+import Carousel from "@/components/carousel/Carousel.vue";
+import MemberSwiper from "@/components/member/MemberSwiper.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -37,22 +38,22 @@ const { t } = useI18n();
 const newsList: Ref<IServerNewsWithPhotoView[]> = ref([]);
 const userView: Ref<IServerUserWithPhotoView[]> = ref([]);
 
-import logoImg from '@/assets/logo.png';
-import captialMarkets from '@/assets/captialMarkets.png';
-import Corporate from '@/assets/Corporate.png';
-import employment from '@/assets/employment.png';
-import healthcare from '@/assets/healthcare.png';
-import intellectual from '@/assets/intellectual.png';
-import immigration from '@/assets/immigration.png';
-import wills from '@/assets/wills.png';
-import civil from '@/assets/civil.png';
+import logoImg from "@/assets/logo.png";
+import captialMarkets from "@/assets/captialMarkets.png";
+import Corporate from "@/assets/Corporate.png";
+import employment from "@/assets/employment.png";
+import healthcare from "@/assets/healthcare.png";
+import intellectual from "@/assets/intellectual.png";
+import immigration from "@/assets/immigration.png";
+import wills from "@/assets/wills.png";
+import civil from "@/assets/civil.png";
 
 const carouselImageViewArray = reactive<IServerCarouselImageView[]>([]);
 
 onMounted(async () => {
   await getCarouselAllDataFromServer();
   await getTopNewsDataFromServer();
-  await getUserAllDataFromServer();
+  // await getUserAllDataFromServer();
 });
 
 const getCarouselAllDataFromServer = async () => {
@@ -112,7 +113,7 @@ const newsTails = computed(() => {
 
 const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   if (!newsView) {
-    router.push({ path: '/news' });
+    router.push({ path: "/news" });
     return;
   }
 
@@ -140,7 +141,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t('app.team_member') }}
+          {{ t("app.team_member") }}
         </div>
       </div>
       <div class="card-header-read-more">
@@ -148,7 +149,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
       </div>
     </div>
 
-    <MemberSwiper :users="userView"></MemberSwiper>
+    <MemberSwiper :users="UserInfo"></MemberSwiper>
     <!-- <el-carousel :interval="2000" arrow="always" height="400px" autoplay style="background-color: white; color: black"> -->
     <!-- <el-carousel-item v-for="userItem in userView" :key="userItem.sysUser.id"> -->
     <!-- <div style="display: flex; justify-content: center; align-items: center; margin: 20px"> -->
@@ -197,7 +198,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t('app.service') }}
+          {{ t("app.service") }}
         </div>
       </div>
     </div>
@@ -242,7 +243,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t('app.news') }}
+          {{ t("app.news") }}
         </div>
         <div class="card-header-title-text-description">
           The latest news on our deals, insights, events, and achievements
@@ -256,31 +257,37 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
       <!--新闻-->
       <div v-for="newsItem in newsList" class="card-content-item">
         <!--图像-->
-        <div
-          v-if="newsItem.news.titlePhoto.length > 0"
-          class="card-content-item-image-container"
-          @click="onNewsClick(newsItem)"
-        >
+        <div class="card-content-item-image-container" @click="onNewsClick(newsItem)">
           <img :src="newsItem.photoBase64" alt="news photo" />
           <div class="highlight-overlay"></div>
         </div>
         <!--新闻-->
-        <div style="align-items: center; justify-content: center; width: 400px; text-align: left">
+        <div
+          style="
+            box-sizing: border-box;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 180px;
+            padding: 0 15px;
+            text-align: left;
+          "
+        >
           <!--新闻标题-->
           <div
-            style="color: #06456b; font-size: 1.5em; font-weight: 600; cursor: pointer; margin: 20px 0px"
+            style="color: #06456b; font-size: 1.5em; font-weight: 600; cursor: pointer"
             @click="onNewsClick(newsItem)"
           >
             {{ newsItem.news.title }}
           </div>
 
           <!--新闻日期---->
-          <div style="margin: 10px 0px">
+          <div>
             {{ formatDate01(newsItem.news.createDateTime) }}
           </div>
 
           <!--新闻内容-->
-          <div style="margin: 10px 0px; font-size: 0.8em; line-height: 1.5em">
+          <div style="overflow: hidden; height: 55px; margin: 10px 0px; font-size: 0.8em; line-height: 1.5em">
             {{ newsItem.news.brief }}
           </div>
 
@@ -328,7 +335,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   background-color: white;
 }
 .card-header-title-text {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 60px;
   text-align: left;
   line-height: 82px;
@@ -338,7 +345,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 }
 
 .card-header-title-text-description {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 20px;
   text-align: left;
   line-height: 42px;
@@ -360,7 +367,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   cursor: pointer;
   text-align: center;
   line-height: 32px;
-  font-family: 'Manrope', sans-serif;
+  font-family: "Manrope", sans-serif;
   transition: all 0.3s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   &:hover {
@@ -373,23 +380,26 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   display: flex;
   align-items: center;
   justify-content: center;
-
   overflow: hidden;
+  width: 100%;
+  height: 260px;
+  margin-bottom: 12px;
 }
 
 .card-content-item-image-container img {
-  width: 400px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.card-content-item-image-container:hover {
+/* .card-content-item-image-container:hover {
   transform: scale(1.02);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .card-content-item-image-container:hover .highlight-overlay {
   opacity: 1;
-}
+} */
 
 .highlight-overlay {
   position: absolute;
@@ -413,10 +423,12 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 }
 
 .card-content-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  box-sizing: border-box;
+  height: 440px;
+  width: 400px;
+  border: 1px solid #e4e4e4;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .card-button-read-more {
@@ -542,7 +554,4 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
-/* 轮播图开始 */
-/* 轮播图结束 */
 </style>
