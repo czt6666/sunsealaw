@@ -1,85 +1,178 @@
 <template>
   <div class="lawyer-carousel-container">
-    <button class="nav-btn prev-btn" @click="prevSlide" aria-label="Previous">
+    <button class="nav-btn prev-btn" @click="prevSlide" :disabled="totalItems <= visibleCards" aria-label="Previous">
       <i class="fas fa-chevron-left"></i>
     </button>
 
-    <div class="lawyer-carousel">
+    <div class="lawyer-carousel" ref="carouselRef">
       <div
-        class="lawyer-track transition"
+        class="lawyer-track"
+        :class="{ 'no-transition': isTransitioning }"
         :style="trackStyle"
         @mouseenter="pauseAutoPlay"
         @mouseleave="resumeAutoPlay"
         @transitionend="handleTransitionEnd"
       >
-        <div v-for="(user, index) in loopedUsers" :key="index" class="lawyer-card">
+        <div
+          v-for="(user, index) in loopedUsers"
+          :key="`${user.sysUser?.id || index}-${index}`"
+          class="lawyer-card"
+          :class="{ active: isCardActive(index) }"
+        >
           <div class="lawyer-image-container">
-            <img :src="user.photoBase64" :alt="user.sysUser.realName" class="lawyer-image" />
-            <div class="lawyer-badge" v-if="user.sysUser.licensedInfo">
-              <i class="fas fa-balance-scale"></i>
+            <div class="image-wrapper">
+              <img :src="user.photoBase64" :alt="user.sysUser?.realName || 'Lawyer'" class="lawyer-image" />
+              <div class="image-overlay"></div>
             </div>
-            <h3 class="lawyer-name">{{ user.sysUser.realName }}</h3>
+
+            <div class="lawyer-badge" v-if="user.sysUser?.licensedInfo">
+              <i class="fas fa-balance-scale"></i>
+              <span class="badge-tooltip">Licensed Attorney</span>
+            </div>
+
+            <div class="lawyer-info">
+              <h3 class="lawyer-name">{{ user.sysUser?.realName || "Unknown" }}</h3>
+              <p class="lawyer-role">{{ user.sysUser?.companyRole || "Attorney" }}</p>
+            </div>
           </div>
-          <p class="lawyer-role">{{ user.sysUser.companyRole }}</p>
         </div>
       </div>
     </div>
 
-    <button class="nav-btn next-btn" @click="nextSlide" aria-label="Next">
+    <button class="nav-btn next-btn" @click="nextSlide" :disabled="totalItems <= visibleCards" aria-label="Next">
       <i class="fas fa-chevron-right"></i>
     </button>
+
+    <!-- 指示器 -->
+    <div class="carousel-indicators" v-if="totalItems > visibleCards">
+      <button
+        v-for="(_, index) in totalItems"
+        :key="index"
+        class="indicator"
+        :class="{ active: isIndicatorActive(index) }"
+        @click="goToSlide(index)"
+        :aria-label="`Go to slide ${index + 1}`"
+      ></button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, computed, watch } from "vue";
-import type { IServerUserWithPhotoView } from "@/server/ServerType";
+import { IServerUserWithPhotoView } from "@/server/ServerType";
+import { onMounted, onBeforeUnmount, ref, computed, nextTick } from "vue";
 
-const props = defineProps<{
-  users: IServerUserWithPhotoView[];
-  visibleCards?: number;
-  interval?: number;
-}>();
+const props = withDefaults(
+  defineProps<{
+    users: IServerUserWithPhotoView[];
+    visibleCards?: number;
+    interval?: number;
+  }>(),
+  {
+    visibleCards: 3,
+    interval: 5000,
+  },
+);
 
-const visibleCards = props.visibleCards ?? 3;
-const interval = props.interval ?? 5000;
-const cardWidth = 320 + 20 * 2;
-
-const currentIndex = ref(visibleCards);
-const isPlaying = ref(true);
+// 响应式数据
+const carouselRef = ref<HTMLElement>();
+const currentIndex = ref(0);
+const isPlaying = ref(false);
+const isTransitioning = ref(false);
+const cardWidth = ref(360); // 320px + 40px margin
 
 let autoTimer: number | null = null;
 
-// 拼接前后元素，实现首尾循环
+// 计算属性
+const totalItems = computed(() => props.users.length);
+
 const loopedUsers = computed(() => {
-  if (props.users.length <= visibleCards) return props.users;
-  return [...props.users.slice(-visibleCards), ...props.users, ...props.users.slice(0, visibleCards)];
+  if (totalItems.value <= props.visibleCards) return props.users;
+
+  // 为了实现无缝循环，在前后各添加 visibleCards 数量的卡片
+  const beforeItems = props.users.slice(-props.visibleCards);
+  const afterItems = props.users.slice(0, props.visibleCards);
+
+  return [...beforeItems, ...props.users, ...afterItems];
 });
 
-const totalItems = computed(() => props.users.length);
-const maxIndex = computed(() => totalItems.value + visibleCards - 1);
-
-const trackStyle = computed(() => ({
-  transform: `translateX(${-currentIndex.value * cardWidth}px)`,
-}));
+const trackStyle = computed(() => {
+  const translateX = -(currentIndex.value + props.visibleCards) * cardWidth.value;
+  return {
+    transform: `translateX(${translateX}px)`,
+    width: `${loopedUsers.value.length * cardWidth.value}px`,
+  };
+});
 
 function nextSlide() {
-  if (totalItems.value <= visibleCards) return;
+  if (totalItems.value <= props.visibleCards) return;
+
   currentIndex.value++;
+
+  // 检查是否需要循环
+  if (currentIndex.value >= totalItems.value) {
+    // 延迟重置到开始位置
+    setTimeout(() => {
+      isTransitioning.value = true;
+      currentIndex.value = 0;
+      nextTick(() => {
+        isTransitioning.value = false;
+      });
+    }, 500);
+  }
 }
 
 function prevSlide() {
-  if (totalItems.value <= visibleCards) return;
+  if (totalItems.value <= props.visibleCards) return;
+
   currentIndex.value--;
+
+  // 检查是否需要循环
+  if (currentIndex.value < 0) {
+    // 延迟设置到末尾位置
+    setTimeout(() => {
+      isTransitioning.value = true;
+      currentIndex.value = totalItems.value - 1;
+      nextTick(() => {
+        isTransitioning.value = false;
+      });
+    }, 500);
+  }
+}
+
+function goToSlide(index: number) {
+  if (totalItems.value <= props.visibleCards) return;
+  currentIndex.value = index;
 }
 
 function handleTransitionEnd() {
-  // 循环平滑跳转
-  if (currentIndex.value === totalItems.value + visibleCards) {
-    currentIndex.value = visibleCards;
-  } else if (currentIndex.value === 0) {
-    currentIndex.value = totalItems.value;
+  // 处理无缝循环的过渡结束
+  if (currentIndex.value >= totalItems.value) {
+    isTransitioning.value = true;
+    currentIndex.value = 0;
+    nextTick(() => {
+      isTransitioning.value = false;
+    });
+  } else if (currentIndex.value < 0) {
+    isTransitioning.value = true;
+    currentIndex.value = totalItems.value - 1;
+    nextTick(() => {
+      isTransitioning.value = false;
+    });
   }
+}
+
+function isCardActive(index: number): boolean {
+  if (totalItems.value <= props.visibleCards) return true;
+
+  const actualIndex = currentIndex.value + props.visibleCards;
+  const centerStart = actualIndex;
+  const centerEnd = actualIndex + props.visibleCards - 1;
+
+  return index >= centerStart && index <= centerEnd;
+}
+
+function isIndicatorActive(index: number): boolean {
+  return index === currentIndex.value;
 }
 
 function pauseAutoPlay() {
@@ -91,17 +184,22 @@ function pauseAutoPlay() {
 }
 
 function resumeAutoPlay() {
-  isPlaying.value = true;
-  startAutoPlay();
+  // if (totalItems.value > props.visibleCards) {
+  //   isPlaying.value = true;
+  //   startAutoPlay();
+  // }
 }
 
 function startAutoPlay() {
+  if (totalItems.value <= props.visibleCards) return;
+
   if (autoTimer) clearInterval(autoTimer);
   autoTimer = setInterval(() => {
     if (isPlaying.value) nextSlide();
-  }, interval);
+  }, props.interval);
 }
 
+// 生命周期
 onMounted(() => {
   startAutoPlay();
 });
@@ -112,171 +210,250 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
 .lawyer-carousel-container {
+  overflow: hidden;
   position: relative;
-  max-width: 1200px;
-  height: 500px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 60px;
-  display: flex;
-  align-items: center;
+  padding: 40px 80px 10px;
+  border-radius: 20px;
 }
 
 .lawyer-carousel {
-  width: 100%;
+  border-radius: 16px;
+  background: transparent;
 }
 
 .lawyer-track {
   display: flex;
-  transition: transform 0.5s ease;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform;
+}
+
+.lawyer-track.no-transition {
+  transition: none;
 }
 
 .lawyer-card {
-  position: relative;
-  /* width: 320px; */
+  flex: 0 0 auto;
+  width: 320px;
+  height: 440px;
   margin: 0 20px;
   background: white;
-  transition: all 0.3s ease;
-  opacity: 0.8;
-  transform: scale(0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  opacity: 0.7;
+  transform: scale(0.92) translateY(10px);
+  position: relative;
 }
 
 .lawyer-card.active {
   opacity: 1;
-  transform: scale(1);
+  transform: scale(1) translateY(0);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  z-index: 2;
 }
 
 .lawyer-image-container {
   position: relative;
-  overflow: hidden;
   width: 100%;
   height: 100%;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  overflow: hidden;
 }
 
 .lawyer-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  vertical-align: middle;
-  transition: transform 0.5s ease;
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  object-position: center;
+  transition: transform 0.3s ease;
+  background: #f0f0f0;
 }
 
-.lawyer-card.active .lawyer-image {
+.lawyer-card:hover .lawyer-image {
   transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.7) 100%);
+  pointer-events: none;
 }
 
 .lawyer-badge {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
-  background: #d4af37;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.lawyer-badge:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+}
+
+.badge-tooltip {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.lawyer-badge:hover .badge-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lawyer-info {
+  height: 120px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9));
+  z-index: 3;
 }
 
 .lawyer-name {
-  font-size: 53px;
-  font-weight: 800;
-  margin-bottom: 5px;
-  color: #0b132c;
-  position: absolute;
-  bottom: 0;
-  z-index: 99;
   width: 100%;
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #333;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
 }
 
 .lawyer-role {
-  position: absolute;
-  bottom: -30px;
+  width: 100%;
   font-size: 22px;
   color: #d4af37;
-  font-weight: 500;
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-.lawyer-id,
-.lawyer-license,
-.lawyer-email {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-}
-
-.lawyer-id i,
-.lawyer-license i,
-.lawyer-email i {
-  margin-right: 8px;
-  color: #666;
-  width: 20px;
-  text-align: center;
-}
-
-.lawyer-license {
-  color: #2a7f62;
-  font-weight: 500;
-}
-
-.lawyer-details {
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: #555;
-  margin: 15px 0;
-}
-
-.lawyer-email {
-  color: #0a2c5e;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.lawyer-email:hover {
-  color: #d4af37;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.5px;
+  position: absolute;
+  left: 50%;
+  bottom: -30px;
+  transform: translateX(-50%);
+  z-index: 99;
 }
 
 .nav-btn {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: white;
-  border: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e2e8f0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 10;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.nav-btn:hover {
-  background: #f0f0f0;
-  transform: translateY(-50%) scale(1.1);
+.nav-btn:hover:not(:disabled) {
+  background: #f8f9fc;
+  border-color: #d4af37;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: translateY(-50%) scale(0.9);
 }
 
 .nav-btn i {
-  color: #333;
-  font-size: 1.2rem;
+  color: #4a5568;
+  font-size: 20px;
+  transition: color 0.3s ease;
+}
+
+.nav-btn:hover:not(:disabled) i {
+  color: #d4af37;
 }
 
 .prev-btn {
-  left: 0;
+  left: 10px;
 }
 
 .next-btn {
-  right: 0;
+  right: 10px;
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 60px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: #cbd5e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.indicator:hover {
+  background: #a0aec0;
+  transform: scale(1.2);
+}
+
+.indicator.active {
+  background: #d4af37;
+  transform: scale(1.3);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
 }
 </style>

@@ -138,7 +138,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 
   <!--成员轮播图-->
   <section class="section-card">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
           {{ t("app.team_member") }}
@@ -195,7 +195,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   <!--Service Area-->
 
   <section class="section-card">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
           {{ t("app.service") }}
@@ -240,7 +240,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 
   <!--新闻-->
   <section class="section-card">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
           {{ t("app.news") }}
@@ -317,7 +317,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   padding: 40px 20px;
   width: 100%;
   max-width: 1300px;
-  margin: 100px auto;
+  margin: 60px auto;
 }
 
 .section-card-header {
