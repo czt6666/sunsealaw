@@ -7,11 +7,11 @@
         <el-input v-model="form.title" placeholder="请输入新闻标题" size="large" />
       </el-form-item>
 
-      <el-form-item label="摘要">
+      <el-form-item label="摘要" required>
         <el-input v-model="form.brief" type="textarea" placeholder="请输入新闻摘要" :rows="3" resize="none" />
       </el-form-item>
 
-      <el-form-item label="标题图片">
+      <el-form-item label="标题图片" required>
         <el-upload
           ref="upload"
           v-model:file-list="fileList"
@@ -109,6 +109,11 @@ const initEditor = async () => {
   editorInstance.value = new EditorJS({
     holder: "editorjs",
     placeholder: "请输入新闻内容...",
+
+    onReady: () => {
+      console.log("Editor.js 已就绪");
+    },
+
     tools: {
       header: {
         class: Header as any,
@@ -123,23 +128,22 @@ const initEditor = async () => {
         config: {
           uploader: {
             async uploadByFile(file: File) {
-              try {
-                const imageUrl = await uploadImage(file);
-                return {
-                  success: 1,
-                  file: {
-                    url: imageUrl,
-                  },
+              return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  resolve({
+                    success: 1,
+                    file: {
+                      url: e.target?.result as string, // 直接返回Base64数据
+                    },
+                  });
                 };
-              } catch (error) {
-                console.error("图片上传失败:", error);
-                return {
-                  success: 0,
-                  error: {
-                    message: "图片上传失败",
-                  },
-                };
-              }
+                reader.readAsDataURL(file); // 读取文件为Base64
+              });
+            },
+            async uploadByUrl(url: string) {
+              // 可选：处理URL上传（根据需求实现）
+              return { success: 0 };
             },
           },
         },
@@ -147,6 +151,10 @@ const initEditor = async () => {
       paragraph: {
         class: Paragraph as any,
         inlineToolbar: true,
+        // 设置段落默认左对齐
+        config: {
+          defaultAlignment: "left",
+        },
       },
       list: {
         class: List as any,
@@ -158,6 +166,8 @@ const initEditor = async () => {
         config: {
           quotePlaceholder: "输入引用内容...",
           captionPlaceholder: "引用来源",
+          // 引用块左对齐
+          defaultAlignment: "left",
         },
       },
       delimiter: Delimiter,
@@ -167,9 +177,6 @@ const initEditor = async () => {
       },
       code: CodeTool,
       embed: Embed as any,
-    },
-    onReady: () => {
-      console.log("Editor.js 已就绪");
     },
     onChange: async () => {
       await saveEditorContent();
@@ -405,6 +412,7 @@ onMounted(() => {
 
 <style scoped>
 .news-publish-container {
+  text-align: left;
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px;
@@ -456,6 +464,7 @@ h1 {
 .preview-content {
   padding: 25px;
   min-height: 300px;
+  text-align: left;
   background-color: #f9fafb;
   border-radius: 0 0 12px 12px;
 }
@@ -565,5 +574,41 @@ h1 {
   color: #a0aec0;
   padding: 40px 0;
   font-style: italic;
+}
+
+::v-deep(.editor-container) {
+  /* 文字居左 */
+  .codex-editor__redactor {
+    padding-left: 70px;
+  }
+  .ce-block__content {
+    max-width: 100%;
+    margin: 0px;
+    text-align: left;
+  }
+  .ce-toolbar__content {
+    max-width: 100%;
+    margin: 0;
+    position: relative;
+  }
+  .ce-toolbar__actions {
+    position: absolute;
+    left: 0;
+    right: unset;
+  }
+
+  /* 图片居中 */
+  .image-tool {
+    text-align: center;
+  }
+  .image-tool__image img {
+    margin: 0 auto;
+  }
+}
+
+::v-deep(.preview-content) {
+  .image-block {
+    text-align: center;
+  }
 }
 </style>
