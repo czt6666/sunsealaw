@@ -7,11 +7,10 @@
     <div class="lawyer-carousel" ref="carouselRef">
       <div
         class="lawyer-track"
-        :class="{ 'no-transition': isTransitioning }"
+        :class="{ 'no-transition': !isTransition }"
         :style="trackStyle"
         @mouseenter="pauseAutoPlay"
         @mouseleave="resumeAutoPlay"
-        @transitionend="handleTransitionEnd"
       >
         <div
           v-for="(user, index) in loopedUsers"
@@ -76,8 +75,8 @@ const props = withDefaults(
 // 响应式数据
 const carouselRef = ref<HTMLElement>();
 const currentIndex = ref(0);
-const isPlaying = ref(false);
-const isTransitioning = ref(false);
+const isPlaying = ref(true);
+const isTransition = ref(true);
 const cardWidth = ref(360); // 320px + 40px margin
 
 let autoTimer: number | null = null;
@@ -110,14 +109,11 @@ function nextSlide() {
 
   // 检查是否需要循环
   if (currentIndex.value >= totalItems.value) {
-    // 延迟重置到开始位置
-    setTimeout(() => {
-      isTransitioning.value = true;
-      currentIndex.value = 0;
-      nextTick(() => {
-        isTransitioning.value = false;
-      });
-    }, 500);
+    currentIndex.value = 0;
+    // isTransition.value = false;
+    // setTimeout(() => {
+    //   isTransition.value = true;
+    // }, 0);
   }
 }
 
@@ -128,37 +124,17 @@ function prevSlide() {
 
   // 检查是否需要循环
   if (currentIndex.value < 0) {
-    // 延迟设置到末尾位置
-    setTimeout(() => {
-      isTransitioning.value = true;
-      currentIndex.value = totalItems.value - 1;
-      nextTick(() => {
-        isTransitioning.value = false;
-      });
-    }, 500);
+    currentIndex.value = totalItems.value - 1;
+    // isTransition.value = false;
+    // nextTick(() => {
+    //   isTransition.value = true;
+    // });
   }
 }
 
 function goToSlide(index: number) {
   if (totalItems.value <= props.visibleCards) return;
   currentIndex.value = index;
-}
-
-function handleTransitionEnd() {
-  // 处理无缝循环的过渡结束
-  if (currentIndex.value >= totalItems.value) {
-    isTransitioning.value = true;
-    currentIndex.value = 0;
-    nextTick(() => {
-      isTransitioning.value = false;
-    });
-  } else if (currentIndex.value < 0) {
-    isTransitioning.value = true;
-    currentIndex.value = totalItems.value - 1;
-    nextTick(() => {
-      isTransitioning.value = false;
-    });
-  }
 }
 
 function isCardActive(index: number): boolean {
@@ -184,10 +160,10 @@ function pauseAutoPlay() {
 }
 
 function resumeAutoPlay() {
-  // if (totalItems.value > props.visibleCards) {
-  //   isPlaying.value = true;
-  //   startAutoPlay();
-  // }
+  if (totalItems.value > props.visibleCards) {
+    isPlaying.value = true;
+    startAutoPlay();
+  }
 }
 
 function startAutoPlay() {
@@ -235,7 +211,7 @@ onBeforeUnmount(() => {
 }
 
 .lawyer-track.no-transition {
-  transition: none;
+  transition: none !important;
 }
 
 .lawyer-card {
