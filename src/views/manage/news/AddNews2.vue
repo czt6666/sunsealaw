@@ -230,7 +230,9 @@ const convertToHtml = (data: OutputData): string => {
         htmlContent += `<p class="content-paragraph">${block.data.text}</p>`;
         break;
       case "image":
-        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${block.data.caption || ""}" class="content-image">`;
+        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${
+          block.data.caption || ""
+        }" class="content-image">`;
         if (block.data.caption) {
           htmlContent += `<p class="image-caption">${block.data.caption}</p>`;
         }
@@ -603,9 +605,19 @@ h1 {
   }
 }
 
-::v-deep(.preview-content) {
+/* ::v-deep(.preview-content) {
   .image-block {
     text-align: center;
   }
+} */
+::v-deep(.image-block) {
+  text-align: center;
+}
+::v-deep(.image-block img) {
+  max-width: 554px;
+  max-height: 369px;
+}
+::v-deep(p.content-paragraph) {
+  text-indent: 2em;
 }
 </style>

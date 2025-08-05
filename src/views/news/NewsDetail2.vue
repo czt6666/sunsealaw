@@ -76,22 +76,6 @@ const getNewsDataFromSever = async (id: number) => {
 <template>
   <!--新闻信息-->
   <div class="news-title-container">
-    <!--图像
-    <div
-      v-if="newsData.titlePhoto"
-      style="
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <NewsPhoto
-        :newsId="newsData.id"
-        :img-width="100"
-        :img-height="100"
-      ></NewsPhoto>
-    </div>-->
     <!--新闻-->
     <div class="news-container-outer">
       <div class="news-container-inner">
@@ -107,19 +91,6 @@ const getNewsDataFromSever = async (id: number) => {
       </div>
     </div>
   </div>
-  <!-- <div
-    v-if="newsData.brief"
-    style="
-      margin: 20px;
-      padding: 20px;
-      text-align: left;
-      font-style: italic;
-      background-color: #ebedf0;
-      border-radius: 10px;
-    "
-  >
-    {{ newsData.brief }}
-  </div>---->
   <div class="news-info">
     <!--详细信息-->
     <RenderHtml :html-content="newsData.contentHtml" />
@@ -139,14 +110,6 @@ const getNewsDataFromSever = async (id: number) => {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-.news-info {
-  padding: 20px;
-  width: 800px;
-  margin: 0 auto;
-}
-:deep(.image-block p) {
-  text-align: center !important;
-}
 .news-container-outer {
   display: flex;
   align-items: center;
@@ -162,13 +125,19 @@ const getNewsDataFromSever = async (id: number) => {
   align-items: flex-start;
   justify-content: space-between;
 }
-
-.news-container {
-  margin: 10px;
-  padding: 10px;
-
-  border-radius: 5px;
-
-  display: flex;
+.news-info {
+  padding: 20px;
+  width: 800px;
+  margin: 0 auto;
+}
+::v-deep(.image-block) {
+  text-align: center;
+}
+::v-deep(.image-block img) {
+  max-width: 554px;
+  max-height: 369px;
+}
+::v-deep(p.content-paragraph) {
+  text-indent: 2em;
 }
 </style>
