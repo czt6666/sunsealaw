@@ -287,7 +287,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
           </div>
 
           <!--新闻内容-->
-          <div style="overflow: hidden; height: 55px; margin: 10px 0px; font-size: 0.8em; line-height: 1.5em">
+          <div style="overflow: hidden; height: 44px; font-size: 0.8em; line-height: 1.5em">
             {{ newsItem.news.brief }}
           </div>
 
@@ -433,7 +433,6 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 
 .card-button-read-more {
   color: #06456b;
-  margin: 10px 0px;
   font-size: 0.8em;
   font-weight: 600;
   cursor: pointer;
