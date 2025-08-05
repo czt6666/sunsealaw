@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/news-detail/:id",
 
-    component: () => import("@/views/news/NewsDetail.vue"),
+    component: () => import("@/views/news/NewsDetail2.vue"),
   },
   {
     path: "/news-detail2/:id",
@@ -51,16 +51,12 @@ const routes: Array<RouteRecordRaw> = [
   //新闻添加
   {
     path: "/manager-news-add",
-    component: () => import("@/views/manage/news/AddNews.vue"),
+    component: () => import("@/views/manage/news/AddNews2.vue"),
   },
 
   //新闻更新
   {
     path: "/manager-news-update/:id",
-    component: () => import("@/views/manage/news/UpdateNews.vue"),
-  },
-  {
-    path: "/manager-news-update2/:id",
     component: () => import("@/views/manage/news/UpdateNews2.vue"),
   },
 
@@ -189,12 +185,6 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     component: () => import("@/views/index.vue"),
-  },
-
-  //测试
-  {
-    path: "/test",
-    component: () => import("@/views/manage/news/AddNews2.vue"),
   },
 ];
 
