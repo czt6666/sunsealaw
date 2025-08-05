@@ -59,6 +59,10 @@ const routes: Array<RouteRecordRaw> = [
     path: "/manager-news-update/:id",
     component: () => import("@/views/manage/news/UpdateNews.vue"),
   },
+  {
+    path: "/manager-news-update2/:id",
+    component: () => import("@/views/manage/news/UpdateNews2.vue"),
+  },
 
   //服务:Capital Markets
   {

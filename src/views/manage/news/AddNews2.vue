@@ -1,6 +1,6 @@
 <template>
   <div class="news-publish-container">
-    <h1>新闻发布</h1>
+    <h1>Add News</h1>
 
     <el-form :model="form" label-position="top" ref="formRef">
       <el-form-item label="标题" required>
@@ -59,11 +59,7 @@ import EditorJS, { OutputData } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
 import Paragraph from "@editorjs/paragraph";
-import List from "@editorjs/list";
-import Quote from "@editorjs/quote";
 import Delimiter from "@editorjs/delimiter";
-import Table from "@editorjs/table";
-import CodeTool from "@editorjs/code";
 import Embed from "@editorjs/embed";
 import {
   ElMessage,
@@ -151,26 +147,7 @@ const initEditor = async () => {
       paragraph: {
         class: Paragraph as any,
         inlineToolbar: true,
-        // config: {
-        //   defaultAlignment: "left",
-        // },
       },
-      // list: {
-      //   class: List as any,
-      //   inlineToolbar: true,
-      //   config: {
-      //     defaultStyle: "unordered",
-      //   },
-      // },
-      // quote: {
-      //   class: Quote,
-      //   inlineToolbar: true,
-      //   config: {
-      //     quotePlaceholder: "输入引用内容...",
-      //     captionPlaceholder: "引用来源",
-      //     defaultAlignment: "left",
-      //   },
-      // },
       delimiter: Delimiter,
       embed: Embed as any,
     },
@@ -194,24 +171,6 @@ const saveEditorContent = async (): Promise<void> => {
       console.error("保存编辑器内容时出错:", error);
       ElMessage.error("保存内容失败");
     }
-  }
-};
-
-// 上传图片到服务器
-const uploadImage = async (file: File): Promise<string> => {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const ret = await serverAddNewsPhotoUploadTempFiles(formData);
-    if (ret && ret.code === 200 && ret.data) {
-      return ret.data;
-    } else {
-      throw new Error("图片上传失败");
-    }
-  } catch (error) {
-    console.error("图片上传失败:", error);
-    throw error;
   }
 };
 
