@@ -532,7 +532,7 @@ h1 {
   font-style: italic;
 }
 
-::v-deep(.editor-container) {
+:deep(.editor-container) {
   /* 文字居左 */
   .codex-editor__redactor {
     padding-left: 70px;
@@ -562,9 +562,14 @@ h1 {
   }
 }
 
-::v-deep(.preview-content) {
-  .image-block {
-    text-align: center;
-  }
+:deep(.img-block) {
+  text-align: center;
+}
+:deep(.img-block img) {
+  max-width: 554px;
+  max-height: 369px;
+}
+:deep(p.content-paragraph) {
+  text-indent: 2em;
 }
 </style>

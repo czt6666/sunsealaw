@@ -139,11 +139,6 @@ const getNewsDataFromSever = async (id: number) => {
   padding-top: 40px;
   padding-bottom: 40px;
 }
-.news-info {
-  padding: 20px;
-  width: 800px;
-  margin: 0 auto;
-}
 :deep(.image-block p) {
   text-align: center !important;
 }
@@ -163,12 +158,19 @@ const getNewsDataFromSever = async (id: number) => {
   justify-content: space-between;
 }
 
-.news-container {
-  margin: 10px;
-  padding: 10px;
-
-  border-radius: 5px;
-
-  display: flex;
+.news-info {
+  padding: 20px;
+  width: 800px;
+  margin: 0 auto;
+}
+:deep(.img-block) {
+  text-align: center;
+}
+:deep(.img-block img) {
+  max-width: 554px;
+  max-height: 369px;
+}
+:deep(p.content-paragraph) {
+  text-indent: 2em;
 }
 </style>
