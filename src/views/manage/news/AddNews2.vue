@@ -562,14 +562,14 @@ h1 {
   }
 }
 
-:deep(.img-block) {
+:deep(.image-block) {
   text-align: center;
 }
-:deep(.img-block img) {
+:deep(.image-block img) {
   max-width: 554px;
   max-height: 369px;
 }
-:deep(p.content-paragraph) {
+:deep(.content-paragraph) {
   text-indent: 2em;
 }
 </style>

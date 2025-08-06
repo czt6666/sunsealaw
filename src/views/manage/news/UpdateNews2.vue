@@ -619,9 +619,14 @@ h1 {
   }
 }
 
-::v-deep(.preview-content) {
-  .image-block {
-    text-align: center;
-  }
+:deep(.image-block) {
+  text-align: center;
+}
+:deep(.image-block img) {
+  max-width: 554px;
+  max-height: 369px;
+}
+:deep(.content-paragraph) {
+  text-indent: 2em;
 }
 </style>
