@@ -17,6 +17,7 @@
           :key="`${user.sysUser?.id || index}-${index}`"
           class="lawyer-card"
           :class="{ active: isCardActive(index) }"
+          @click="() => router.push({ path: `/team-member/${user.sysUser.id}` })"
         >
           <div class="lawyer-image-container">
             <div class="image-wrapper">
@@ -58,8 +59,10 @@
 
 <script setup lang="ts">
 import { IServerUserWithPhotoView } from "@/server/ServerType";
+import { useRouter, useRoute } from "vue-router";
 import { onMounted, onBeforeUnmount, ref, computed, nextTick } from "vue";
 
+const router = useRouter();
 const props = withDefaults(
   defineProps<{
     users: IServerUserWithPhotoView[];
