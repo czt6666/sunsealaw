@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref, Ref, h } from "vue";
-import { UserInfo } from "@/components/member/data";
 
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -48,24 +47,24 @@ import immigration from "@/assets/immigration.png";
 import wills from "@/assets/wills.png";
 import civil from "@/assets/civil.png";
 
-const carouselImageViewArray = reactive<IServerCarouselImageView[]>([]);
+const carouselImageViewArray = ref<IServerCarouselImageView[]>([]);
 
 onMounted(async () => {
-  await getCarouselAllDataFromServer();
-  await getTopNewsDataFromServer();
-  // await getUserAllDataFromServer();
+  getCarouselAllDataFromServer();
+  getUserAllDataFromServer();
+  getTopNewsDataFromServer();
 });
 
 const getCarouselAllDataFromServer = async () => {
-  carouselImageViewArray.length = 0;
+  carouselImageViewArray.value.length = 0;
   const ret = await serverGetAllCarouselImageView();
   if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
     for (let i = 0; i < ret.data.length; i++) {
-      carouselImageViewArray.push(ret.data[i]);
+      carouselImageViewArray.value.push(ret.data[i]);
     }
   }
 
-  console.log(carouselImageViewArray);
+  console.log("getCarouselAllDataFromServer", carouselImageViewArray.value);
 };
 
 /**
@@ -80,7 +79,7 @@ const getTopNewsDataFromServer = async () => {
       newsList.value.push(ret.data[i]);
     }
   }
-  console.log(newsList.value);
+  console.log("getTopNewsDataFromServer", newsList.value);
 };
 
 /**
@@ -94,7 +93,7 @@ const getUserAllDataFromServer = async () => {
     for (let i = 0; i < ret.data.length; i++) {
       userView.value.push(ret.data[i]);
     }
-    console.log(userView.value);
+    console.log("getUserAllDataFromServer", userView.value);
   }
 };
 
@@ -149,7 +148,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
       </div>
     </div>
 
-    <MemberSwiper :users="UserInfo"></MemberSwiper>
+    <MemberSwiper :users="userView"></MemberSwiper>
     <!-- <el-carousel :interval="2000" arrow="always" height="400px" autoplay style="background-color: white; color: black"> -->
     <!-- <el-carousel-item v-for="userItem in userView" :key="userItem.sysUser.id"> -->
     <!-- <div style="display: flex; justify-content: center; align-items: center; margin: 20px"> -->
