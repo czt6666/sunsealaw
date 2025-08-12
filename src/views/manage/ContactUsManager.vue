@@ -1,21 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { useRouter, useRoute } from "vue-router";
-import { View, Hide, Search, Plus } from "@element-plus/icons-vue";
+import { onMounted, ref, reactive, computed } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { useRouter, useRoute } from 'vue-router';
+import { View, Hide, Search, Plus } from '@element-plus/icons-vue';
 import {
   serverContactUsAdd,
   serverContactUsDelete,
   serverContactUsUpdate,
   serverGetContactUsPage,
-} from "@/server/ContactUs";
-import {
-  IServerContactUs,
-  Pageable,
-  Page,
-  SimplePage,
-  convertPage,
-} from "@/server/ServerType";
+} from '@/server/ContactUs';
+import { IServerContactUs, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 import {
   clearCookies,
   setUserCookies,
@@ -26,8 +20,8 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
-import { useI18n } from "vue-i18n";
+} from '@/cookies/user';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const route = useRoute();
@@ -43,7 +37,7 @@ const updateSysUser = ref<IServerContactUs>(); //修改对话框中要修改的�
 const textElipsisValue = ref(false); //超长文本中多余的内容是否用...显示
 
 onMounted(async () => {
-  if (!isAdmin()) router.push("/login");
+  if (!isAdmin()) router.push('/login');
   await getPageDataFromSever();
 });
 
@@ -84,23 +78,23 @@ const onPageSizeChange = async (value: number) => {
 const onRowDeleteButtonClick = async (row: IServerContactUs, index: number) => {
   console.log(index, row);
 
-  ElMessageBox.confirm("是否真的删除数据？", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('是否真的删除数据？', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
   })
     .then(async () => {
       await serverContactUsDelete(row);
       await getPageDataFromSever();
       ElMessage({
-        type: "success",
-        message: "完成删除",
+        type: 'success',
+        message: '完成删除',
       });
     })
     .catch(() => {
       ElMessage({
-        type: "info",
-        message: "删除失败",
+        type: 'info',
+        message: '删除失败',
       });
     });
 };
@@ -155,27 +149,13 @@ const goBack = () => {
             margin-bottom: -5px;
           "
         >
-          <el-col :span="1" style="display: flex; align-items: center"
-            >No.
-          </el-col>
-          <el-col :span="3" style="display: flex; align-items: center"
-            >Name
-          </el-col>
-          <el-col :span="3" style="display: flex; align-items: center">
-            address</el-col
-          >
-          <el-col :span="2" style="display: flex; align-items: center">
-            phone</el-col
-          >
-          <el-col :span="3" style="display: flex; align-items: center">
-            email</el-col
-          >
-          <el-col :span="10" style="display: flex; align-items: center"
-            >message
-          </el-col>
-          <el-col :span="2" style="display: flex; align-items: center">
-            操作
-          </el-col>
+          <el-col :span="1" style="display: flex; align-items: center">No.</el-col>
+          <el-col :span="3" style="display: flex; align-items: center">Name</el-col>
+          <el-col :span="3" style="display: flex; align-items: center">address</el-col>
+          <el-col :span="2" style="display: flex; align-items: center">phone</el-col>
+          <el-col :span="3" style="display: flex; align-items: center">email</el-col>
+          <el-col :span="10" style="display: flex; align-items: center">message</el-col>
+          <el-col :span="2" style="display: flex; align-items: center">操作</el-col>
         </el-row>
 
         <el-row
@@ -250,21 +230,14 @@ const goBack = () => {
 
           <!--操作-->
           <el-col :span="2">
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-              "
-            >
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
               <el-button
                 size="small"
                 type="danger"
                 style="margin-left: 0px; margin-top: 5px"
                 @click="onRowDeleteButtonClick(userItem, userIndex)"
               >
-                {{ t("app.delete") }}
+                {{ t('app.delete') }}
               </el-button>
             </div>
           </el-col>

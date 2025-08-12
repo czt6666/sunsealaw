@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from "vue";
-import { ElMessage } from "element-plus";
-import { useRouter, useRoute } from "vue-router";
-import { View, Hide, Search, Plus } from "@element-plus/icons-vue";
+import { onMounted, ref, reactive, computed } from 'vue';
+import { ElMessage } from 'element-plus';
+import { useRouter, useRoute } from 'vue-router';
+import { View, Hide, Search, Plus } from '@element-plus/icons-vue';
 import {
   serverUserAdd,
   serverUserDelete,
   serverUserUpdate,
   serverUserResetPwd,
   serverGetUserPage,
-} from "@/server/SysUser";
-import {
-  IServerCarousel,
-  Pageable,
-  Page,
-  SimplePage,
-  convertPage,
-} from "@/server/ServerType";
+} from '@/server/SysUser';
+import { IServerCarousel, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 
 import {
   serverCarouselAdd,
@@ -26,7 +20,7 @@ import {
   serverAddCarouselPhotoUploadTempFiles,
   serverDeleteCarouselPhotoUploadTempFiles,
   serverGetCarouselPhotoFileById,
-} from "@/server/Carousel";
+} from '@/server/Carousel';
 
 import {
   clearCookies,
@@ -38,11 +32,11 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
-import CarouselPhoto from "@/components/carousel/CarouselPhoto.vue";
-import NewCarouselDialog from "@/components/carousel/NewCarouselDialog.vue";
-import UpdateCarouselDialog from "@/components/carousel/UpdateCarouselDialog.vue";
-import { useI18n } from "vue-i18n";
+} from '@/cookies/user';
+import CarouselPhoto from '@/components/carousel/CarouselPhoto.vue';
+import NewCarouselDialog from '@/components/carousel/NewCarouselDialog.vue';
+import UpdateCarouselDialog from '@/components/carousel/UpdateCarouselDialog.vue';
+import { useI18n } from 'vue-i18n';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -57,7 +51,7 @@ const updateCarousel = ref<IServerCarousel>(); //修改对话框中要修改的�
 const textElipsisValue = ref(false); //超长文本中多余的内容是否用...显示
 
 onMounted(async () => {
-  if (!isAdmin()) router.push("/login");
+  if (!isAdmin()) router.push('/login');
   await getCarouselPageDataFromSever();
 });
 
@@ -105,18 +99,12 @@ const handleNewMemberCancel = () => {
   dialogNewVisible.value = false;
 };
 
-const onRowEditButtonClick = async (
-  carousel: IServerCarousel,
-  userIndex: number
-) => {
+const onRowEditButtonClick = async (carousel: IServerCarousel, userIndex: number) => {
   updateCarousel.value = carousel;
   dialogUpdateVisible.value = true;
 };
 
-const onRowDeleteButtonClick = async (
-  carousel: IServerCarousel,
-  userIndex: number
-) => {
+const onRowDeleteButtonClick = async (carousel: IServerCarousel, userIndex: number) => {
   const ret = await serverCarouselDelete(carousel);
   await getCarouselPageDataFromSever();
 };
@@ -166,7 +154,7 @@ const goBack = () => {
       <!--新增按钮-->
       <div>
         <el-button :icon="Plus" type="primary" @click="onNewButtonClick">
-          {{ t("app.new") }}
+          {{ t('app.new') }}
         </el-button>
       </div>
     </div>
@@ -189,13 +177,13 @@ const goBack = () => {
             margin-bottom: -5px;
           "
         >
-          <el-col :span="1">No. </el-col>
-          <el-col :span="4"> Title</el-col>
-          <el-col :span="10"> Sub Title </el-col>
-          <el-col :span="5"> Photo</el-col>
+          <el-col :span="1">No.</el-col>
+          <el-col :span="4">Title</el-col>
+          <el-col :span="10">Sub Title</el-col>
+          <el-col :span="5">Photo</el-col>
 
-          <el-col :span="2"> Valid</el-col>
-          <el-col :span="2"> 操作 </el-col>
+          <el-col :span="2">Valid</el-col>
+          <el-col :span="2">操作</el-col>
         </el-row>
 
         <el-row
@@ -216,25 +204,13 @@ const goBack = () => {
         >
           <!--序号-->
           <el-col :span="1">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
+            <div style="display: flex; align-items: center; justify-content: center">
               {{ pageNo * pageSize + userIndex + 1 }}
             </div>
           </el-col>
 
           <el-col :span="4">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
+            <div style="display: flex; align-items: center; justify-content: center">
               <span class="textEllipsis" :title="userItem.title">
                 {{ userItem.title }}
               </span>
@@ -242,13 +218,7 @@ const goBack = () => {
           </el-col>
 
           <el-col :span="10">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
+            <div style="display: flex; align-items: center; justify-content: center">
               <span class="textEllipsis" :title="userItem.subTitle">
                 {{ userItem.subTitle }}
               </span>
@@ -257,50 +227,23 @@ const goBack = () => {
 
           <!--照片-->
           <el-col :span="5">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <CarouselPhoto
-                :carouselId="userItem.id"
-                :img-width="100"
-                :img-height="100"
-              ></CarouselPhoto>
+            <div style="display: flex; align-items: center; justify-content: center">
+              <CarouselPhoto :carouselId="userItem.id" :img-width="100" :img-height="100"></CarouselPhoto>
             </div>
           </el-col>
 
           <!--是否有效-->
           <el-col :span="2">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              {{ userItem.style == 1 ? "Show" : "Hide" }}
+            <div style="display: flex; align-items: center; justify-content: center">
+              {{ userItem.style == 1 ? 'Show' : 'Hide' }}
             </div>
           </el-col>
 
           <!--操作-->
           <el-col :span="2">
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <el-button
-                type="primary"
-                size="small"
-                @click="onRowEditButtonClick(userItem, userIndex)"
-              >
-                {{ t("app.edit") }}
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+              <el-button type="primary" size="small" @click="onRowEditButtonClick(userItem, userIndex)">
+                {{ t('app.edit') }}
               </el-button>
 
               <el-button
@@ -309,7 +252,7 @@ const goBack = () => {
                 style="margin-left: 0px; margin-top: 5px"
                 @click="onRowDeleteButtonClick(userItem, userIndex)"
               >
-                {{ t("app.delete") }}
+                {{ t('app.delete') }}
               </el-button>
             </div>
           </el-col>

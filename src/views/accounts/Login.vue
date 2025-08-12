@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
+import { useRouter, useRoute } from 'vue-router';
 
-import { View, Hide, Refresh, Help } from "@element-plus/icons-vue";
+import { View, Hide, Refresh, Help } from '@element-plus/icons-vue';
 
-import {
-  serverLogin,
-  serverGetPublicKey,
-  serverSignUp,
-  serverGetCaptchaJpg,
-} from "@/server/SysUser";
+import { serverLogin, serverGetPublicKey, serverSignUp, serverGetCaptchaJpg } from '@/server/SysUser';
 
-import { IServerSysUserLoginResult } from "@/server/ServerType";
+import { IServerSysUserLoginResult } from '@/server/ServerType';
 
-import { JSEncrypt } from "jsencrypt";
+import { JSEncrypt } from 'jsencrypt';
 
 import {
   clearCookies,
@@ -26,27 +21,27 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
-import { userStore } from "@/store/user";
+import { userStore } from '@/store/user';
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const { t } = useI18n();
 const store = userStore();
 
 const show = ref(false);
-const Authorization = ref("");
-const captchaLabel = ref("验证码");
+const Authorization = ref('');
+const captchaLabel = ref('验证码');
 const captchaLabelCountDown = ref(120);
 const showPwd = ref(false); //是否显示密码明文
 const formLogin = reactive({
-  userName: "",
-  password: "",
-  captchaCode: "",
-  captchaKey: "",
-  code: "",
+  userName: '',
+  password: '',
+  captchaCode: '',
+  captchaKey: '',
+  code: '',
 });
 
 const router = useRouter();
@@ -68,13 +63,8 @@ const onLoginClick = async () => {
       let publicKey = publicKeyResponse.data;
       encrypt.setPublicKey(publicKey);
       let encodePassword = encrypt.encrypt(formLogin.password);
-      if (typeof encodePassword == "string") {
-        let ret = await serverLogin(
-          formLogin.userName,
-          encodePassword,
-          formLogin.code,
-          formLogin.captchaKey
-        );
+      if (typeof encodePassword == 'string') {
+        let ret = await serverLogin(formLogin.userName, encodePassword, formLogin.code, formLogin.captchaKey);
         if (ret && ret.code == 200) {
           let data: IServerSysUserLoginResult = ret.data;
           console.log(data);
@@ -103,13 +93,8 @@ const onSignUPClick = async () => {
       let publicKey = publicKeyResponse.data;
       encrypt.setPublicKey(publicKey);
       let encodePassword = encrypt.encrypt(formLogin.password);
-      if (typeof encodePassword == "string") {
-        let ret = await serverSignUp(
-          formLogin.userName,
-          encodePassword,
-          formLogin.code,
-          formLogin.captchaKey
-        );
+      if (typeof encodePassword == 'string') {
+        let ret = await serverSignUp(formLogin.userName, encodePassword, formLogin.code, formLogin.captchaKey);
         console.log(ret);
       }
     }
@@ -129,14 +114,11 @@ const countDownTimer = () => {
 const countDownTimerHelper = async () => {
   if (captchaLabelCountDown.value <= 0) {
     window.clearInterval(countDownTimerId.value);
-    captchaLabel.value = "Verification Code ";
+    captchaLabel.value = 'Verification Code ';
     return;
   }
 
-  captchaLabel.value =
-    "Verification Code (remaining time" +
-    captchaLabelCountDown.value +
-    "seconds)";
+  captchaLabel.value = 'Verification Code (remaining time' + captchaLabelCountDown.value + 'seconds)';
 
   captchaLabelCountDown.value -= 1;
 };
@@ -151,7 +133,7 @@ const onRefreshCode = async () => {
     if ((ret.code = 200)) {
       formLogin.captchaCode = ret.data.code; //验证图像
       formLogin.captchaKey = ret.data.key; //验证图像对应的key
-      formLogin.code = "";
+      formLogin.code = '';
     }
 
     countDownTimer();
@@ -172,11 +154,7 @@ function onClickBack() {
       style="max-width: 600px; margin-bottom: 2em; text-align: left"
     >
       <el-form-item label="User ID">
-        <el-input
-          v-model="formLogin.userName"
-          placeholder="Please input user ID"
-          @keydown.enter="onLoginClick"
-        />
+        <el-input v-model="formLogin.userName" placeholder="Please input user ID" @keydown.enter="onLoginClick" />
       </el-form-item>
       <el-form-item label="Password">
         <el-input
@@ -186,21 +164,14 @@ function onClickBack() {
           @keydown.enter="onLoginClick"
         >
           <template #append>
-            <el-button
-              :icon="showPwd ? Hide : View"
-              @click="showPwd = !showPwd"
-            />
+            <el-button :icon="showPwd ? Hide : View" @click="showPwd = !showPwd" />
           </template>
         </el-input>
       </el-form-item>
 
       <el-form-item :label="captchaLabel">
         <el-col :span="16">
-          <el-input
-            v-model="formLogin.code"
-            placeholder="Please input captcha"
-            @keydown.enter="onLoginClick"
-          >
+          <el-input v-model="formLogin.code" placeholder="Please input captcha" @keydown.enter="onLoginClick">
             <template #append>
               <el-button :icon="Refresh" @click="onRefreshCode" />
             </template>
@@ -208,30 +179,13 @@ function onClickBack() {
         </el-col>
 
         <el-col :span="8">
-          <img
-            class="login-code"
-            alt="Captcha"
-            id="codeImg"
-            :src="formLogin.captchaCode"
-            @click="onRefreshCode"
-          />
+          <img class="login-code" alt="Captcha" id="codeImg" :src="formLogin.captchaCode" @click="onRefreshCode" />
         </el-col>
       </el-form-item>
 
-      <el-button type="primary" @click="onLoginClick" v-if="show === false">
-        Login
-      </el-button>
-      <el-button
-        type="primary"
-        @click="onSignUPClick"
-        v-if="show === false"
-        :disabled="true"
-      >
-        Register
-      </el-button>
-      <el-button type="primary" @click="onClickBack" v-if="show === true">
-        Back
-      </el-button>
+      <el-button type="primary" @click="onLoginClick" v-if="show === false">Login</el-button>
+      <el-button type="primary" @click="onSignUPClick" v-if="show === false" :disabled="true">Register</el-button>
+      <el-button type="primary" @click="onClickBack" v-if="show === true">Back</el-button>
     </el-form>
   </div>
 </template>

@@ -18,7 +18,7 @@
 
         <!-- 内容区域 -->
         <div class="dialog-body">
-          <slot> </slot>
+          <slot></slot>
         </div>
       </div>
     </div>
@@ -26,13 +26,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from "vue";
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
   visible: Boolean,
   title: {
     type: String,
-    default: "Dialog",
+    default: 'Dialog',
   },
   closeOnClickOutside: {
     type: Boolean,
@@ -44,7 +44,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:visible"]);
+const emit = defineEmits(['update:visible']);
 
 // 对话框位置
 const position = reactive({ ...props.initialPosition });
@@ -60,8 +60,8 @@ const startDrag = (e) => {
   startPos.x = e.clientX - position.x;
   startPos.y = e.clientY - position.y;
 
-  document.addEventListener("mousemove", onDrag);
-  document.addEventListener("mouseup", stopDrag);
+  document.addEventListener('mousemove', onDrag);
+  document.addEventListener('mouseup', stopDrag);
 };
 
 // 处理拖动
@@ -86,8 +86,8 @@ const onDrag = (e) => {
 // 停止拖动
 const stopDrag = () => {
   isDragging.value = false;
-  document.removeEventListener("mousemove", onDrag);
-  document.removeEventListener("mouseup", stopDrag);
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
 };
 
 // 处理对话框点击（防止点击穿透）
@@ -99,13 +99,13 @@ const handleDialogMouseDown = (e) => {
 
 // 关闭对话框
 const close = () => {
-  emit("update:visible", false);
+  emit('update:visible', false);
 };
 
 // 组件卸载时清理
 onUnmounted(() => {
-  document.removeEventListener("mousemove", onDrag);
-  document.removeEventListener("mouseup", stopDrag);
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
 });
 </script>
 

@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, PropType, ref, watch, onMounted, onBeforeUnmount, computed } from "vue";
+import { defineComponent, PropType, ref, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 
 import {
   IServerNewsWithPhotoView,
@@ -43,7 +43,7 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
-} from "@/server/ServerType";
+} from '@/server/ServerType';
 
 const props = defineProps({
   items: {
@@ -175,7 +175,7 @@ onBeforeUnmount(stopAutoPlay);
 }
 
 .slide::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -221,7 +221,7 @@ onBeforeUnmount(stopAutoPlay);
   font-size: 8rem;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
-  font-family: "Instrument Serif", serif;
+  font-family: 'Instrument Serif', serif;
   font-weight: lighter;
 }
 

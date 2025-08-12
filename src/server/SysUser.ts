@@ -3,7 +3,7 @@
  * @author hbs@bistu.edu.cn
  *
  */
-import { BASEURL, axios } from "@/http";
+import { BASEURL, axios } from '@/http';
 
 import type {
   IServerResponseData,
@@ -11,11 +11,11 @@ import type {
   IServerSysUserLoginResult,
   IServerSysUser,
   IServerUserWithPhotoView,
-} from "./ServerType";
+} from './ServerType';
 
-import { clearCookies } from "@/cookies/user";
+import { clearCookies } from '@/cookies/user';
 
-import { Pageable, Page, SimplePage, convertPage } from "@/server/ServerType";
+import { Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 
 /**
  * 用户登录
@@ -29,13 +29,10 @@ export async function serverLogin(
   username: string, //用户名
   password: string, //用户密码
   captchaCode: string, //验证码
-  captchaKey: string //验证码对应的键
+  captchaKey: string, //验证码对应的键
 ): Promise<IServerResponseData<IServerSysUserLoginResult>> {
   try {
-    let res = await axios.post<
-      any,
-      IServerResponseData<IServerSysUserLoginResult>
-    >(BASEURL.sysuser + "login", {
+    let res = await axios.post<any, IServerResponseData<IServerSysUserLoginResult>>(BASEURL.sysuser + 'login', {
       userName: username,
       password: password,
       captchaCode: captchaCode,
@@ -58,7 +55,7 @@ export async function serverLogin(
 export async function serverLoginOut() {
   try {
     clearCookies(); //删除Cookies相关数据
-    let res = await axios.post(BASEURL.sysuser + "logout");
+    let res = await axios.post(BASEURL.sysuser + 'logout');
 
     if (res) return res;
     return null;
@@ -78,18 +75,15 @@ export async function serverSignUp(
   username: string,
   password: string,
   captchaCode: string, //验证码
-  captchaKey: string //验证码对应的键
+  captchaKey: string, //验证码对应的键
 ): Promise<IServerResponseData<string> | null> {
   try {
-    let res = await axios.post<any, IServerResponseData<string> | null>(
-      BASEURL.sysuser + "signUp",
-      {
-        userName: username,
-        pwd: password,
-        captchaCode: captchaCode,
-        captchaKey: captchaKey,
-      }
-    );
+    let res = await axios.post<any, IServerResponseData<string> | null>(BASEURL.sysuser + 'signUp', {
+      userName: username,
+      pwd: password,
+      captchaCode: captchaCode,
+      captchaKey: captchaKey,
+    });
 
     return res;
   } catch (err) {
@@ -104,9 +98,7 @@ export async function serverSignUp(
  */
 export async function serverGetPublicKey(): Promise<IServerResponseData<string> | null> {
   try {
-    let res = await axios.get<any, IServerResponseData<string> | null>(
-      BASEURL.sysuser + "publicKey"
-    );
+    let res = await axios.get<any, IServerResponseData<string> | null>(BASEURL.sysuser + 'publicKey');
     return res;
   } catch (err) {
     console.log(err);
@@ -120,9 +112,7 @@ export async function serverGetPublicKey(): Promise<IServerResponseData<string> 
  */
 export async function serverGetCaptchaJpg(): Promise<IServerResponseData<ICaptcha> | null> {
   try {
-    let res = await axios.get<any, IServerResponseData<ICaptcha> | null>(
-      BASEURL.sysuser + "captcha.jpg"
-    );
+    let res = await axios.get<any, IServerResponseData<ICaptcha> | null>(BASEURL.sysuser + 'captcha.jpg');
     return res;
   } catch (err) {
     console.log(err);
@@ -136,14 +126,9 @@ export async function serverGetCaptchaJpg(): Promise<IServerResponseData<ICaptch
  * @param note
  * @returns
  */
-export async function serverUserAdd(
-  sysUser: IServerSysUser
-): Promise<IServerResponseData<string>> {
+export async function serverUserAdd(sysUser: IServerSysUser): Promise<IServerResponseData<string>> {
   try {
-    let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.sysuser + "admin/add",
-      sysUser
-    );
+    let res = await axios.post<any, IServerResponseData<string>>(BASEURL.sysuser + 'admin/add', sysUser);
     return res;
   } catch (err) {
     console.log(err);
@@ -157,14 +142,9 @@ export async function serverUserAdd(
  * @param note
  * @returns
  */
-export async function serverUserDelete(
-  sysUser: IServerSysUser
-): Promise<IServerResponseData<number>> {
+export async function serverUserDelete(sysUser: IServerSysUser): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.sysuser + "admin/delete",
-      sysUser
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.sysuser + 'admin/delete', sysUser);
     return res;
   } catch (err) {
     console.log(err);
@@ -178,14 +158,9 @@ export async function serverUserDelete(
  * @param note
  * @returns
  */
-export async function serverUserUpdate(
-  sysUser: IServerSysUser
-): Promise<IServerResponseData<number>> {
+export async function serverUserUpdate(sysUser: IServerSysUser): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.sysuser + "admin/update",
-      sysUser
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.sysuser + 'admin/update', sysUser);
     return res;
   } catch (err) {
     console.log(err);
@@ -199,14 +174,9 @@ export async function serverUserUpdate(
  * @param note
  * @returns
  */
-export async function serverUserUpdateOwnInfo(
-  sysUser: IServerSysUser
-): Promise<IServerResponseData<number>> {
+export async function serverUserUpdateOwnInfo(sysUser: IServerSysUser): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.sysuser + "auth/update-own-info",
-      sysUser
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.sysuser + 'auth/update-own-info', sysUser);
     return res;
   } catch (err) {
     console.log(err);
@@ -220,14 +190,9 @@ export async function serverUserUpdateOwnInfo(
  * @param note
  * @returns
  */
-export async function serverUserUpdateOwnPwd(
-  sysUser: IServerSysUser
-): Promise<IServerResponseData<number>> {
+export async function serverUserUpdateOwnPwd(sysUser: IServerSysUser): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.sysuser + "auth/update-own-pwd",
-      sysUser
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.sysuser + 'auth/update-own-pwd', sysUser);
     return res;
   } catch (err) {
     console.log(err);
@@ -241,14 +206,9 @@ export async function serverUserUpdateOwnPwd(
  * @param note
  * @returns
  */
-export async function serverUserResetPwd(
-  sysUser: IServerSysUser
-): Promise<IServerResponseData<number>> {
+export async function serverUserResetPwd(sysUser: IServerSysUser): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.sysuser + "admin/reset-pwd",
-      sysUser
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.sysuser + 'admin/reset-pwd', sysUser);
     return res;
   } catch (err) {
     console.log(err);
@@ -262,18 +222,13 @@ export async function serverUserResetPwd(
  * @param note
  * @returns
  */
-export async function serverGetUserByUserName(
-  userName: string
-): Promise<IServerResponseData<IServerSysUser>> {
+export async function serverGetUserByUserName(userName: string): Promise<IServerResponseData<IServerSysUser>> {
   try {
-    let res = await axios.get<any, IServerResponseData<IServerSysUser>>(
-      BASEURL.sysuser + "get-by-user-name",
-      {
-        params: {
-          userName: userName,
-        },
-      }
-    );
+    let res = await axios.get<any, IServerResponseData<IServerSysUser>>(BASEURL.sysuser + 'get-by-user-name', {
+      params: {
+        userName: userName,
+      },
+    });
     return res;
   } catch (err) {
     console.log(err);
@@ -287,13 +242,9 @@ export async function serverGetUserByUserName(
  * @param note
  * @returns
  */
-export async function serverGetUserBySysUserId(
-  id: number
-): Promise<IServerResponseData<IServerSysUser>> {
+export async function serverGetUserBySysUserId(id: number): Promise<IServerResponseData<IServerSysUser>> {
   try {
-    let res = await axios.get<any, IServerResponseData<IServerSysUser>>(
-      BASEURL.sysuser + id
-    );
+    let res = await axios.get<any, IServerResponseData<IServerSysUser>>(BASEURL.sysuser + id);
     return res;
   } catch (err) {
     console.log(err);
@@ -309,18 +260,15 @@ export async function serverGetUserBySysUserId(
  */
 export async function serverGetUserPage(
   pageNo: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IServerResponseData<Page<IServerSysUser>>> {
   try {
-    let res = await axios.get<any, IServerResponseData<Page<IServerSysUser>>>(
-      BASEURL.sysuser + "page",
-      {
-        params: {
-          page: pageNo,
-          size: pageSize,
-        },
-      }
-    );
+    let res = await axios.get<any, IServerResponseData<Page<IServerSysUser>>>(BASEURL.sysuser + 'page', {
+      params: {
+        page: pageNo,
+        size: pageSize,
+      },
+    });
 
     return res;
   } catch (err) {
@@ -334,13 +282,11 @@ export async function serverGetUserPage(
  * @param files
  * @returns
  */
-export async function serverAddUserPhotoUploadTempFiles(
-  files: FormData
-): Promise<IServerResponseData<string>> {
+export async function serverAddUserPhotoUploadTempFiles(files: FormData): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.sysuser + "admin/add-user-photo-temp-file",
-      files
+      BASEURL.sysuser + 'admin/add-user-photo-temp-file',
+      files,
     );
     return res;
   } catch (err) {
@@ -354,13 +300,11 @@ export async function serverAddUserPhotoUploadTempFiles(
  * @param files
  * @returns
  */
-export async function serverDeleteUserPhotoUploadTempFiles(
-  files: FormData
-): Promise<IServerResponseData<string>> {
+export async function serverDeleteUserPhotoUploadTempFiles(files: FormData): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.sysuser + "admin/delete-user-photo-temp-file",
-      files
+      BASEURL.sysuser + 'admin/delete-user-photo-temp-file',
+      files,
     );
     return res;
   } catch (err) {
@@ -375,12 +319,12 @@ export async function serverDeleteUserPhotoUploadTempFiles(
  * @returns
  */
 export async function serverAddUserPhotoUploadTempFilesByAuthenticatedUser(
-  files: FormData
+  files: FormData,
 ): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.sysuser + "auth/add-user-photo-temp-file",
-      files
+      BASEURL.sysuser + 'auth/add-user-photo-temp-file',
+      files,
     );
     return res;
   } catch (err) {
@@ -395,12 +339,12 @@ export async function serverAddUserPhotoUploadTempFilesByAuthenticatedUser(
  * @returns
  */
 export async function serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser(
-  files: FormData
+  files: FormData,
 ): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.sysuser + "auth/delete-user-photo-temp-file",
-      files
+      BASEURL.sysuser + 'auth/delete-user-photo-temp-file',
+      files,
     );
     return res;
   } catch (err) {
@@ -409,18 +353,13 @@ export async function serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser(
   }
 }
 
-export async function serverGetUserPhotoFileById(
-  userId: number
-): Promise<IServerResponseData<string>> {
+export async function serverGetUserPhotoFileById(userId: number): Promise<IServerResponseData<string>> {
   try {
-    let res = await axios.get<any, IServerResponseData<string>>(
-      BASEURL.sysuser + "download-photo-file-in-base64",
-      {
-        params: {
-          userId: userId,
-        },
-      }
-    );
+    let res = await axios.get<any, IServerResponseData<string>>(BASEURL.sysuser + 'download-photo-file-in-base64', {
+      params: {
+        userId: userId,
+      },
+    });
 
     return res;
   } catch (err) {
@@ -429,14 +368,11 @@ export async function serverGetUserPhotoFileById(
   }
 }
 
-export async function serverGetAllUserWithPhotoView(): Promise<
-  IServerResponseData<IServerUserWithPhotoView[]>
-> {
+export async function serverGetAllUserWithPhotoView(): Promise<IServerResponseData<IServerUserWithPhotoView[]>> {
   try {
-    let res = await axios.get<
-      any,
-      IServerResponseData<IServerUserWithPhotoView[]>
-    >(BASEURL.sysuser + "get-all-user-view");
+    let res = await axios.get<any, IServerResponseData<IServerUserWithPhotoView[]>>(
+      BASEURL.sysuser + 'get-all-user-view',
+    );
 
     return res;
   } catch (err) {

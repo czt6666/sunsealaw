@@ -10,23 +10,23 @@ import {
   PropType,
   watch,
   shallowRef,
-} from "vue";
+} from 'vue';
 
-import { registerDragonSupport } from "@lexical/dragon";
-import { createEmptyHistoryState, registerHistory } from "@lexical/history";
-import { mergeRegister } from "@lexical/utils";
-import { HeadingNode, QuoteNode, registerRichText } from "@lexical/rich-text";
-import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
+import { registerDragonSupport } from '@lexical/dragon';
+import { createEmptyHistoryState, registerHistory } from '@lexical/history';
+import { mergeRegister } from '@lexical/utils';
+import { HeadingNode, QuoteNode, registerRichText } from '@lexical/rich-text';
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import {
   $getSelectionStyleValueForProperty,
   $isParentElementRTL,
   $patchStyleText,
   $setBlocksType,
-} from "@lexical/selection";
-import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
+} from '@lexical/selection';
+import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 
-import { ElMessage, ElMessageBox } from "element-plus";
-import Divider from "./Divider";
+import { ElMessage, ElMessageBox } from 'element-plus';
+import Divider from './Divider';
 
 import {
   createEditor,
@@ -59,21 +59,21 @@ import {
   LexicalNode,
   Klass,
   RangeSelection,
-} from "lexical";
+} from 'lexical';
 
-import { $isTableNode, $isTableSelection } from "@lexical/table";
+import { $isTableNode, $isTableSelection } from '@lexical/table';
 
-import PlaygroundEditorTheme from "./PlaygroundEditorTheme";
+import PlaygroundEditorTheme from './PlaygroundEditorTheme';
 
-import ColorDropdown from "../dropdown/ColorDropdown.vue";
+import ColorDropdown from '../dropdown/ColorDropdown.vue';
 
-import FindReplaceDialog from "./FindReplaceDialog.vue";
+import FindReplaceDialog from './FindReplaceDialog.vue';
 
-import { escapeRegExp } from "lodash";
+import { escapeRegExp } from 'lodash';
 
-import FontDropdown from "@/components/dropdown/FontDropdown.vue";
-import DocumentStyleDropdown from "../dropdown/DocumentStyleDropdown.vue";
-import FontSizeDropdown from "../dropdown/FontSizeDropdown.vue";
+import FontDropdown from '@/components/dropdown/FontDropdown.vue';
+import DocumentStyleDropdown from '../dropdown/DocumentStyleDropdown.vue';
+import FontSizeDropdown from '../dropdown/FontSizeDropdown.vue';
 
 const props = defineProps({});
 
@@ -88,11 +88,11 @@ const textColorButtonRef = ref<HTMLDivElement | null>(null);
 const textBackgroundColorButtonRef = ref<HTMLDivElement | null>(null);
 const showTextColorOptionsDropDown = ref(false);
 const showTextBackgroundColorOptionsDropDown = ref(false);
-const color = ref("#000000");
-const colorBackground = ref("#ffffff");
-const fontfamily = ref("Arial");
+const color = ref('#000000');
+const colorBackground = ref('#ffffff');
+const fontfamily = ref('Arial');
 const fontsize = ref(12);
-const documentStyle = ref("Normal");
+const documentStyle = ref('Normal');
 //编辑器状态
 
 //编辑器配置
@@ -105,9 +105,9 @@ onMounted(async () => {
 
 //event
 const emit = defineEmits<{
-  (e: "onContentChanged", text: string): void;
-  (e: "onContentChangedJson", jsonText: string): void;
-  (e: "onContentChangedHtml", text: string): void;
+  (e: 'onContentChanged', text: string): void;
+  (e: 'onContentChangedJson', jsonText: string): void;
+  (e: 'onContentChangedHtml', text: string): void;
 }>();
 
 const findReplaceDialogVisible = ref(false);
@@ -116,7 +116,7 @@ const showReplaceArea = ref(false);
 const PlaygroundNodes: Array<Klass<LexicalNode>> = [HeadingNode];
 
 const editorConfig = {
-  namespace: "LexicalRichTextEditor", // 添加唯一的 namespace
+  namespace: 'LexicalRichTextEditor', // 添加唯一的 namespace
   theme: PlaygroundEditorTheme,
   editable: true,
   nodes: [...PlaygroundNodes],
@@ -172,16 +172,15 @@ const FONT_SIZE_DEC_COMMAND: LexicalCommand<string> = createCommand();
 const TEXT_COLOR_COMMAND: LexicalCommand<string> = createCommand();
 const TEXT_BACKGROUND_COLOR_COMMAND: LexicalCommand<string> = createCommand();
 
-const searchText = ref<string>("");
-const replaceText = ref<string>("");
+const searchText = ref<string>('');
+const replaceText = ref<string>('');
 /**
  * 更新工具栏
  */
 const updateToolbar = () => {
   const selection = $getSelection();
   // 判断是否为有效选区且非空
-  const hasValidSelection =
-    $isRangeSelection(selection) && !selection.isCollapsed();
+  const hasValidSelection = $isRangeSelection(selection) && !selection.isCollapsed();
 
   canEditorCut.value = hasValidSelection;
   canEditorCopy.value = hasValidSelection;
@@ -191,29 +190,15 @@ const updateToolbar = () => {
   canFind.value = canDeleteAll.value;
   canReplace.value = canDeleteAll.value;
   if ($isRangeSelection(selection) || $isTableSelection(selection)) {
-    isBold.value = selection?.hasFormat("bold");
-    isItalic.value = selection?.hasFormat("italic");
-    isUnderline.value = selection?.hasFormat("underline");
-    isStrikethrough.value = selection?.hasFormat("strikethrough");
+    isBold.value = selection?.hasFormat('bold');
+    isItalic.value = selection?.hasFormat('italic');
+    isUnderline.value = selection?.hasFormat('underline');
+    isStrikethrough.value = selection?.hasFormat('strikethrough');
 
-    fontfamily.value = $getSelectionStyleValueForProperty(
-      selection,
-      "font-family",
-      "Arial"
-    );
-    fontsize.value = parseInt(
-      $getSelectionStyleValueForProperty(selection, "font-size", "15px")
-    );
-    color.value = $getSelectionStyleValueForProperty(
-      selection,
-      "color",
-      "#000"
-    );
-    colorBackground.value = $getSelectionStyleValueForProperty(
-      selection,
-      "background-color",
-      "#fff"
-    );
+    fontfamily.value = $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial');
+    fontsize.value = parseInt($getSelectionStyleValueForProperty(selection, 'font-size', '15px'));
+    color.value = $getSelectionStyleValueForProperty(selection, 'color', '#000');
+    colorBackground.value = $getSelectionStyleValueForProperty(selection, 'background-color', '#fff');
   }
 };
 
@@ -257,21 +242,18 @@ const onBlur = () => {
   // canDeleteAll.value = false;
 };
 
-const applyTextStyle = (
-  styles: Record<string, string>,
-  skipHistoryStack?: boolean
-) => {
+const applyTextStyle = (styles: Record<string, string>, skipHistoryStack?: boolean) => {
   editor.update(
     () => {
       const selection = $getSelection();
       console.log(selection);
 
       if (selection !== null) {
-        console.log("applyTextStyle", styles);
+        console.log('applyTextStyle', styles);
         $patchStyleText(selection, styles);
       }
     },
-    skipHistoryStack ? { tag: "historic" } : {}
+    skipHistoryStack ? { tag: 'historic' } : {},
   );
 };
 
@@ -285,7 +267,7 @@ async function isClipboardEmpty() {
     try {
       const text = await navigator.clipboard.readText();
       //console.log("Clipboard API 访问成功，剪贴板内容：", text);
-      return text.trim() === "";
+      return text.trim() === '';
     } catch (error) {
       //console.warn("Clipboard API 访问失败，尝试备用方案");
     }
@@ -293,22 +275,22 @@ async function isClipboardEmpty() {
 
   // 备用方案：创建临时输入框
   return new Promise((resolve) => {
-    const tempInput = document.createElement("input");
-    tempInput.style.position = "fixed";
-    tempInput.style.opacity = "0";
+    const tempInput = document.createElement('input');
+    tempInput.style.position = 'fixed';
+    tempInput.style.opacity = '0';
 
-    tempInput.addEventListener("paste", (e) => {
+    tempInput.addEventListener('paste', (e) => {
       if (e && e.clipboardData) {
         e.preventDefault();
-        const text = e.clipboardData.getData("text/plain").trim();
+        const text = e.clipboardData.getData('text/plain').trim();
         document.body.removeChild(tempInput);
-        resolve(text === "");
+        resolve(text === '');
       }
     });
 
     document.body.appendChild(tempInput);
     tempInput.focus();
-    document.execCommand("paste");
+    document.execCommand('paste');
   });
 }
 
@@ -319,21 +301,21 @@ function prepopulatedRichText() {
 
   const paragraph = $createParagraphNode();
   paragraph.append(
-    $createTextNode("This is a demo environment built with "),
-    $createTextNode("lexical").toggleFormat("code"),
-    $createTextNode("."),
-    $createTextNode(" Try typing in "),
-    $createTextNode("some text").toggleFormat("bold"),
-    $createTextNode(" with ").setStyle("color: red"),
-    $createTextNode("different").toggleFormat("italic"),
-    $createTextNode(" formats.")
+    $createTextNode('This is a demo environment built with '),
+    $createTextNode('lexical').toggleFormat('code'),
+    $createTextNode('.'),
+    $createTextNode(' Try typing in '),
+    $createTextNode('some text').toggleFormat('bold'),
+    $createTextNode(' with ').setStyle('color: red'),
+    $createTextNode('different').toggleFormat('italic'),
+    $createTextNode(' formats.'),
   );
   root.append(paragraph);
 }
 
 onMounted(() => {
   //  insert();
-  const contentEditableElement = document.getElementById("richtexteditor");
+  const contentEditableElement = document.getElementById('richtexteditor');
 
   editor.setRootElement(contentEditableElement);
 
@@ -344,34 +326,32 @@ onMounted(() => {
     registerHistory(editor, createEmptyHistoryState(), 300),
     editor.registerRootListener((rootElement) => {
       if (rootElement) {
-        rootElement.addEventListener("focus", onFocus);
-        rootElement.addEventListener("blur", onBlur);
+        rootElement.addEventListener('focus', onFocus);
+        rootElement.addEventListener('blur', onBlur);
       }
     }),
-    editor.registerUpdateListener(
-      ({ editorState, dirtyElements, dirtyLeaves }) => {
-        editorState.read(() => {
-          updateToolbar();
-        });
+    editor.registerUpdateListener(({ editorState, dirtyElements, dirtyLeaves }) => {
+      editorState.read(() => {
+        updateToolbar();
+      });
 
-        const json = editorState.toJSON();
-        emit("onContentChangedJson", JSON.stringify(json));
+      const json = editorState.toJSON();
+      emit('onContentChangedJson', JSON.stringify(json));
 
-        const html = convertToHtml();
-        emit("onContentChangedHtml", html);
+      const html = convertToHtml();
+      emit('onContentChangedHtml', html);
 
-        // 检查是否有实际内容变更（避免光标移动等无关操作）
-        if (dirtyElements.size > 0 || dirtyLeaves.size > 0) {
-          //  const currentState = editor.getEditorState();
-          // const currentText = currentState.read(() =>
-          //   $getRoot().getTextContent()
-          // );
+      // 检查是否有实际内容变更（避免光标移动等无关操作）
+      if (dirtyElements.size > 0 || dirtyLeaves.size > 0) {
+        //  const currentState = editor.getEditorState();
+        // const currentText = currentState.read(() =>
+        //   $getRoot().getTextContent()
+        // );
 
-          // console.log("内容已修改:", currentText);
-          documentDirty.value = true;
-        }
+        // console.log("内容已修改:", currentText);
+        documentDirty.value = true;
       }
-    ),
+    }),
     editor.registerCommand(
       SELECTION_CHANGE_COMMAND,
       () => {
@@ -385,7 +365,7 @@ onMounted(() => {
 
         return false;
       },
-      LowPriority
+      LowPriority,
     ),
 
     editor.registerCommand(
@@ -395,7 +375,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
 
     editor.registerCommand(
@@ -404,7 +384,7 @@ onMounted(() => {
         canEditorUndo.value = payload;
         return false;
       },
-      LowPriority
+      LowPriority,
     ),
     editor.registerCommand(
       CAN_REDO_COMMAND,
@@ -412,7 +392,7 @@ onMounted(() => {
         canEditorRedo.value = payload;
         return false;
       },
-      LowPriority
+      LowPriority,
     ),
     // Cut, Copy, Paste
     editor.registerCommand(
@@ -441,7 +421,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     editor.registerCommand(
       COPY_COMMAND,
@@ -464,7 +444,7 @@ onMounted(() => {
         return true;
       },
       // 优先级（数字越小优先级越高）
-      LowPriority
+      LowPriority,
     ),
     editor.registerCommand(
       PASTE_COMMAND,
@@ -503,7 +483,7 @@ onMounted(() => {
 
         return true;
       },
-      LowPriority
+      LowPriority,
     ),
 
     editor.registerCommand(
@@ -517,7 +497,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     editor.registerCommand(
       DELETE_ALL_COMMAND,
@@ -531,7 +511,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
 
     // 查找
@@ -546,7 +526,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     //替换
     editor.registerCommand(
@@ -560,7 +540,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     //字体
     editor.registerCommand(
@@ -569,12 +549,12 @@ onMounted(() => {
         editor.update(() => {
           // Get the RootNode from the EditorState
           showFontOptionsDropDown.value = false;
-          applyTextStyle({ "font-family": fontfamily });
+          applyTextStyle({ 'font-family': fontfamily });
         });
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     //字体大小
     editor.registerCommand(
@@ -583,12 +563,12 @@ onMounted(() => {
         editor.update(() => {
           // Get the RootNode from the EditorState
           showFontSizeOptionsDropDown.value = false;
-          applyTextStyle({ "font-size": fontsize + "px" });
+          applyTextStyle({ 'font-size': fontsize + 'px' });
         });
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     //样式
     editor.registerCommand(
@@ -600,20 +580,17 @@ onMounted(() => {
           showDocumentStyleOptionsDropDown.value = false;
           documentStyle.value = payload;
 
-          if (payload === "Normal")
-            $setBlocksType(selection, () => $createParagraphNode());
-          else if (payload === "Heading 1") {
-            console.log("documentStyle 1");
-            $setBlocksType(selection, () => $createHeadingNode("h1"));
-          } else if (payload === "Heading 2")
-            $setBlocksType(selection, () => $createHeadingNode("h2"));
-          else if (payload === "Heading 3")
-            $setBlocksType(selection, () => $createHeadingNode("h3"));
+          if (payload === 'Normal') $setBlocksType(selection, () => $createParagraphNode());
+          else if (payload === 'Heading 1') {
+            console.log('documentStyle 1');
+            $setBlocksType(selection, () => $createHeadingNode('h1'));
+          } else if (payload === 'Heading 2') $setBlocksType(selection, () => $createHeadingNode('h2'));
+          else if (payload === 'Heading 3') $setBlocksType(selection, () => $createHeadingNode('h3'));
         });
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     //增加字体大小
     editor.registerCommand(
@@ -622,14 +599,14 @@ onMounted(() => {
         editor.update(() => {
           // Get the RootNode from the EditorState
 
-          applyTextStyle({ "font-size": fontsize.value + 2 + "px" });
+          applyTextStyle({ 'font-size': fontsize.value + 2 + 'px' });
 
           //  editorConfiguration.value.fontsize = val + "px";
         });
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     //减小字体大小
     editor.registerCommand(
@@ -639,13 +616,13 @@ onMounted(() => {
           // Get the RootNode from the EditorState
           let temp = fontsize.value - 2;
           if (temp <= 5) temp = 5;
-          applyTextStyle({ "font-size": temp + "px" });
+          applyTextStyle({ 'font-size': temp + 'px' });
           // editorConfiguration.value.fontsize = val + "px";
         });
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     // 字体颜色
     editor.registerCommand(
@@ -660,7 +637,7 @@ onMounted(() => {
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
+      LowPriority,
     ),
     // 背景色
     editor.registerCommand(
@@ -670,13 +647,13 @@ onMounted(() => {
           // Get the RootNode from the EditorState
           colorBackground.value = payload;
           showTextBackgroundColorOptionsDropDown.value = false;
-          applyTextStyle({ "background-color": colorBackground.value });
+          applyTextStyle({ 'background-color': colorBackground.value });
         });
 
         return true; // Return true to stop propagation.
       },
-      LowPriority
-    )
+      LowPriority,
+    ),
   );
 
   editor.focus();
@@ -698,7 +675,7 @@ const getBrief = () => {
     return $getRoot().getTextContent();
   });
 
-  if (text.length > 100) return text.substring(0, 100) + "...";
+  if (text.length > 100) return text.substring(0, 100) + '...';
   return text;
 };
 
@@ -728,7 +705,7 @@ const setText = (content: string) => {
 
 const loadJson = (json: string) => {
   // 检查 JSON 字符串是否为空或仅包含空格
-  const isEmptyJson = json.trim() === "";
+  const isEmptyJson = json.trim() === '';
 
   if (isEmptyJson) {
     // 如果 JSON 字符串为空或仅包含空格，不执行任何操作
@@ -747,7 +724,7 @@ const loadHtml = (htmlString: string) => {
     root.clear();
 
     const parser = new DOMParser();
-    const dom = parser.parseFromString(htmlString, "text/html");
+    const dom = parser.parseFromString(htmlString, 'text/html');
 
     // Once you have the DOM instance it's easy to generate LexicalNodes.
     const nodes = $generateNodesFromDOM(editor, dom);
@@ -784,7 +761,7 @@ function highlightTextRange(
   bold: boolean, //加粗
   italic: boolean, //斜体
   underline: boolean, //下划线
-  strikethrough: boolean //删除线
+  strikethrough: boolean, //删除线
 ): void {
   editor.update(() => {
     const root = $getRoot();
@@ -802,12 +779,9 @@ function highlightTextRange(
     });
 
     // 边界检查
-    const totalLength = textNodes.reduce(
-      (acc, node) => acc + node.getTextContent().length,
-      0
-    );
+    const totalLength = textNodes.reduce((acc, node) => acc + node.getTextContent().length, 0);
     if (startPos < 0 || endPos > totalLength || startPos > endPos) {
-      console.error("无效的位置范围");
+      console.error('无效的位置范围');
       return;
     }
 
@@ -843,25 +817,22 @@ function highlightTextRange(
     // 创建选区
     if (startNode && endNode) {
       const rangeSelection: RangeSelection = $createRangeSelection();
-      rangeSelection.anchor.set(startNode.getKey(), startOffset, "text");
-      rangeSelection.focus.set(endNode.getKey(), endOffset, "text");
+      rangeSelection.anchor.set(startNode.getKey(), startOffset, 'text');
+      rangeSelection.focus.set(endNode.getKey(), endOffset, 'text');
       $setSelection(rangeSelection);
 
       // 应用前景色样式
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
         if (setColor) $patchStyleText(selection, { color: color });
-        if (setBgColor)
-          $patchStyleText(selection, { "background-color": bgColor });
-        if (bold) $patchStyleText(selection, { "font-weight": "bold" });
-        if (italic) $patchStyleText(selection, { "font-style": "italic" });
-        if (underline)
-          $patchStyleText(selection, { "text-decoration": "underline" });
-        if (strikethrough)
-          $patchStyleText(selection, { "text-decoration": "line-through" });
+        if (setBgColor) $patchStyleText(selection, { 'background-color': bgColor });
+        if (bold) $patchStyleText(selection, { 'font-weight': 'bold' });
+        if (italic) $patchStyleText(selection, { 'font-style': 'italic' });
+        if (underline) $patchStyleText(selection, { 'text-decoration': 'underline' });
+        if (strikethrough) $patchStyleText(selection, { 'text-decoration': 'line-through' });
       }
     } else {
-      console.error("无法定位文本节点");
+      console.error('无法定位文本节点');
     }
   });
 }
@@ -893,7 +864,7 @@ function insertText(beginLineNo: number, newText: string) {
       beginIndex = index;
       break;
     }
-    index = text.indexOf("\n", index);
+    index = text.indexOf('\n', index);
     if (index >= 0) {
       index++;
       line++;
@@ -905,7 +876,7 @@ function insertText(beginLineNo: number, newText: string) {
 
   //插入的是新行。如果插在最后面的话，需要判断最后的结尾有无\n
   if (beginIndex == text.length) {
-    if (text.substring(text.length - 1) != "\n") text = text + "\n";
+    if (text.substring(text.length - 1) != '\n') text = text + '\n';
   }
   text = text.substring(0, beginIndex) + newText + text.substring(beginIndex);
 
@@ -932,14 +903,14 @@ onUnmounted(() => {
   unregisterMergeListener?.();
 });
 
-const filePath = ref("");
+const filePath = ref('');
 const fileOpenRef = ref<HTMLTextAreaElement>();
 /**
  * 打开文件
  */
 const onFileOpen = () => {
   if (fileOpenRef.value) {
-    fileOpenRef.value.dispatchEvent(new MouseEvent("click"));
+    fileOpenRef.value.dispatchEvent(new MouseEvent('click'));
   }
 };
 const fileChange = async (event: Event) => {
@@ -976,7 +947,7 @@ const fileChange = async (event: Event) => {
     //文件加载完成后的回调函数
     reader.onload = () => {
       clearText();
-      setText(reader.result + "");
+      setText(reader.result + '');
     };
 
     //读取文件
@@ -984,13 +955,13 @@ const fileChange = async (event: Event) => {
       //  const encoding = await chardet.detectFile(file);
       //  if (encoding) reader.readAsText(file, encoding);
       //  else reader.readAsText(file, "utf-8");
-      reader.readAsText(file, "utf-8");
+      reader.readAsText(file, 'utf-8');
     }
   } else {
-    ElMessageBox.alert("Only txt files can be opened", "warning", {
+    ElMessageBox.alert('Only txt files can be opened', 'warning', {
       // if you want to disable its autofocus
       // autofocus: false,
-      confirmButtonText: "OK",
+      confirmButtonText: 'OK',
     });
     return;
   }
@@ -1037,11 +1008,11 @@ interface MatchResult {
   end: number;
 }
 
-import { ISearchOptions } from "@/components/lexical/FindReplaceDialog.vue";
+import { ISearchOptions } from '@/components/lexical/FindReplaceDialog.vue';
 
 let searchResults = ref<MatchResult[]>([]);
 let currentMatchIndex = ref(-1);
-let lastSearchQuery = ref("");
+let lastSearchQuery = ref('');
 let lastOptions = ref<ISearchOptions>({});
 
 function shallowEqual(a: any, b: any): boolean {
@@ -1079,10 +1050,7 @@ function searchNodes(query: string, options: ISearchOptions): MatchResult[] {
       let match;
 
       // 为每个节点创建独立的正则实例
-      const regExp = new RegExp(
-        options.regex ? query : escapeRegExp(query),
-        options.caseSensitive ? "g" : "gi"
-      );
+      const regExp = new RegExp(options.regex ? query : escapeRegExp(query), options.caseSensitive ? 'g' : 'gi');
 
       while ((match = regExp.exec(text)) !== null) {
         matches.push({
@@ -1136,7 +1104,7 @@ function findNext(query: string, options: ISearchOptions = {}) {
       console.log(currentMatchIndex);
       highlightMatch(searchResults.value[currentMatchIndex.value]);
     } else {
-      console.log("selection:", selection);
+      console.log('selection:', selection);
     }
   });
 }
@@ -1213,8 +1181,8 @@ function highlightMatch(match: MatchResult) {
 
     if (domNode && domNode.isAttached()) {
       const rangeSelection = $createRangeSelection();
-      rangeSelection.anchor.set(domNode.__key, start, "text");
-      rangeSelection.focus.set(domNode.__key, end, "text");
+      rangeSelection.anchor.set(domNode.__key, start, 'text');
+      rangeSelection.focus.set(domNode.__key, end, 'text');
       $setSelection(rangeSelection);
     }
   });
@@ -1226,11 +1194,7 @@ function highlightMatch(match: MatchResult) {
  * @param targetOffset - 目标偏移量
  * @param focusEditor - 是否聚焦编辑器（默认 true）
  */
-function moveCursorToPosition(
-  targetKey: string,
-  targetOffset: number,
-  focusEditor = true
-) {
+function moveCursorToPosition(targetKey: string, targetOffset: number, focusEditor = true) {
   editor.update(() => {
     // 创建新选区
     const newSelection = $createRangeSelection();
@@ -1239,13 +1203,13 @@ function moveCursorToPosition(
     const targetNode = $getNodeByKey(targetKey);
 
     if (!targetNode) {
-      console.error("Node not exists");
+      console.error('Node not exists');
       return;
     }
 
     // 设置选区起终点（折叠选区）
-    newSelection.anchor.set(targetKey, targetOffset, "text");
-    newSelection.focus.set(targetKey, targetOffset, "text");
+    newSelection.anchor.set(targetKey, targetOffset, 'text');
+    newSelection.focus.set(targetKey, targetOffset, 'text');
 
     // 应用新选区
     $setSelection(newSelection);
@@ -1291,7 +1255,7 @@ function moveCursorToDocumentStart() {
     }
 
     // 查找第一个可定位的位置
-    let targetKey: string = "";
+    let targetKey: string = '';
     let targetOffset: number = 0;
 
     if ($isTextNode(firstNode)) {
@@ -1301,8 +1265,8 @@ function moveCursorToDocumentStart() {
     }
 
     // 设置选区位置
-    selection.anchor.set(targetKey, targetOffset, "text");
-    selection.focus.set(targetKey, targetOffset, "text");
+    selection.anchor.set(targetKey, targetOffset, 'text');
+    selection.focus.set(targetKey, targetOffset, 'text');
 
     // 应用选区
     $setSelection(selection);
@@ -1332,9 +1296,9 @@ defineExpose({
 const clipboardEventPasteHandler = async () => {
   const data = new DataTransfer();
   const items = await navigator.clipboard.readText();
-  data.setData("text/plain", items);
+  data.setData('text/plain', items);
 
-  const event = new ClipboardEvent("paste", {
+  const event = new ClipboardEvent('paste', {
     clipboardData: data,
   });
   editor.dispatchCommand(PASTE_COMMAND, event);
@@ -1346,14 +1310,7 @@ const clipboardEventPasteHandler = async () => {
     <!--打开文件的控件，处于隐藏模式
   accept=".txt,,csc,.c,.cc,.cpp,.cxx,.cxx,.h,.hpp,.hxx,.hxx,.java,.js,.m,.mm,.php,.py,.ps1,.rb,.swift,.ts,.tsx,.sh,.vue"
   -->
-    <input
-      v-show="false"
-      ref="fileOpenRef"
-      accept=".*"
-      type="file"
-      :value="filePath"
-      @change="fileChange"
-    />
+    <input v-show="false" ref="fileOpenRef" accept=".*" type="file" :value="filePath" @change="fileChange" />
     <div ref="toolbarRef" class="toolbar">
       <button
         :disabled="!canFileOpen"
@@ -1499,26 +1456,13 @@ const clipboardEventPasteHandler = async () => {
         ref="documentStyleButtonRef"
         class="toolbar-item spaced"
         aria-label="Formatting ppt"
-        @click="
-          showDocumentStyleOptionsDropDown = !showDocumentStyleOptionsDropDown
-        "
+        @click="showDocumentStyleOptionsDropDown = !showDocumentStyleOptionsDropDown"
       >
         <i class="format h1" v-if="documentStyle === 'Headling 1'" />
         <i class="format h2" v-else-if="documentStyle === 'Headling 2'" />
         <i class="format h3" v-else-if="documentStyle === 'Headling 3'" />
-        <i
-          class="format paragraph_normal"
-          v-else-if="documentStyle === 'Normal'"
-        />
-        <div
-          style="
-            width: 100px;
-            border: solid 1px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-          "
-        >
+        <i class="format paragraph_normal" v-else-if="documentStyle === 'Normal'" />
+        <div style="width: 100px; border: solid 1px; text-align: left; display: flex; align-items: center">
           <div style="margin-left: 5px">{{ documentStyle }}</div>
         </div>
         <i class="chevron-down" />
@@ -1528,10 +1472,7 @@ const clipboardEventPasteHandler = async () => {
           v-if="showDocumentStyleOptionsDropDown"
           v-model:showOptionsDropDown="showDocumentStyleOptionsDropDown"
           :toolbar-ref="documentStyleButtonRef"
-          @onDocStyleClick="
-            (style:string) =>
-              editor.dispatchCommand(TEXT_DOC_STYLE_COMMAND, style)
-          "
+          @onDocStyleClick="(style: string) => editor.dispatchCommand(TEXT_DOC_STYLE_COMMAND, style)"
         />
       </Teleport>
 
@@ -1543,15 +1484,7 @@ const clipboardEventPasteHandler = async () => {
         @click="showFontOptionsDropDown = !showFontOptionsDropDown"
       >
         <i class="format font" />
-        <div
-          style="
-            width: 100px;
-            border: solid 1px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-          "
-        >
+        <div style="width: 100px; border: solid 1px; text-align: left; display: flex; align-items: center">
           <div style="margin-left: 5px">{{ fontfamily }}</div>
         </div>
         <i class="chevron-down" />
@@ -1561,9 +1494,7 @@ const clipboardEventPasteHandler = async () => {
           v-if="showFontOptionsDropDown"
           v-model:showOptionsDropDown="showFontOptionsDropDown"
           :toolbar-ref="fontButtonRef"
-          @onFontClick="
-            (fontfamily:string) => editor.dispatchCommand(TEXT_FONT_COMMAND, fontfamily)
-          "
+          @onFontClick="(fontfamily: string) => editor.dispatchCommand(TEXT_FONT_COMMAND, fontfamily)"
         />
       </Teleport>
 
@@ -1576,15 +1507,7 @@ const clipboardEventPasteHandler = async () => {
       >
         <i class="format fontsize2" />
 
-        <div
-          style="
-            width: 60px;
-            border: solid 1px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-          "
-        >
+        <div style="width: 60px; border: solid 1px; text-align: left; display: flex; align-items: center">
           <div style="margin-left: 5px">{{ fontsize }}px</div>
         </div>
         <i class="chevron-down" />
@@ -1594,9 +1517,7 @@ const clipboardEventPasteHandler = async () => {
           v-if="showFontSizeOptionsDropDown"
           v-model:showOptionsDropDown="showFontSizeOptionsDropDown"
           :toolbar-ref="fontSizeButtonRef"
-          @onFontSizeClick="
-            (fontsize:number) => editor.dispatchCommand(FONT_SIZE_COMMAND, fontsize)
-          "
+          @onFontSizeClick="(fontsize: number) => editor.dispatchCommand(FONT_SIZE_COMMAND, fontsize)"
         />
       </Teleport>
 
@@ -1628,9 +1549,7 @@ const clipboardEventPasteHandler = async () => {
         @click="showTextColorOptionsDropDown = !showTextColorOptionsDropDown"
       >
         <i class="format color" />
-        <span
-          :style="`background-color:${color};width:20px;height:100%;border:solid 1px;`"
-        ></span>
+        <span :style="`background-color:${color};width:20px;height:100%;border:solid 1px;`"></span>
         <i class="chevron-down" />
       </button>
       <Teleport to="body">
@@ -1638,9 +1557,7 @@ const clipboardEventPasteHandler = async () => {
           v-if="showTextColorOptionsDropDown"
           v-model:showColorOptionsDropDown="showTextColorOptionsDropDown"
           :toolbar-ref="textColorButtonRef"
-          @onColorChanged="
-            (colorval:string) => editor.dispatchCommand(TEXT_COLOR_COMMAND, colorval)
-          "
+          @onColorChanged="(colorval: string) => editor.dispatchCommand(TEXT_COLOR_COMMAND, colorval)"
         />
       </Teleport>
 
@@ -1649,45 +1566,29 @@ const clipboardEventPasteHandler = async () => {
         ref="textBackgroundColorButtonRef"
         class="toolbar-item spaced"
         aria-label="Formatting ppt"
-        @click="
-          showTextBackgroundColorOptionsDropDown =
-            !showTextBackgroundColorOptionsDropDown
-        "
+        @click="showTextBackgroundColorOptionsDropDown = !showTextBackgroundColorOptionsDropDown"
       >
         <i class="format bgcolor" />
-        <span
-          :style="`background-color:${colorBackground};width:20px;height:100%;border:solid 1px;`"
-        ></span>
+        <span :style="`background-color:${colorBackground};width:20px;height:100%;border:solid 1px;`"></span>
         <i class="chevron-down" />
       </button>
       <Teleport to="body">
         <ColorDropdown
           v-if="showTextBackgroundColorOptionsDropDown"
-          v-model:showColorOptionsDropDown="
-            showTextBackgroundColorOptionsDropDown
-          "
+          v-model:showColorOptionsDropDown="showTextBackgroundColorOptionsDropDown"
           :toolbar-ref="textBackgroundColorButtonRef"
-          @onColorChanged="
-            (colorval:string) =>
-              editor.dispatchCommand(TEXT_BACKGROUND_COLOR_COMMAND, colorval)
-          "
+          @onColorChanged="(colorval: string) => editor.dispatchCommand(TEXT_BACKGROUND_COLOR_COMMAND, colorval)"
         />
       </Teleport>
     </div>
 
-    <div
-      id="richtexteditor"
-      class="lexical-editor-simple-container"
-      contenteditable
-      @focus="onFocus"
-      @blur="onBlur"
-    />
+    <div id="richtexteditor" class="lexical-editor-simple-container" contenteditable @focus="onFocus" @blur="onBlur" />
   </div>
 </template>
 
 <style>
-@import url("@/assets/css/toolbar.css");
-@import url("@/assets/css/minitoolbar.css");
+@import url('@/assets/css/toolbar.css');
+@import url('@/assets/css/minitoolbar.css');
 
 .editor-wrapper {
   border: 2px solid gray;

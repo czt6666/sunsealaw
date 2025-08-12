@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, Ref, h } from "vue";
+import { computed, onMounted, reactive, ref, Ref, h } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import {
   clearCookies,
@@ -12,8 +12,8 @@ import {
   getUserName,
   getUserRealName,
   isAdmin,
-} from "@/cookies/user";
-import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from "@/server/Carousel";
+} from '@/cookies/user';
+import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from '@/server/Carousel';
 
 import {
   IServerNewsWithPhotoView,
@@ -21,14 +21,14 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
-} from "@/server/ServerType";
-import { serverGetNewsPhotoView } from "@/server/News";
-import { serverGetAllUserWithPhotoView } from "@/server/SysUser";
-import UserPhoto from "@/components/member/UserPhoto.vue";
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { formatDate0, formatDate01 } from "@/utils/utils";
-import Carousel from "@/components/carousel/Carousel.vue";
-import MemberSwiper from "@/components/member/MemberSwiper.vue";
+} from '@/server/ServerType';
+import { serverGetNewsPhotoView } from '@/server/News';
+import { serverGetAllUserWithPhotoView } from '@/server/SysUser';
+import UserPhoto from '@/components/member/UserPhoto.vue';
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { formatDate0, formatDate01 } from '@/utils/utils';
+import Carousel from '@/components/carousel/Carousel.vue';
+import MemberSwiper from '@/components/member/MemberSwiper.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -37,15 +37,15 @@ const { t } = useI18n();
 const newsList: Ref<IServerNewsWithPhotoView[]> = ref([]);
 const userView: Ref<IServerUserWithPhotoView[]> = ref([]);
 
-import logoImg from "@/assets/logo.png";
-import captialMarkets from "@/assets/captialMarkets.png";
-import Corporate from "@/assets/Corporate.png";
-import employment from "@/assets/employment.png";
-import healthcare from "@/assets/healthcare.png";
-import intellectual from "@/assets/intellectual.png";
-import immigration from "@/assets/immigration.png";
-import wills from "@/assets/wills.png";
-import civil from "@/assets/civil.png";
+import logoImg from '@/assets/logo.png';
+import captialMarkets from '@/assets/captialMarkets.png';
+import Corporate from '@/assets/Corporate.png';
+import employment from '@/assets/employment.png';
+import healthcare from '@/assets/healthcare.png';
+import intellectual from '@/assets/intellectual.png';
+import immigration from '@/assets/immigration.png';
+import wills from '@/assets/wills.png';
+import civil from '@/assets/civil.png';
 
 const carouselImageViewArray = ref<IServerCarouselImageView[]>([]);
 
@@ -64,7 +64,7 @@ const getCarouselAllDataFromServer = async () => {
     }
   }
 
-  console.log("getCarouselAllDataFromServer", carouselImageViewArray.value);
+  console.log('getCarouselAllDataFromServer', carouselImageViewArray.value);
 };
 
 /**
@@ -79,7 +79,7 @@ const getTopNewsDataFromServer = async () => {
       newsList.value.push(ret.data[i]);
     }
   }
-  console.log("getTopNewsDataFromServer", newsList.value);
+  console.log('getTopNewsDataFromServer', newsList.value);
 };
 
 /**
@@ -93,7 +93,7 @@ const getUserAllDataFromServer = async () => {
     for (let i = 0; i < ret.data.length; i++) {
       userView.value.push(ret.data[i]);
     }
-    console.log("getUserAllDataFromServer", userView.value);
+    console.log('getUserAllDataFromServer', userView.value);
   }
 };
 
@@ -112,7 +112,7 @@ const newsTails = computed(() => {
 
 const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   if (!newsView) {
-    router.push({ path: "/news" });
+    router.push({ path: '/news' });
     return;
   }
 
@@ -140,7 +140,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t("app.team_member") }}
+          {{ t('app.team_member') }}
         </div>
       </div>
       <div class="card-header-read-more">
@@ -197,7 +197,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t("app.service") }}
+          {{ t('app.service') }}
         </div>
       </div>
     </div>
@@ -242,7 +242,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t("app.news") }}
+          {{ t('app.news') }}
         </div>
         <div class="card-header-title-text-description">
           The latest news on our deals, insights, events, and achievements
@@ -334,7 +334,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   background-color: white;
 }
 .card-header-title-text {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 60px;
   text-align: left;
   line-height: 82px;
@@ -344,7 +344,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 }
 
 .card-header-title-text-description {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 20px;
   text-align: left;
   line-height: 42px;
@@ -366,7 +366,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   cursor: pointer;
   text-align: center;
   line-height: 32px;
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   transition: all 0.3s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   &:hover {

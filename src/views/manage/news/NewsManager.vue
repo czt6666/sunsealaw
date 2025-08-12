@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { onMounted, ref, reactive, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
-import { ElMessage } from "element-plus";
+import { ElMessage } from 'element-plus';
 
-import { View, Hide, Search, Plus } from "@element-plus/icons-vue";
+import { View, Hide, Search, Plus } from '@element-plus/icons-vue';
 import {
   serverUserAdd,
   serverUserDelete,
   serverUserUpdate,
   serverUserResetPwd,
   serverGetUserPage,
-} from "@/server/SysUser";
+} from '@/server/SysUser';
 
 import {
   serverNewsAdd,
@@ -21,9 +21,9 @@ import {
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
-} from "@/server/News";
+} from '@/server/News';
 
-import { IServerSysUser, Pageable, Page, SimplePage, convertPage, IServerNews } from "@/server/ServerType";
+import { IServerSysUser, Pageable, Page, SimplePage, convertPage, IServerNews } from '@/server/ServerType';
 import {
   clearCookies,
   setUserCookies,
@@ -34,9 +34,9 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+} from '@/cookies/user';
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const route = useRoute();
@@ -49,7 +49,7 @@ const loading = ref(false);
 const textElipsisValue = ref(true); //超长文本中多余的内容是否用...显示
 
 onMounted(async () => {
-  if (!isAdmin()) router.push("/login");
+  if (!isAdmin()) router.push('/login');
   await getNewsPageDataFromSever();
 });
 
@@ -83,7 +83,7 @@ const onPageSizeChange = async (value: number) => {
 };
 
 const onNewButtonClick = () => {
-  router.push({ path: "/manager-news-add" });
+  router.push({ path: '/manager-news-add' });
 };
 
 const onRowEditButtonClick = async (userItem: IServerNews, userIndex: number) => {
@@ -114,7 +114,7 @@ const goBack = () => {
     <div class="top-toolbar">
       <!--新增按钮-->
       <div>
-        <el-button :icon="Plus" type="primary" @click="onNewButtonClick"> Add News </el-button>
+        <el-button :icon="Plus" type="primary" @click="onNewButtonClick">Add News</el-button>
       </div>
 
       <div style="margin-left: auto">
@@ -146,11 +146,11 @@ const goBack = () => {
             margin-bottom: -5px;
           "
         >
-          <el-col :span="1">No. </el-col>
-          <el-col :span="6"> Title</el-col>
-          <el-col :span="3"> TitlePhoto</el-col>
-          <el-col :span="12"> Content</el-col>
-          <el-col :span="2"> 操作 </el-col>
+          <el-col :span="1">No.</el-col>
+          <el-col :span="6">Title</el-col>
+          <el-col :span="3">TitlePhoto</el-col>
+          <el-col :span="12">Content</el-col>
+          <el-col :span="2">操作</el-col>
         </el-row>
 
         <el-row
@@ -208,7 +208,7 @@ const goBack = () => {
           <el-col :span="2">
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
               <el-button size="small" @click="onRowEditButtonClick(newsItem, newsIndex)">
-                {{ t("app.edit") }}
+                {{ t('app.edit') }}
               </el-button>
 
               <el-button
@@ -217,7 +217,7 @@ const goBack = () => {
                 style="margin-left: 0px; margin-top: 5px"
                 @click="onRowDeleteButtonClick(newsItem, newsIndex)"
               >
-                {{ t("app.delete") }}
+                {{ t('app.delete') }}
               </el-button>
             </div>
           </el-col>

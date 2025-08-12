@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,12 +13,12 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
+import { formatDate0, formatDate01 } from '@/utils/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -68,14 +68,11 @@ onMounted(async () => {});
   </div>
 
   <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">
-      Immigration Law
-    </div>
+    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Immigration Law</div>
 
     <p>
-      We provide tailored immigration solutions for individuals and businesses,
-      guiding them through the complexities of U.S. immigration law with a
-      strategic and personalized approach.
+      We provide tailored immigration solutions for individuals and businesses, guiding them through the complexities of
+      U.S. immigration law with a strategic and personalized approach.
     </p>
 
     <p>Our immigration services include:</p>

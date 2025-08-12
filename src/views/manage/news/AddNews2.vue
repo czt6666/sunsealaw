@@ -44,23 +44,25 @@
 
     <div class="action-buttons">
       <el-button @click="resetForm" type="info" size="large" plain>
-        <el-icon><Refresh /></el-icon> 重置
+        <el-icon><Refresh /></el-icon>
+        重置
       </el-button>
       <el-button @click="publishNews" type="primary" size="large">
-        <el-icon><Promotion /></el-icon> 发布新闻
+        <el-icon><Promotion /></el-icon>
+        发布新闻
       </el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick } from "vue";
-import EditorJS, { OutputData } from "@editorjs/editorjs";
-import Header from "@editorjs/header";
-import ImageTool from "@editorjs/image";
-import Paragraph from "@editorjs/paragraph";
-import Delimiter from "@editorjs/delimiter";
-import Embed from "@editorjs/embed";
+import { ref, reactive, onMounted, nextTick } from 'vue';
+import EditorJS, { OutputData } from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import ImageTool from '@editorjs/image';
+import Paragraph from '@editorjs/paragraph';
+import Delimiter from '@editorjs/delimiter';
+import Embed from '@editorjs/embed';
 import {
   ElMessage,
   ElMessageBox,
@@ -69,14 +71,14 @@ import {
   UploadRawFile,
   UploadRequestOptions,
   UploadUserFile,
-} from "element-plus";
-import { Refresh, Promotion, Plus } from "@element-plus/icons-vue";
+} from 'element-plus';
+import { Refresh, Promotion, Plus } from '@element-plus/icons-vue';
 
-import { serverNewsAdd, serverAddNewsPhotoUploadTempFiles, serverDeleteNewsPhotoUploadTempFiles } from "@/server/News";
-import router from "@/router";
-import { getUserID } from "@/cookies/user";
-import { isAdmin } from "@/cookies/user";
-import { IServerNews } from "@/server/ServerType";
+import { serverNewsAdd, serverAddNewsPhotoUploadTempFiles, serverDeleteNewsPhotoUploadTempFiles } from '@/server/News';
+import router from '@/router';
+import { getUserID } from '@/cookies/user';
+import { isAdmin } from '@/cookies/user';
+import { IServerNews } from '@/server/ServerType';
 
 const formRef = ref<FormInstance>();
 const fileList = ref<UploadUserFile[]>([]);
@@ -88,11 +90,11 @@ const editorData = ref<OutputData | null>(null);
 const form = reactive<IServerNews>({
   id: 0,
   createDateTime: new Date(),
-  title: "",
-  brief: "",
-  contentJson: "",
-  contentHtml: "",
-  titlePhoto: "",
+  title: '',
+  brief: '',
+  contentJson: '',
+  contentHtml: '',
+  titlePhoto: '',
   sysUserId: getUserID() || 0,
 });
 
@@ -103,18 +105,18 @@ const initEditor = async () => {
   }
 
   editorInstance.value = new EditorJS({
-    holder: "editorjs",
-    placeholder: "请输入新闻内容...",
+    holder: 'editorjs',
+    placeholder: '请输入新闻内容...',
 
     onReady: () => {
-      console.log("Editor.js 已就绪");
+      console.log('Editor.js 已就绪');
     },
 
     tools: {
       header: {
         class: Header as any,
         config: {
-          placeholder: "输入标题...",
+          placeholder: '输入标题...',
           levels: [1, 2, 3, 4],
           defaultLevel: 2,
         },
@@ -168,67 +170,67 @@ const saveEditorContent = async (): Promise<void> => {
       form.contentHtml = convertToHtml(outputData);
       previewHtml.value = form.contentHtml;
     } catch (error) {
-      console.error("保存编辑器内容时出错:", error);
-      ElMessage.error("保存内容失败");
+      console.error('保存编辑器内容时出错:', error);
+      ElMessage.error('保存内容失败');
     }
   }
 };
 
 // 将编辑器内容转换为HTML
 const convertToHtml = (data: OutputData): string => {
-  if (!data || !data.blocks) return "";
+  if (!data || !data.blocks) return '';
 
-  let htmlContent = "";
+  let htmlContent = '';
 
   data.blocks.forEach((block) => {
     switch (block.type) {
-      case "header":
+      case 'header':
         htmlContent += `<h${block.data.level} class="content-header">${block.data.text}</h${block.data.level}>`;
         break;
-      case "paragraph":
+      case 'paragraph':
         htmlContent += `<p class="content-paragraph">${block.data.text}</p>`;
         break;
-      case "image":
-        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${block.data.caption || ""}" class="content-image">`;
+      case 'image':
+        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${block.data.caption || ''}" class="content-image">`;
         if (block.data.caption) {
           htmlContent += `<p class="image-caption">${block.data.caption}</p>`;
         }
         htmlContent += `</div>`;
         break;
-      case "list":
-        const tag = block.data.style === "ordered" ? "ol" : "ul";
+      case 'list':
+        const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
         htmlContent += `<${tag} class="content-list">`;
         block.data.items.forEach((item: string) => {
           htmlContent += `<li>${item}</li>`;
         });
         htmlContent += `</${tag}>`;
         break;
-      case "quote":
+      case 'quote':
         htmlContent += `<blockquote class="quote-block">${block.data.text}`;
         if (block.data.caption) {
           htmlContent += `<cite class="quote-cite">${block.data.caption}</cite>`;
         }
         htmlContent += `</blockquote>`;
         break;
-      case "code":
+      case 'code':
         htmlContent += `<pre class="code-pre"><code class="code-block">${block.data.code}</code></pre>`;
         break;
-      case "table":
+      case 'table':
         htmlContent += `<div class="table-container"><table class="content-table"><tbody>`;
         block.data.content.forEach((row: string[], rowIndex: number) => {
           htmlContent += `<tr>`;
           row.forEach((cell: string) => {
-            const tag = rowIndex === 0 ? "th" : "td";
+            const tag = rowIndex === 0 ? 'th' : 'td';
             htmlContent += `<${tag}>${cell}</${tag}>`;
           });
           htmlContent += `</tr>`;
         });
         htmlContent += `</tbody></table></div>`;
         break;
-      case "delimiter":
+      case 'delimiter':
         htmlContent += `<hr class="delimiter">`;
         break;
-      case "embed":
+      case 'embed':
         htmlContent += `<div class="embed-block">${block.data.embed}</div>`;
         break;
       default:
@@ -243,20 +245,20 @@ const convertToHtml = (data: OutputData): string => {
 const publishNews = async (): Promise<void> => {
   const userId = getUserID();
   if (!userId) {
-    ElMessageBox.alert("请先登录", "提示", {
-      confirmButtonText: "确定",
-      callback: () => router.push("/login"),
+    ElMessageBox.alert('请先登录', '提示', {
+      confirmButtonText: '确定',
+      callback: () => router.push('/login'),
     });
     return;
   }
 
   if (!form.title) {
-    ElMessage.warning("请输入标题");
+    ElMessage.warning('请输入标题');
     return;
   }
 
   if (!form.contentHtml) {
-    ElMessage.warning("请输入内容");
+    ElMessage.warning('请输入内容');
     return;
   }
 
@@ -273,13 +275,13 @@ const publishNews = async (): Promise<void> => {
       contentHtml: form.contentHtml,
     };
 
-    console.log("发布数据:", newsData);
+    console.log('发布数据:', newsData);
     await serverNewsAdd(newsData);
-    ElMessage.success("新闻发布成功");
-    router.push("/manager-news");
+    ElMessage.success('新闻发布成功');
+    router.push('/manager-news');
   } catch (error) {
-    console.error("发布失败:", error);
-    ElMessage.error("新闻发布失败");
+    console.error('发布失败:', error);
+    ElMessage.error('新闻发布失败');
   }
 };
 
@@ -287,11 +289,11 @@ const publishNews = async (): Promise<void> => {
 const resetForm = async () => {
   // 重置表单数据
   Object.assign(form, {
-    title: "",
-    brief: "",
-    contentJson: "",
-    contentHtml: "",
-    titlePhoto: "",
+    title: '',
+    brief: '',
+    contentJson: '',
+    contentHtml: '',
+    titlePhoto: '',
   });
 
   // 重置图片上传
@@ -306,57 +308,57 @@ const resetForm = async () => {
   // 重置预览
   previewHtml.value = "<div class='preview-placeholder'>编辑内容后，此处将显示预览</div>";
 
-  ElMessage.success("表单已重置");
+  ElMessage.success('表单已重置');
 };
 
-const handleRemove: UploadProps["onRemove"] = async (uploadFile, uploadFiles) => {
+const handleRemove: UploadProps['onRemove'] = async (uploadFile, uploadFiles) => {
   if (form.titlePhoto) {
     const formData = new FormData();
-    formData.append("fileName", form.titlePhoto);
+    formData.append('fileName', form.titlePhoto);
 
     try {
       const ret = await serverDeleteNewsPhotoUploadTempFiles(formData);
       if (ret && ret.code == 200 && ret.data) {
-        ElMessage.success("图片删除成功");
-        form.titlePhoto = "";
+        ElMessage.success('图片删除成功');
+        form.titlePhoto = '';
       } else {
-        ElMessage.error("图片删除失败");
+        ElMessage.error('图片删除失败');
       }
     } catch (error) {
-      console.error("删除图片失败:", error);
-      ElMessage.error("图片删除失败");
+      console.error('删除图片失败:', error);
+      ElMessage.error('图片删除失败');
     }
   }
 };
 
-const handleExceed: UploadProps["onExceed"] = () => {
-  ElMessage.warning("最多只能上传一张标题图片");
+const handleExceed: UploadProps['onExceed'] = () => {
+  ElMessage.warning('最多只能上传一张标题图片');
 };
 
 const httpRequest = async (options: UploadRequestOptions) => {
   const fileObj = options.file;
 
   const formData = new FormData();
-  formData.append("file", fileObj);
+  formData.append('file', fileObj);
 
   try {
     const ret = await serverAddNewsPhotoUploadTempFiles(formData);
     if (ret && ret.code == 200 && ret.data) {
       form.titlePhoto = ret.data;
-      ElMessage.success("图片上传成功");
+      ElMessage.success('图片上传成功');
     } else {
-      ElMessage.error("图片上传失败");
+      ElMessage.error('图片上传失败');
     }
   } catch (error) {
-    console.error("图片上传失败:", error);
-    ElMessage.error("图片上传失败");
+    console.error('图片上传失败:', error);
+    ElMessage.error('图片上传失败');
   }
 };
 
 onMounted(() => {
   if (!isAdmin()) {
-    ElMessage.warning("您没有权限访问此页面");
-    router.push("/login");
+    ElMessage.warning('您没有权限访问此页面');
+    router.push('/login');
     return;
   }
 

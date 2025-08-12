@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue';
 
 const props = defineProps({
   iconDir: {
@@ -12,7 +12,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: "",
+    default: '',
   },
   size: {
     type: [Number, String],

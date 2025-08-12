@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import {
-  IServerSysUser,
-  Pageable,
-  Page,
-  SimplePage,
-  convertPage,
-} from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerSysUser, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 
 import {
   serverUserAdd,
@@ -17,11 +11,11 @@ import {
   serverUserUpdate,
   serverUserResetPwd,
   serverGetUserBySysUserId,
-} from "@/server/SysUser";
+} from '@/server/SysUser';
 
-import UserPhoto from "@/components/member/UserPhoto.vue";
+import UserPhoto from '@/components/member/UserPhoto.vue';
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -30,20 +24,20 @@ const userId = ref<number>(0);
 
 const userData = ref<IServerSysUser>({
   id: 0,
-  userName: "",
-  realName: "",
-  password: "",
-  companyRole: "",
-  licensedInfo: "",
-  details: "",
-  email: "",
-  photo: "",
+  userName: '',
+  realName: '',
+  password: '',
+  companyRole: '',
+  licensedInfo: '',
+  details: '',
+  email: '',
+  photo: '',
   auth: 0,
 });
 
 onBeforeRouteUpdate(async (to) => {
   console.log(to);
-  if (typeof to.params.id === "string") {
+  if (typeof to.params.id === 'string') {
     userId.value = parseInt(to.params.id);
     await getUserDataFromSever(parseInt(to.params.id));
   } else {
@@ -57,7 +51,7 @@ onBeforeRouteUpdate(async (to) => {
 onMounted(async () => {
   console.log(route.params);
   console.log(typeof route.params.id);
-  if (typeof route.params.id === "string") {
+  if (typeof route.params.id === 'string') {
     await getUserDataFromSever(parseInt(route.params.id));
     userId.value = parseInt(route.params.id);
   }
@@ -97,27 +91,11 @@ const getUserDataFromSever = async (id: number) => {
   >
     Team Member
   </div>
-  <div
-    style="
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 20px;
-    "
-  >
+  <div style="display: flex; justify-content: center; align-items: center; margin: 20px">
     <!--成员主要信息-->
     <div style="display: flex" v-if="userData.id > 0">
       <!--头像-->
-      <div
-        style="
-          width: 400px;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex: 1;
-        "
-      >
+      <div style="width: 400px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; flex: 1">
         <UserPhoto :userId="userData.id" :img-width="300"></UserPhoto>
       </div>
       <!--姓名及注册信息等-->
@@ -158,8 +136,9 @@ const getUserDataFromSever = async (id: number) => {
         line-height: 1.6; /* 良好的行高提升可读性 */
         white-space: pre-wrap;
       "
-      >{{ userData.details }}</span
     >
+      {{ userData.details }}
+    </span>
   </div>
 </template>
 

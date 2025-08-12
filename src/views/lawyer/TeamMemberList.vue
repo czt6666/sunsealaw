@@ -1,27 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from "vue";
-import { ElMessage } from "element-plus";
+import { onMounted, ref, reactive, computed } from 'vue';
+import { ElMessage } from 'element-plus';
 
-import { View, Hide, Search, Plus } from "@element-plus/icons-vue";
+import { View, Hide, Search, Plus } from '@element-plus/icons-vue';
 import {
   serverUserAdd,
   serverUserDelete,
   serverUserUpdate,
   serverUserResetPwd,
   serverGetUserPage,
-} from "@/server/SysUser";
-import {
-  IServerSysUser,
-  Pageable,
-  Page,
-  SimplePage,
-  convertPage,
-} from "@/server/ServerType";
-import { getUserPageSize, setUserPageSize } from "@/cookies/user";
-import UserPhoto from "@/components/member/UserPhoto.vue";
-import { useRouter, useRoute } from "vue-router";
+} from '@/server/SysUser';
+import { IServerSysUser, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
+import { getUserPageSize, setUserPageSize } from '@/cookies/user';
+import UserPhoto from '@/components/member/UserPhoto.vue';
+import { useRouter, useRoute } from 'vue-router';
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -51,7 +45,7 @@ const tableData = computed(() => {
   const ret = pageData.value?.content ?? [];
   if (ret.length > 0) {
     for (let i = 0; i < ret.length; i++) {
-      if (ret[i].userName == "admin") {
+      if (ret[i].userName == 'admin') {
         ret.splice(i, 1);
         i--;
         break;
@@ -92,18 +86,12 @@ const handleNewMemberCancel = () => {
   dialogNewVisible.value = false;
 };
 
-const onRowEditButtonClick = async (
-  userItem: IServerSysUser,
-  userIndex: number
-) => {
+const onRowEditButtonClick = async (userItem: IServerSysUser, userIndex: number) => {
   updateSysUser.value = userItem;
   dialogUpdateVisible.value = true;
 };
 
-const onRowDeleteButtonClick = async (
-  userItem: IServerSysUser,
-  userIndex: number
-) => {
+const onRowDeleteButtonClick = async (userItem: IServerSysUser, userIndex: number) => {
   await getUserPageDataFromSever();
 };
 const handleUpdateMemberOk = async (sysUser: IServerSysUser) => {
@@ -145,13 +133,11 @@ const goBack = () => {
       user-select: none;
     "
   >
-    {{ t("app.core_team_members") }}
+    {{ t('app.core_team_members') }}
   </div>
 
-  <div
-    style="margin: 20px; padding: 20px; text-align: left; font-style: italic"
-  >
-    {{ t("app.core_team_members_desc") }}
+  <div style="margin: 20px; padding: 20px; text-align: left; font-style: italic">
+    {{ t('app.core_team_members_desc') }}
   </div>
   <!--工具栏-->
   <div class="member-container">
@@ -164,21 +150,10 @@ const goBack = () => {
       @click="onMemberClick(userItem)"
     >
       <!--成员主要信息-->
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-        "
-      >
+      <div style="display: flex; align-items: center; justify-content: center; flex-direction: column">
         <!--头像-->
         <div class="member-photo">
-          <UserPhoto
-            :userId="userItem.id"
-            :img-width="300"
-            :img-height="300"
-          ></UserPhoto>
+          <UserPhoto :userId="userItem.id" :img-width="300" :img-height="300"></UserPhoto>
         </div>
         <!--姓名及注册信息等-->
         <div class="user-container-outter" @click="onMemberClick(userItem)">

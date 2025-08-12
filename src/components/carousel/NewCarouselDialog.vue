@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
 
-import { useRouter } from "vue-router/dist/vue-router";
+import { useRouter } from 'vue-router/dist/vue-router';
 
-import store from "@/store";
+import store from '@/store';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { Delete } from "@element-plus/icons-vue";
+import type { FormInstance, FormRules } from 'element-plus';
+import { Delete } from '@element-plus/icons-vue';
 
-import { ElMessage, ElMessageBox } from "element-plus";
-import type { Action } from "element-plus";
-import type { CascaderValue } from "element-plus";
+import { ElMessage, ElMessageBox } from 'element-plus';
+import type { Action } from 'element-plus';
+import type { CascaderValue } from 'element-plus';
 
 import {
   clearCookies,
@@ -22,9 +22,9 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
-import { IServerCarousel } from "@/server/ServerType";
+import { IServerCarousel } from '@/server/ServerType';
 
 import {
   serverCarouselAdd,
@@ -34,15 +34,9 @@ import {
   serverAddCarouselPhotoUploadTempFiles,
   serverDeleteCarouselPhotoUploadTempFiles,
   serverGetCarouselPhotoFileById,
-} from "@/server/Carousel";
-import { useI18n } from "vue-i18n";
-import type {
-  UploadInstance,
-  UploadProps,
-  UploadRawFile,
-  UploadUserFile,
-  UploadRequestOptions,
-} from "element-plus";
+} from '@/server/Carousel';
+import { useI18n } from 'vue-i18n';
+import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from 'element-plus';
 const { t } = useI18n(); // 解构出t方法
 
 const router = useRouter();
@@ -57,11 +51,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const form = reactive<IServerCarousel>({
   id: 0,
-  photo: "",
+  photo: '',
   sysUserId: 0,
   createDateTime: new Date(),
-  title: "",
-  subTitle: "",
+  title: '',
+  subTitle: '',
   style: 1,
 });
 // 表单引用
@@ -69,13 +63,13 @@ const formRef = ref<FormInstance>();
 
 // 表单验证规则
 const rules = reactive<FormRules>({
-  photo: [{ required: true, message: "User Name", trigger: "blur" }],
+  photo: [{ required: true, message: 'User Name', trigger: 'blur' }],
 });
 
 //event
 const emit = defineEmits<{
-  (e: "onDilalogOk", sysUser: IServerCarousel): void;
-  (e: "onDilalogCancel"): void;
+  (e: 'onDilalogOk', sysUser: IServerCarousel): void;
+  (e: 'onDilalogCancel'): void;
 }>();
 
 const dialogFormVisible = computed({
@@ -90,15 +84,15 @@ const dialogFormVisible = computed({
 const onOpenDialog = async () => {};
 
 const handleClose = () => {
-  emit("onDilalogCancel");
+  emit('onDilalogCancel');
 };
 const onOk = () => {
   let userId = getUserID();
   if (!userId) {
-    ElMessageBox.alert("Please login", "Warning", {
-      confirmButtonText: "OK",
+    ElMessageBox.alert('Please login', 'Warning', {
+      confirmButtonText: 'OK',
     });
-    router.push("/login");
+    router.push('/login');
     return;
   }
 
@@ -116,19 +110,19 @@ const onOk = () => {
           style: form.style,
         };
 
-        emit("onDilalogOk", carousel);
+        emit('onDilalogOk', carousel);
       } catch (error) {
-        ElMessage.error("Failed");
-        console.error("Failed", error);
+        ElMessage.error('Failed');
+        console.error('Failed', error);
       }
     } else {
-      ElMessage.error("Please check data");
+      ElMessage.error('Please check data');
     }
   });
 };
 
 const onCancel = () => {
-  emit("onDilalogCancel");
+  emit('onDilalogCancel');
 };
 
 // 重置表单
@@ -139,32 +133,29 @@ const resetForm = () => {
 const fileList = ref<UploadUserFile[]>([]);
 const imageData = ref<string[]>([]);
 
-const dialogImageUrl = ref("");
+const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
 const upload = ref<UploadInstance>();
 
-const handleRemove: UploadProps["onRemove"] = async (
-  uploadFile,
-  uploadFiles
-) => {
+const handleRemove: UploadProps['onRemove'] = async (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 
   if (form.photo) {
     const formData = new FormData();
 
-    formData.append("fileName", form.photo);
+    formData.append('fileName', form.photo);
 
     const ret = await serverDeleteCarouselPhotoUploadTempFiles(formData);
     if (ret && ret.code == 200 && ret.data) {
       ElMessage({
-        type: "success",
-        message: "删除成功",
+        type: 'success',
+        message: '删除成功',
       });
     } else ElMessage.success(`删除失败`);
   }
 };
 
-const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
@@ -174,7 +165,7 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
  * @param files
  * @param uploadFiles
  */
-const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
+const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
   ElMessage.warning(`最大上传文件个数为1个，已经超过最大值。`);
 };
 
@@ -183,10 +174,7 @@ const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
  * @param uploadFile
  * @param uploadFiles
  */
-const handleUploadImageChange: UploadProps["onChange"] = (
-  uploadFile,
-  uploadFiles
-) => {
+const handleUploadImageChange: UploadProps['onChange'] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 };
 
@@ -195,7 +183,7 @@ const handleUploadImageChange: UploadProps["onChange"] = (
  * @param rawFile
  */
 const beforeUpload = (rawFile: UploadRawFile) => {
-  const extension = rawFile.name.substring(rawFile.name.lastIndexOf(".") + 1);
+  const extension = rawFile.name.substring(rawFile.name.lastIndexOf('.') + 1);
 };
 
 /**
@@ -203,12 +191,10 @@ const beforeUpload = (rawFile: UploadRawFile) => {
  * @param uploadFile
  * @param uploadFiles
  */
-const beforeRemove: UploadProps["beforeRemove"] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(
-    `Cancel the transfert of ${uploadFile.name} ?`
-  ).then(
+const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
+  return ElMessageBox.confirm(`Cancel the transfert of ${uploadFile.name} ?`).then(
     () => true,
-    () => false
+    () => false,
   );
 };
 
@@ -220,14 +206,14 @@ const httpRequest = async (options: UploadRequestOptions) => {
   const fileObj = options.file;
 
   const formData = new FormData();
-  formData.append("file", fileObj);
+  formData.append('file', fileObj);
 
   const ret = await serverAddCarouselPhotoUploadTempFiles(formData);
   if (ret && ret.code == 200 && ret.data) {
     form.photo = ret.data;
     ElMessage({
-      type: "success",
-      message: "Success",
+      type: 'success',
+      message: 'Success',
     });
   } else ElMessage.error(`Failed`);
 };
@@ -280,9 +266,9 @@ const httpRequest = async (options: UploadRequestOptions) => {
 
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="resetForm">{{ t("app.reset") }}</el-button>
-        <el-button @click="onCancel">{{ t("app.cancel") }}</el-button>
-        <el-button type="primary" @click="onOk()">{{ t("app.ok") }}</el-button>
+        <el-button @click="resetForm">{{ t('app.reset') }}</el-button>
+        <el-button @click="onCancel">{{ t('app.cancel') }}</el-button>
+        <el-button type="primary" @click="onOk()">{{ t('app.ok') }}</el-button>
       </span>
     </template>
   </el-dialog>

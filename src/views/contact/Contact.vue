@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter } from "vue-router/dist/vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter } from 'vue-router/dist/vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerContactUs } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerContactUs } from '@/server/ServerType';
 
 import {
   clearCookies,
@@ -15,27 +15,27 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
 import {
   serverContactUsAdd,
   serverContactUsDelete,
   serverContactUsUpdate,
   serverGetContactUsPage,
-} from "@/server/ContactUs";
+} from '@/server/ContactUs';
 
-import { ElMessage, ElMessageBox } from "element-plus";
-import { useI18n } from "vue-i18n";
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n(); // 解构出t方法
 const router = useRouter();
 
 const form = reactive<IServerContactUs>({
   id: 0,
-  name: "",
-  address: "",
-  phone: "",
-  email: "",
-  message: "",
+  name: '',
+  address: '',
+  phone: '',
+  email: '',
+  message: '',
 });
 
 // 表单引用
@@ -43,11 +43,11 @@ const formRef = ref<FormInstance>();
 
 // 表单验证规则
 const rules = reactive<FormRules>({
-  name: [{ required: true, message: "User Name", trigger: "blur" }],
-  address: [{ required: true, message: "Real Name", trigger: "blur" }],
-  phone: [{ required: true, message: "Password", trigger: "blur" }],
-  email: [{ required: true, message: "Company Role", trigger: "blur" }],
-  message: [{ required: true, message: "Licensed Info", trigger: "blur" }],
+  name: [{ required: true, message: 'User Name', trigger: 'blur' }],
+  address: [{ required: true, message: 'Real Name', trigger: 'blur' }],
+  phone: [{ required: true, message: 'Password', trigger: 'blur' }],
+  email: [{ required: true, message: 'Company Role', trigger: 'blur' }],
+  message: [{ required: true, message: 'Licensed Info', trigger: 'blur' }],
 });
 
 // 重置表单
@@ -72,19 +72,19 @@ const onOk = () => {
         const res = await serverContactUsAdd(contactUs);
         if (res && res.code == 200) {
           ElMessage({
-            type: "success",
-            message: "Success",
+            type: 'success',
+            message: 'Success',
           });
-          router.push("/");
+          router.push('/');
         } else {
           ElMessage.error(`Failed`);
         }
       } catch (error) {
-        ElMessage.error("Failed");
-        console.error("Failed", error);
+        ElMessage.error('Failed');
+        console.error('Failed', error);
       }
     } else {
-      ElMessage.error("Please check data");
+      ElMessage.error('Please check data');
     }
   });
 };
@@ -110,7 +110,7 @@ const onCancel = () => {};
     <div class="news-container-outer">
       <div class="news-container-inner">
         <div style="font-size: 3em; cursor: pointer">
-          {{ t("app.contact_us") }}
+          {{ t('app.contact_us') }}
         </div>
       </div>
     </div>
@@ -139,9 +139,9 @@ const onCancel = () => {};
       <el-input v-model="form.message" type="textarea" :rows="4" />
     </el-form-item>
     <el-form-item style="float: right">
-      <el-button type="primary" @click="onOk">{{ t("app.submit") }}</el-button>
-      <el-button @click="onCancel">{{ t("app.cancel") }}</el-button>
-      <el-button @click="resetForm">{{ t("app.reset") }}</el-button>
+      <el-button type="primary" @click="onOk">{{ t('app.submit') }}</el-button>
+      <el-button @click="onCancel">{{ t('app.cancel') }}</el-button>
+      <el-button @click="resetForm">{{ t('app.reset') }}</el-button>
     </el-form-item>
   </el-form>
 
@@ -159,9 +159,7 @@ const onCancel = () => {};
     <div class="visit-us-container">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">SUNSEA LAW GROUP P.C.</div>
-        <div style="text-align: left">
-          Address: 3350 Shelby Street Suite 200, Ontario,CA 91764
-        </div>
+        <div style="text-align: left">Address: 3350 Shelby Street Suite 200, Ontario,CA 91764</div>
         <div>Email: info@sunsealaw.com</div>
       </div>
     </div>
