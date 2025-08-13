@@ -193,7 +193,7 @@ onBeforeUnmount(stopAutoPlay);
 .content {
   position: absolute;
 
-  bottom: 15%; /* 从底部15%开始 */
+  bottom: 19%; /* 从底部15%开始 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -218,15 +218,15 @@ onBeforeUnmount(stopAutoPlay);
 }
 
 .title {
-  font-size: 8rem;
+  font-size: 7rem;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Georgia', serif;
   font-weight: lighter;
 }
 
 .subtitle {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   margin-bottom: 1rem;
 }
 

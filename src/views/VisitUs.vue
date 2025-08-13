@@ -58,7 +58,7 @@ import locationMap from '@/assets/staticmap_zh-CN.png';
     <div class="visit-us-container" style="flex: 1">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">Location</div>
-        <div style="text-align: left">LA Address: 3350 Shelby Street Suite 200, Ontario,CA 91764</div>
+        <div style="text-align: left">LA Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
       </div>
     </div>
     <div class="visit-us-container" style="flex: 1">

@@ -159,7 +159,7 @@ const onCancel = () => {};
     <div class="visit-us-container">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">SUNSEA LAW GROUP P.C.</div>
-        <div style="text-align: left">Address: 3350 Shelby Street Suite 200, Ontario,CA 91764</div>
+        <div style="text-align: left">Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
         <div>Email: info@sunsealaw.com</div>
       </div>
     </div>

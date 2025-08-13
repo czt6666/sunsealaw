@@ -58,7 +58,7 @@ const { t } = useI18n();
 
           <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px">
             <i class="fa-solid fa-location-dot"></i>
-            <div style="text-align: left">3350 Shelby Street Suite 200, Ontario,CA 91764</div>
+            <div style="text-align: left">18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
           </div>
         </div>
       </div>
@@ -82,9 +82,6 @@ const { t } = useI18n();
         </div>
         <div>
           <router-link to="/terms">{{ t('app.terms_of_service') }}</router-link>
-        </div>
-        <div>
-          <router-link to="/disclaimer">{{ t('app.disclaimer') }}</router-link>
         </div>
         <div>© 2025 Sunsea Law. All Rights Reserved.</div>
       </div>
