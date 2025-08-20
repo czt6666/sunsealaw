@@ -61,11 +61,15 @@ const getCarouselAllDataFromServer = async () => {
   const ret = await serverGetAllCarouselImageView();
   if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
     for (let i = 0; i < ret.data.length; i++) {
-      carouselImageViewArray.push(ret.data[i]);
+      const info = {
+        ...ret.data[i],
+        subTitle: ret.data[i].subTitle.replace("；", "<br>"),
+      };
+      console.log(info);
+
+      carouselImageViewArray.push(info);
     }
   }
-
-  console.log(carouselImageViewArray);
 };
 
 /**
@@ -287,7 +291,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
           </div>
 
           <!--新闻内容-->
-          <div style="overflow: hidden; height: 55px; margin: 10px 0px; font-size: 0.8em; line-height: 1.5em">
+          <div style="overflow: hidden; height: 55px; margin: 0px 0px; font-size: 0.8em; line-height: 1.5em">
             {{ newsItem.news.brief }}
           </div>
 
@@ -433,7 +437,6 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 
 .card-button-read-more {
   color: #06456b;
-  margin: 10px 0px;
   font-size: 0.8em;
   font-weight: 600;
   cursor: pointer;

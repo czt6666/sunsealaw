@@ -23,7 +23,7 @@ const { t } = useI18n();
       background-color: #0c162f;
       margin: 0px;
       color: white;
-      font-family: &quot;Instrument Serif&quot;, serif;
+      font-family: 'Instrument Serif', serif;
       font-size: 20px;
       font-weight: 400;
       letter-spacing: 1.2px;
