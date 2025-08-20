@@ -1,4 +1,3 @@
-// Carousel.vue
 <template>
   <div class="carousel-container" @mouseover="pauseAutoPlay" @mouseout="resumeAutoPlay">
     <div class="slides">
@@ -36,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, PropType, ref, watch, onMounted, onBeforeUnmount, computed } from "vue";
+import { defineComponent, PropType, ref, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 
 import {
   IServerNewsWithPhotoView,
@@ -44,7 +43,7 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
-} from "@/server/ServerType";
+} from '@/server/ServerType';
 
 const props = defineProps({
   items: {
@@ -69,11 +68,13 @@ const getTitle = (item: IServerCarouselImageView) => {
 };
 
 const next = () => {
+  if (!props.items.length) return;
   currentIndex.value = (currentIndex.value + 1) % props.items.length;
   resetTimer(); // 每次切换后重置计时器
 };
 
 const previous = () => {
+  if (!props.items.length) return;
   currentIndex.value = (currentIndex.value - 1 + props.items.length) % props.items.length;
   resetTimer(); // 每次切换后重置计时器
 };
@@ -174,7 +175,7 @@ onBeforeUnmount(stopAutoPlay);
 }
 
 .slide::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -192,7 +193,7 @@ onBeforeUnmount(stopAutoPlay);
 .content {
   position: absolute;
 
-  bottom: 15%; /* 从底部15%开始 */
+  bottom: 19%; /* 从底部15%开始 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -217,15 +218,15 @@ onBeforeUnmount(stopAutoPlay);
 }
 
 .title {
-  font-size: 8rem;
+  font-size: 7rem;
   margin-bottom: 1.5rem;
   text-transform: uppercase;
-  font-family: "Instrument Serif", serif;
+  font-family: 'Georgia', serif;
   font-weight: lighter;
 }
 
 .subtitle {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   margin-bottom: 1rem;
 }
 

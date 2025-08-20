@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, computed } from "vue";
-import svgIcon from "@/components/SvgIcon.vue";
-
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
+import svgIcon from '@/components/SvgIcon.vue';
 
 const { toolbarRef } = defineProps<{
   toolbarRef?: HTMLDivElement | null | undefined;
 }>();
 
 const emit = defineEmits<{
-  (e: "update:showOptionsDropDown", value: boolean): void;
-  (e: "onFontClick", fontFamily: string): void;
+  (e: 'update:showOptionsDropDown', value: boolean): void;
+  (e: 'onFontClick', fontFamily: string): void;
 }>();
 const dropDownRef = ref<HTMLDivElement | null>(null);
 
@@ -21,12 +20,10 @@ onMounted(() => {
 
     dropDownRef.value.style.top = `${top + height}px`;
     if (left + dropdownRect.width > window.innerWidth)
-      dropDownRef.value.style.left = `${
-        window.innerWidth - dropdownRect.width - 20
-      }px`;
+      dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
     else dropDownRef.value.style.left = `${left}px`;
 
-    document.addEventListener("click", handle);
+    document.addEventListener('click', handle);
   }
 });
 
@@ -39,62 +36,59 @@ watch(
 
       dropDownRef.value.style.top = `${top + height}px`;
       if (left + dropdownRect.width > window.innerWidth)
-        dropDownRef.value.style.left = `${
-          window.innerWidth - dropdownRect.width - 20
-        }px`;
+        dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
       else dropDownRef.value.style.left = `${left}px`;
     }
-  }
+  },
 );
 
 function handle(event: Event) {
   const target = event.target as Node;
 
-  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target))
-    emit("update:showOptionsDropDown", false);
+  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target)) emit('update:showOptionsDropDown', false);
 }
 
 onUnmounted(() => {
-  document.removeEventListener("click", handle);
+  document.removeEventListener('click', handle);
 });
 
 const onFontClick = (fontFamily: string) => {
-  emit("onFontClick", fontFamily);
+  emit('onFontClick', fontFamily);
 };
 
 const fontfamilies = [
   {
-    value: "Arial",
-    label: "Arial",
+    value: 'Arial',
+    label: 'Arial',
   },
 
   {
-    value: "Verdana",
-    label: "Verdana",
+    value: 'Verdana',
+    label: 'Verdana',
   },
   {
-    value: "Impact",
-    label: "Impact",
+    value: 'Impact',
+    label: 'Impact',
   },
   {
-    value: "Trebuchet MS",
-    label: "Trebuchet MS",
+    value: 'Trebuchet MS',
+    label: 'Trebuchet MS',
   },
   {
-    value: "Georgia",
-    label: "Georgia",
+    value: 'Georgia',
+    label: 'Georgia',
   },
   {
-    value: "Times New Roman",
-    label: "Times New Roman",
+    value: 'Times New Roman',
+    label: 'Times New Roman',
   },
   {
-    value: "Courier New",
-    label: "Courier New",
+    value: 'Courier New',
+    label: 'Courier New',
   },
   {
-    value: "Comic Sans MS",
-    label: "Comic Sans MS",
+    value: 'Comic Sans MS',
+    label: 'Comic Sans MS',
   },
 ];
 const fontFamilyStyle = (val: string) => {
@@ -105,12 +99,7 @@ const fontFamilyStyle = (val: string) => {
 <template>
   <div ref="dropDownRef" class="dropdown" style="z-index: 9999">
     <div class="drop-down-container">
-      <div
-        v-for="item in fontfamilies"
-        :key="item.value"
-        class="font-item"
-        @click="onFontClick(item.value)"
-      >
+      <div v-for="item in fontfamilies" :key="item.value" class="font-item" @click="onFontClick(item.value)">
         <div :style="fontFamilyStyle(item.value)">
           {{ item.label }}
         </div>
@@ -120,7 +109,7 @@ const fontFamilyStyle = (val: string) => {
 </template>
 
 <style>
-@import url("@/assets/css/dropdown.css");
+@import url('@/assets/css/dropdown.css');
 .font-item {
   text-align: left;
   border-radius: 5px;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,12 +13,12 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
+import { formatDate0, formatDate01 } from '@/utils/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -68,28 +68,21 @@ onMounted(async () => {});
   </div>
 
   <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">
-      Employment & Labor Law
-    </div>
+    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Employment & Labor Law</div>
 
     <p>
-      We support businesses in building compliant, fair, and productive
-      workplaces. Our attorneys counsel clients on a wide range of employment
-      and labor law matters, from workforce structuring to regulatory compliance
-      and dispute management.
+      We support businesses in building compliant, fair, and productive workplaces. Our attorneys counsel clients on a
+      wide range of employment and labor law matters, from workforce structuring to regulatory compliance and dispute
+      management.
     </p>
 
     <p>Our services include:</p>
     <ul>
       <li>Employment law compliance audits and HR policy development</li>
-      <li>
-        Risk management related to terminations, layoffs, and wage-hour issues
-      </li>
+      <li>Risk management related to terminations, layoffs, and wage-hour issues</li>
       <li>Anti-discrimination, harassment, and DEI policy guidance</li>
       <li>Collective bargaining, labor relations, and union negotiations</li>
-      <li>
-        Defense against wrongful termination and employment-related claims
-      </li>
+      <li>Defense against wrongful termination and employment-related claims</li>
     </ul>
   </div>
 </template>

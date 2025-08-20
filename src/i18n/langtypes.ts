@@ -4,22 +4,22 @@ export interface LangeuageOption {
 }
 
 export const defaultLanguageOption: LangeuageOption = {
-  label: "English (EN)",
-  value: "en",
+  label: 'English (EN)',
+  value: 'en',
 };
 
 export const LANGUAGES_OPTIONS: LangeuageOption[] = [
   {
-    value: "en",
-    label: "English (EN)",
+    value: 'en',
+    label: 'English (EN)',
   },
   {
-    value: "zh",
-    label: "简体中文 (CN)",
+    value: 'zh',
+    label: '简体中文 (CN)',
   },
   {
-    value: "hk",
-    label: "繁體中文 (HK)",
+    value: 'hk',
+    label: '繁體中文 (HK)',
   },
   /*
   {

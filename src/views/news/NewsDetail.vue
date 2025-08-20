@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,13 +13,13 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
-import RenderHtml from "@/components/lexical/RenderHtml.vue";
+import { formatDate0, formatDate01 } from '@/utils/utils';
+import RenderHtml from '@/components/lexical/RenderHtml.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -28,17 +28,17 @@ const newsId = ref(0);
 const newsData = ref<IServerNews>({
   id: 0,
   createDateTime: new Date(),
-  title: "",
-  brief: "",
-  contentJson: "",
-  contentHtml: "",
-  titlePhoto: "",
+  title: '',
+  brief: '',
+  contentJson: '',
+  contentHtml: '',
+  titlePhoto: '',
   sysUserId: 0,
 });
 
 onBeforeRouteUpdate(async (to) => {
   console.log(to);
-  if (typeof to.params.id === "string") {
+  if (typeof to.params.id === 'string') {
     newsId.value = parseInt(to.params.id);
     await getNewsDataFromSever(parseInt(to.params.id));
   } else {
@@ -52,7 +52,7 @@ onBeforeRouteUpdate(async (to) => {
 onMounted(async () => {
   console.log(route.params);
   console.log(typeof route.params.id);
-  if (typeof route.params.id === "string") {
+  if (typeof route.params.id === 'string') {
     await getNewsDataFromSever(parseInt(route.params.id));
     newsId.value = parseInt(route.params.id);
   }

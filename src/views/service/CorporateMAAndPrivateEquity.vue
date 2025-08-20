@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,12 +13,12 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
+import { formatDate0, formatDate01 } from '@/utils/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -68,17 +68,13 @@ onMounted(async () => {});
   </div>
 
   <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">
-      Corporate, M&A, and Private Equity
-    </div>
+    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Corporate, M&A, and Private Equity</div>
 
     <p>
-      We offer end-to-end legal counsel throughout the corporate lifecycle—from
-      formation and capital structuring to growth, restructuring, and exit
-      strategies. We represent companies, private equity funds, strategic
-      investors, and founders in a variety of domestic and cross-border
-      transactions. Our integrated approach helps clients navigate complex legal
-      and regulatory landscapes while achieving their business objectives.
+      We offer end-to-end legal counsel throughout the corporate lifecycle—from formation and capital structuring to
+      growth, restructuring, and exit strategies. We represent companies, private equity funds, strategic investors, and
+      founders in a variety of domestic and cross-border transactions. Our integrated approach helps clients navigate
+      complex legal and regulatory landscapes while achieving their business objectives.
     </p>
 
     <p>Our corporate practice includes:</p>

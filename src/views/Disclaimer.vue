@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRouter, useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import {
   clearCookies,
@@ -10,7 +10,7 @@ import {
   getUserName,
   getUserRealName,
   isAdmin,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
 const router = useRouter();
 const route = useRoute();
@@ -36,7 +36,7 @@ const { t } = useI18n();
     <div class="news-container-outer">
       <div class="news-container-inner">
         <div style="font-size: 3em; cursor: pointer">
-          {{ t("app.disclaimer") }}
+          {{ t('app.disclaimer') }}
         </div>
       </div>
     </div>

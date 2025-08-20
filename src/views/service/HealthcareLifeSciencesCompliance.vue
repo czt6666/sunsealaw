@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,12 +13,12 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
+import { formatDate0, formatDate01 } from '@/utils/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -68,43 +68,26 @@ onMounted(async () => {});
   </div>
 
   <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">
-      Healthcare & Life Sciences Compliance
-    </div>
+    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Healthcare & Life Sciences Compliance</div>
 
     <p>
-      We advise life sciences and healthcare companies navigating the U.S.
-      regulatory landscape. Our attorneys bring technical and legal experience
-      to help clients mitigate compliance risks and streamline product
-      development, commercialization, and operations.
+      We advise life sciences and healthcare companies navigating the U.S. regulatory landscape. Our attorneys bring
+      technical and legal experience to help clients mitigate compliance risks and streamline product development,
+      commercialization, and operations.
     </p>
 
     <p>Our services include:</p>
     <ul>
       <li>
-        Counsel on compliance with software quality standards, development of
-        quality-related policies and procedures
+        Counsel on compliance with software quality standards, development of quality-related policies and procedures
       </li>
+      <li>Assist with internal investigations related to recall and regulatory reporting decisions</li>
+      <li>Analysis of FDA regulatory framework applicable to development of clinical decision support tools</li>
+      <li>Draft and review policies and procedures governing promotional activities</li>
       <li>
-        Assist with internal investigations related to recall and regulatory
-        reporting decisions
+        Advise on scientific communications, clinical trials, grants and sponsorships, and other GxP compliance matters
       </li>
-      <li>
-        Analysis of FDA regulatory framework applicable to development of
-        clinical decision support tools
-      </li>
-      <li>
-        Draft and review policies and procedures governing promotional
-        activities
-      </li>
-      <li>
-        Advise on scientific communications, clinical trials, grants and
-        sponsorships, and other GxP compliance matters
-      </li>
-      <li>
-        Develop policies, procedures and trainings to address
-        internally-developed digital tools
-      </li>
+      <li>Develop policies, procedures and trainings to address internally-developed digital tools</li>
     </ul>
   </div>
 </template>

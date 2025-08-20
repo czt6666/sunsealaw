@@ -1,6 +1,6 @@
 <template>
   <div class="news-publish-container">
-    <h1>Add News</h1>
+    <h1>Update News</h1>
 
     <el-form :model="form" label-position="top" ref="formRef">
       <el-form-item label="标题" required>
@@ -74,11 +74,20 @@ import {
 } from 'element-plus';
 import { Refresh, Promotion, Plus } from '@element-plus/icons-vue';
 
-import { serverNewsAdd, serverAddNewsPhotoUploadTempFiles, serverDeleteNewsPhotoUploadTempFiles } from '@/server/News';
+import {
+  serverNewsAdd,
+  serverAddNewsPhotoUploadTempFiles,
+  serverDeleteNewsPhotoUploadTempFiles,
+  serverGetNewsById,
+  serverGetNewsPhotoFileById,
+} from '@/server/News';
 import router from '@/router';
 import { getUserID } from '@/cookies/user';
 import { isAdmin } from '@/cookies/user';
 import { IServerNews } from '@/server/ServerType';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const formRef = ref<FormInstance>();
 const fileList = ref<UploadUserFile[]>([]);
@@ -87,6 +96,7 @@ const editorInstance = ref<EditorJS | null>(null);
 const previewHtml = ref("<div class='preview-placeholder'>编辑内容后，此处将显示预览</div>");
 const editorData = ref<OutputData | null>(null);
 
+const newsId = ref(0);
 const form = reactive<IServerNews>({
   id: 0,
   createDateTime: new Date(),
@@ -191,9 +201,7 @@ const convertToHtml = (data: OutputData): string => {
         htmlContent += `<p class="content-paragraph">${block.data.text}</p>`;
         break;
       case 'image':
-        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${
-          block.data.caption || ''
-        }" class="content-image">`;
+        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${block.data.caption || ''}" class="content-image">`;
         if (block.data.caption) {
           htmlContent += `<p class="image-caption">${block.data.caption}</p>`;
         }
@@ -247,20 +255,24 @@ const convertToHtml = (data: OutputData): string => {
 const publishNews = async (): Promise<void> => {
   const userId = getUserID();
   if (!userId) {
-    ElMessageBox.alert('请先登录', '提示', {
-      confirmButtonText: '确定',
+    ElMessageBox.alert('Please login', 'Warning', {
+      confirmButtonText: 'OK',
       callback: () => router.push('/login'),
     });
     return;
   }
 
   if (!form.title) {
-    ElMessage.warning('请输入标题');
+    ElMessageBox.alert('Please input title', 'Warning', {
+      confirmButtonText: 'OK',
+    });
     return;
   }
 
   if (!form.contentHtml) {
-    ElMessage.warning('请输入内容');
+    ElMessageBox.alert('Please input content', 'Warning', {
+      confirmButtonText: 'OK',
+    });
     return;
   }
 
@@ -357,17 +369,60 @@ const httpRequest = async (options: UploadRequestOptions) => {
   }
 };
 
-onMounted(() => {
-  if (!isAdmin()) {
-    ElMessage.warning('您没有权限访问此页面');
-    router.push('/login');
-    return;
-  }
+onMounted(async () => {
+  if (!isAdmin()) router.push('/login');
 
-  nextTick(() => {
-    initEditor();
-  });
+  await initEditor();
+  if (typeof route.params.id === 'string') {
+    newsId.value = parseInt(route.params.id);
+    await getUserDataFromSever(parseInt(route.params.id));
+  }
 });
+
+// onBeforeRouteUpdate(async (to) => {
+//   if (!isAdmin()) router.push("/login");
+//   console.log(to);
+//   if (typeof to.params.id === "string") {
+//     newsId.value = parseInt(to.params.id);
+//     await getUserDataFromSever(parseInt(to.params.id));
+//   } else {
+//     getUserDataFromSever(parseInt(to.params.id[0]));
+//     newsId.value = parseInt(to.params.id[0]);
+//   }
+
+//   console.log(newsId.value);
+// });
+
+const getUserDataFromSever = async (id: number) => {
+  if (!id) return;
+
+  const ret = await serverGetNewsById(id);
+  fileList.value = [];
+  if (ret && ret.code == 200) {
+    form.title = ret.data.title;
+    form.brief = ret.data.brief;
+    form.contentJson = ret.data.contentJson;
+    form.contentHtml = ret.data.contentHtml;
+    form.titlePhoto = ret.data.titlePhoto;
+    form.sysUserId = ret.data.sysUserId;
+    form.id = ret.data.id;
+    form.createDateTime = ret.data.createDateTime;
+    // 更新 editorjs 的内容
+    if (form.contentJson && editorInstance.value) {
+      await editorInstance.value.isReady; // 等待就绪
+      await editorInstance.value.render(JSON.parse(form.contentJson)); // 设置内容
+      saveEditorContent();
+    }
+
+    fileList.value = [];
+    let res = await serverGetNewsPhotoFileById(form.id);
+    if (res && res.code == 200 && res.data) {
+      fileList.value.push({ name: form.titlePhoto, url: res.data });
+    }
+
+    console.log(form);
+  }
+};
 </script>
 
 <style scoped>
@@ -536,7 +591,7 @@ h1 {
   font-style: italic;
 }
 
-:deep(.editor-container) {
+::v-deep(.editor-container) {
   /* 文字居左 */
   .codex-editor__redactor {
     padding-left: 70px;

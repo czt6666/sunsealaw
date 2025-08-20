@@ -20,36 +20,15 @@ import { default } from '../tabs/Tab.vue';
         <!-- 内容区域 -->
         <div class="dialog-body">
           <div class="toolbar-mini" style="display: flex; align-items: center">
-            <button
-              v-if="showReplaceItems"
-              class="toolbar-item spaced"
-              aria-label="Find"
-              @click="onShowReplaceItems"
-            >
+            <button v-if="showReplaceItems" class="toolbar-item spaced" aria-label="Find" @click="onShowReplaceItems">
               <i class="format arrow_double_up" />
             </button>
-            <button
-              v-else
-              class="toolbar-item spaced"
-              aria-label="Find"
-              @click="onShowReplaceItems"
-            >
+            <button v-else class="toolbar-item spaced" aria-label="Find" @click="onShowReplaceItems">
               <i class="format arrow_double_down" />
             </button>
-            <input
-              v-model="searchText"
-              type="text"
-              placeholder="Enter search text"
-            />
-            <div v-if="searchResultsCount > 0">
-              {{ editorCurrentMatchIndex + 1 }}/{{ searchResultsCount }}
-            </div>
-            <button
-              :disabled="!searchText"
-              class="toolbar-item spaced"
-              aria-label="Find"
-              @click="onEditFind"
-            >
+            <input v-model="searchText" type="text" placeholder="Enter search text" />
+            <div v-if="searchResultsCount > 0">{{ editorCurrentMatchIndex + 1 }}/{{ searchResultsCount }}</div>
+            <button :disabled="!searchText" class="toolbar-item spaced" aria-label="Find" @click="onEditFind">
               <i class="format find" />
             </button>
             <button
@@ -76,17 +55,9 @@ import { default } from '../tabs/Tab.vue';
               <i class="format casesensitive" />
             </button>
           </div>
-          <div
-            class="toolbar-mini"
-            v-if="showReplaceItems"
-            style="display: flex; align-items: center; margin-top: 5px"
-          >
+          <div class="toolbar-mini" v-if="showReplaceItems" style="display: flex; align-items: center; margin-top: 5px">
             <div v-if="showReplaceItems" style="margin-right: 20px"></div>
-            <input
-              v-model="replaceText"
-              type="text"
-              placeholder="Enter replace text"
-            />
+            <input v-model="replaceText" type="text" placeholder="Enter replace text" />
             <button
               :disabled="!replaceText || searchResultsCount === 0"
               class="toolbar-item spaced"
@@ -111,22 +82,13 @@ import { default } from '../tabs/Tab.vue';
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  onUnmounted,
-  reactive,
-  ref,
-  watch,
-  toRef,
-  nextTick,
-} from "vue";
+import { computed, onMounted, onUnmounted, reactive, ref, watch, toRef, nextTick } from 'vue';
 
 const props = defineProps({
   visible: Boolean,
   title: {
     type: String,
-    default: "Dialog",
+    default: 'Dialog',
   },
   closeOnClickOutside: {
     type: Boolean,
@@ -159,26 +121,16 @@ export interface ISearchOptions {
 //const emit = defineEmits(["update:visible"]);
 
 const emit = defineEmits<{
-  (e: "update:visible", visible: boolean): void;
-  (e: "onEditFind", searchText: string, options: ISearchOptions): void;
-  (e: "onEditFindPrevious", searchText: string, options: ISearchOptions): void;
-  (e: "onEditFindNext", searchText: string, options: ISearchOptions): void;
-  (
-    e: "onEditReplace",
-    searchText: string,
-    replaceText: string,
-    options: ISearchOptions
-  ): void;
-  (
-    e: "onEditReplaceAll",
-    searchText: string,
-    replaceText: string,
-    options: ISearchOptions
-  ): void;
+  (e: 'update:visible', visible: boolean): void;
+  (e: 'onEditFind', searchText: string, options: ISearchOptions): void;
+  (e: 'onEditFindPrevious', searchText: string, options: ISearchOptions): void;
+  (e: 'onEditFindNext', searchText: string, options: ISearchOptions): void;
+  (e: 'onEditReplace', searchText: string, replaceText: string, options: ISearchOptions): void;
+  (e: 'onEditReplaceAll', searchText: string, replaceText: string, options: ISearchOptions): void;
 }>();
 
-const searchText = ref("");
-const replaceText = ref("");
+const searchText = ref('');
+const replaceText = ref('');
 const showReplaceItems = ref(false);
 const isCasesensitive = ref<boolean>(false); //查找时是否大小写敏感
 const isWholeWord = ref<boolean>(false); //查找时是否大小写敏感
@@ -190,7 +142,7 @@ watch(
     //  console.log("val:" + val);
     editorCurrentMatchIndex.value = val;
   },
-  { immediate: true } // 添加立即触发
+  { immediate: true }, // 添加立即触发
 );
 
 watch(
@@ -199,7 +151,7 @@ watch(
     // console.log("val:" + val);
     showReplaceItems.value = val;
   },
-  { immediate: true } // 添加立即触发
+  { immediate: true }, // 添加立即触发
 );
 
 const onEditFindCaseSensitive = () => {
@@ -215,7 +167,7 @@ const onEditFind = () => {
     wholeWord: isWholeWord.value,
     regex: false,
   };
-  emit("onEditFind", searchText.value, options);
+  emit('onEditFind', searchText.value, options);
 };
 
 /**
@@ -227,7 +179,7 @@ const onEditFindPrevious = () => {
     wholeWord: isWholeWord.value,
     regex: false,
   };
-  emit("onEditFindPrevious", searchText.value, options);
+  emit('onEditFindPrevious', searchText.value, options);
 };
 
 /**
@@ -239,7 +191,7 @@ const onEditFindNext = () => {
     wholeWord: isWholeWord.value,
     regex: false,
   };
-  emit("onEditFindNext", searchText.value, options);
+  emit('onEditFindNext', searchText.value, options);
 };
 
 /**
@@ -251,7 +203,7 @@ const onEditReplace = () => {
     wholeWord: isWholeWord.value,
     regex: false,
   };
-  emit("onEditReplace", searchText.value, replaceText.value, options);
+  emit('onEditReplace', searchText.value, replaceText.value, options);
 };
 
 /**
@@ -263,7 +215,7 @@ const onEditReplaceAll = () => {
     wholeWord: isWholeWord.value,
     regex: false,
   };
-  emit("onEditReplaceAll", searchText.value, replaceText.value, options);
+  emit('onEditReplaceAll', searchText.value, replaceText.value, options);
 };
 
 // 对话框位置
@@ -284,8 +236,8 @@ const startDrag = (e: MouseEvent) => {
   startPos.x = e.clientX - position.x;
   startPos.y = e.clientY - position.y;
 
-  document.addEventListener("mousemove", onDrag);
-  document.addEventListener("mouseup", stopDrag);
+  document.addEventListener('mousemove', onDrag);
+  document.addEventListener('mouseup', stopDrag);
 };
 
 // 处理拖动
@@ -310,8 +262,8 @@ const onDrag = (e: MouseEvent) => {
 // 停止拖动
 const stopDrag = () => {
   isDragging.value = false;
-  document.removeEventListener("mousemove", onDrag);
-  document.removeEventListener("mouseup", stopDrag);
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
 };
 
 // 处理对话框点击（防止点击穿透）
@@ -323,19 +275,19 @@ const handleDialogMouseDown = (e: MouseEvent) => {
 
 // 关闭对话框
 const close = () => {
-  emit("update:visible", false);
+  emit('update:visible', false);
 };
 
 // 组件卸载时清理
 onUnmounted(() => {
-  document.removeEventListener("mousemove", onDrag);
-  document.removeEventListener("mouseup", stopDrag);
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
 });
 </script>
 
 <style scoped>
-@import url("@/assets/css/toolbar.css");
-@import url("@/assets/css/minitoolbar.css");
+@import url('@/assets/css/toolbar.css');
+@import url('@/assets/css/minitoolbar.css');
 .dialog-container {
   position: fixed;
   z-index: 1000;

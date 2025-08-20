@@ -3,7 +3,7 @@
  * @author hbs@bistu.edu.cn
  *
  */
-import { BASEURL, axios } from "@/http";
+import { BASEURL, axios } from '@/http';
 
 import type {
   Pageable,
@@ -19,23 +19,18 @@ import type {
   IServerNews,
   IServerNewView,
   IServerContactUs,
-} from "./ServerType";
+} from './ServerType';
 
-import { clearCookies } from "@/cookies/user";
+import { clearCookies } from '@/cookies/user';
 
 /**
  * 增加
  * @param contactUs
  * @returns
  */
-export async function serverContactUsAdd(
-  contactUs: IServerContactUs
-): Promise<IServerResponseData<string>> {
+export async function serverContactUsAdd(contactUs: IServerContactUs): Promise<IServerResponseData<string>> {
   try {
-    let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.contactus + "add",
-      contactUs
-    );
+    let res = await axios.post<any, IServerResponseData<string>>(BASEURL.contactus + 'add', contactUs);
     return res;
   } catch (err) {
     console.log(err);
@@ -48,14 +43,9 @@ export async function serverContactUsAdd(
  * @param contactUs
  * @returns
  */
-export async function serverContactUsDelete(
-  contactUs: IServerContactUs
-): Promise<IServerResponseData<number>> {
+export async function serverContactUsDelete(contactUs: IServerContactUs): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.contactus + "admin/delete",
-      contactUs
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.contactus + 'admin/delete', contactUs);
     return res;
   } catch (err) {
     console.log(err);
@@ -68,14 +58,9 @@ export async function serverContactUsDelete(
  * @param contactUs
  * @returns
  */
-export async function serverContactUsUpdate(
-  contactUs: IServerContactUs
-): Promise<IServerResponseData<number>> {
+export async function serverContactUsUpdate(contactUs: IServerContactUs): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.contactus + "admin/update",
-      contactUs
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.contactus + 'admin/update', contactUs);
     return res;
   } catch (err) {
     console.log(err);
@@ -91,18 +76,15 @@ export async function serverContactUsUpdate(
  */
 export async function serverGetContactUsPage(
   pageNo: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IServerResponseData<Page<IServerContactUs>>> {
   try {
-    let res = await axios.get<any, IServerResponseData<Page<IServerContactUs>>>(
-      BASEURL.contactus + "admin/page",
-      {
-        params: {
-          page: pageNo,
-          size: pageSize,
-        },
-      }
-    );
+    let res = await axios.get<any, IServerResponseData<Page<IServerContactUs>>>(BASEURL.contactus + 'admin/page', {
+      params: {
+        page: pageNo,
+        size: pageSize,
+      },
+    });
 
     return res;
   } catch (err) {

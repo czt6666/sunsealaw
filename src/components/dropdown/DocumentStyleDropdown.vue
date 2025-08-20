@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, computed } from "vue";
-import svgIcon from "@/components/SvgIcon.vue";
-
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
+import svgIcon from '@/components/SvgIcon.vue';
 
 const { toolbarRef } = defineProps<{
   toolbarRef?: HTMLDivElement | null | undefined;
 }>();
 
 const emit = defineEmits<{
-  (e: "update:showOptionsDropDown", value: boolean): void;
-  (e: "onDocStyleClick", style: string): void;
+  (e: 'update:showOptionsDropDown', value: boolean): void;
+  (e: 'onDocStyleClick', style: string): void;
 }>();
 const dropDownRef = ref<HTMLDivElement | null>(null);
 
@@ -21,12 +20,10 @@ onMounted(() => {
 
     dropDownRef.value.style.top = `${top + height}px`;
     if (left + dropdownRect.width > window.innerWidth)
-      dropDownRef.value.style.left = `${
-        window.innerWidth - dropdownRect.width - 20
-      }px`;
+      dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
     else dropDownRef.value.style.left = `${left}px`;
 
-    document.addEventListener("click", handle);
+    document.addEventListener('click', handle);
   }
 });
 
@@ -39,51 +36,52 @@ watch(
 
       dropDownRef.value.style.top = `${top + height}px`;
       if (left + dropdownRect.width > window.innerWidth)
-        dropDownRef.value.style.left = `${
-          window.innerWidth - dropdownRect.width - 20
-        }px`;
+        dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
       else dropDownRef.value.style.left = `${left}px`;
     }
-  }
+  },
 );
 
 function handle(event: Event) {
   const target = event.target as Node;
 
-  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target))
-    emit("update:showOptionsDropDown", false);
+  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target)) emit('update:showOptionsDropDown', false);
 }
 
 onUnmounted(() => {
-  document.removeEventListener("click", handle);
+  document.removeEventListener('click', handle);
 });
 
 const onDocStyleClick = (style: string) => {
-  emit("onDocStyleClick", style);
+  emit('onDocStyleClick', style);
 };
 </script>
 <template>
   <div ref="dropDownRef" class="dropdown" style="z-index: 9999">
     <div class="drop-down-container">
       <div class="doc-style-item" @click="onDocStyleClick('Normal')">
-        <i class="icon paragraph_normal" />Normal
+        <i class="icon paragraph_normal" />
+        Normal
       </div>
       <div class="doc-style-item" @click="onDocStyleClick('Heading 1')">
-        <i class="icon h1" />Heading 1
+        <i class="icon h1" />
+        Heading 1
       </div>
       <div class="doc-style-item" @click="onDocStyleClick('Heading 2')">
-        <i class="icon h2" />Heading 2
+        <i class="icon h2" />
+        Heading 2
       </div>
       <div class="doc-style-item" @click="onDocStyleClick('Heading 3')">
-        <i class="icon h3" />Heading 3
+        <i class="icon h3" />
+        Heading 3
       </div>
     </div>
   </div>
 </template>
 
 <style>
-@import url("@/assets/css/toolbar.css");
-@import url("@/assets/css/dropdown.css");
+@import url('@/assets/css/toolbar.css');
+@import url('@/assets/css/dropdown.css');
 
 .doc-style-item {
   display: flex;

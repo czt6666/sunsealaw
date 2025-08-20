@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, Ref, h } from "vue";
-import { UserInfo } from "@/components/member/data";
+import { computed, onMounted, reactive, ref, Ref, h } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import {
   clearCookies,
@@ -13,8 +12,8 @@ import {
   getUserName,
   getUserRealName,
   isAdmin,
-} from "@/cookies/user";
-import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from "@/server/Carousel";
+} from '@/cookies/user';
+import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from '@/server/Carousel';
 
 import {
   IServerNewsWithPhotoView,
@@ -22,14 +21,15 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
-} from "@/server/ServerType";
-import { serverGetNewsPhotoView } from "@/server/News";
-import { serverGetAllUserWithPhotoView } from "@/server/SysUser";
-import UserPhoto from "@/components/member/UserPhoto.vue";
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { formatDate0, formatDate01 } from "@/utils/utils";
-import Carousel from "@/components/carousel/Carousel.vue";
-import MemberSwiper from "@/components/member/MemberSwiper.vue";
+} from '@/server/ServerType';
+import { serverGetNewsPhotoView } from '@/server/News';
+import { serverGetAllUserWithPhotoView } from '@/server/SysUser';
+import UserPhoto from '@/components/member/UserPhoto.vue';
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { formatDate0, formatDate01 } from '@/utils/utils';
+import Carousel from '@/components/carousel/Carousel.vue';
+import MemberSwiper from '@/components/member/MemberSwiper.vue';
+import CookieBanner from '@/components/CookieBanner.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -38,38 +38,40 @@ const { t } = useI18n();
 const newsList: Ref<IServerNewsWithPhotoView[]> = ref([]);
 const userView: Ref<IServerUserWithPhotoView[]> = ref([]);
 
-import logoImg from "@/assets/logo.png";
-import captialMarkets from "@/assets/captialMarkets.png";
-import Corporate from "@/assets/Corporate.png";
-import employment from "@/assets/employment.png";
-import healthcare from "@/assets/healthcare.png";
-import intellectual from "@/assets/intellectual.png";
-import immigration from "@/assets/immigration.png";
-import wills from "@/assets/wills.png";
-import civil from "@/assets/civil.png";
+import logoImg from '@/assets/logo.png';
+import captialMarkets from '@/assets/captialMarkets.png';
+import Corporate from '@/assets/Corporate.png';
+import employment from '@/assets/employment.png';
+import healthcare from '@/assets/healthcare.png';
+import intellectual from '@/assets/intellectual.png';
+import immigration from '@/assets/immigration.png';
+import wills from '@/assets/wills.png';
+import civil from '@/assets/civil.png';
 
-const carouselImageViewArray = reactive<IServerCarouselImageView[]>([]);
+const carouselImageViewArray = ref<IServerCarouselImageView[]>([]);
 
 onMounted(async () => {
-  await getCarouselAllDataFromServer();
-  await getTopNewsDataFromServer();
-  // await getUserAllDataFromServer();
+  getCarouselAllDataFromServer();
+  getUserAllDataFromServer();
+  getTopNewsDataFromServer();
 });
 
 const getCarouselAllDataFromServer = async () => {
-  carouselImageViewArray.length = 0;
+  carouselImageViewArray.value.length = 0;
   const ret = await serverGetAllCarouselImageView();
   if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
     for (let i = 0; i < ret.data.length; i++) {
       const info = {
         ...ret.data[i],
-        subTitle: ret.data[i].subTitle.replace("；", "<br>"),
+        subTitle: ret.data[i].subTitle.replace('；', '<br>'),
       };
       console.log(info);
 
       carouselImageViewArray.push(info);
     }
   }
+
+  console.log('getCarouselAllDataFromServer', carouselImageViewArray.value);
 };
 
 /**
@@ -84,7 +86,7 @@ const getTopNewsDataFromServer = async () => {
       newsList.value.push(ret.data[i]);
     }
   }
-  console.log(newsList.value);
+  console.log('getTopNewsDataFromServer', newsList.value);
 };
 
 /**
@@ -98,7 +100,7 @@ const getUserAllDataFromServer = async () => {
     for (let i = 0; i < ret.data.length; i++) {
       userView.value.push(ret.data[i]);
     }
-    console.log(userView.value);
+    console.log('getUserAllDataFromServer', userView.value);
   }
 };
 
@@ -117,27 +119,66 @@ const newsTails = computed(() => {
 
 const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   if (!newsView) {
-    router.push({ path: "/news" });
+    router.push({ path: '/news' });
     return;
   }
 
   router.push({ path: `/news-detail/${newsView.news.id}` });
 };
+
+const services = ref([
+  {
+    field: 'Practice',
+    title: 'Capital Markets',
+    path: '/service/capital-markets',
+    image: captialMarkets,
+  },
+  {
+    field: 'Practice',
+    title: 'Corporate, M&A, and Private Equity',
+    path: '/service/corporate-m-a-and-private-equity',
+    image: Corporate,
+  },
+  {
+    field: 'Practice',
+    title: 'Employment & Labor Law',
+    path: '/service/employment-labor-law',
+    image: employment,
+  },
+  {
+    field: 'Practice',
+    title: 'Healthcare & Life Sciences Compliance',
+    path: '/service/healthcare-life-sciences-compliance',
+    image: healthcare,
+  },
+  {
+    field: 'Practice',
+    title: 'Intellectual Property',
+    path: '/service/intellectual-property',
+    image: intellectual,
+  },
+  {
+    field: 'Practice',
+    title: 'Immigration Law',
+    path: '/service/immigration-law',
+    image: immigration,
+  },
+  {
+    field: 'Practice',
+    title: 'Wills, Trusts & Estates Planning',
+    path: '/service/wills-trusts-estates-planning',
+    image: wills,
+  },
+  {
+    field: 'Practice',
+    title: 'Civil & Commercial Litigation',
+    path: '/service/civil-commercial-litigation',
+    image: civil,
+  },
+]);
 </script>
 <template>
-  <!--轮播图
-  <el-carousel
-    :interval="2000"
-    arrow="always"
-    motion-blur
-    height="600px"
-    autoplay
-  >
-    <el-carousel-item v-for="item in imgs" :key="item">
-      <img :src="item" style="" />
-    </el-carousel-item>
-  </el-carousel>
--->
+  <CookieBanner />
   <Carousel :items="carouselImageViewArray" :autoPlay="true" :interval="3000" />
 
   <!--成员轮播图-->
@@ -145,7 +186,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t("app.team_member") }}
+          {{ t('app.team_member') }}
         </div>
       </div>
       <div class="card-header-read-more">
@@ -153,91 +194,31 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
       </div>
     </div>
 
-    <MemberSwiper :users="UserInfo"></MemberSwiper>
-    <!-- <el-carousel :interval="2000" arrow="always" height="400px" autoplay style="background-color: white; color: black"> -->
-    <!-- <el-carousel-item v-for="userItem in userView" :key="userItem.sysUser.id"> -->
-    <!-- <div style="display: flex; justify-content: center; align-items: center; margin: 20px"> -->
-    <!--成员主要信息-->
-    <!-- <div style="display: flex" v-if="userItem.sysUser.id > 0"> -->
-    <!--头像-->
-    <!-- <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center"> -->
-    <!-- <img
-                :src="userItem.photoBase64"
-                class="memger-photo"
-                @click="router.push({ path: `/team-member/${userItem.sysUser.id}` })"
-              /> -->
-    <!-- <div class="highlight-overlay"></div> -->
-    <!-- </div> -->
-    <!--姓名及注册信息等-->
-    <!-- <div class="user-container"> -->
-    <!-- <div class="user-container-inner"> -->
-    <!--姓名-->
-    <!-- <div
-                  style="font-size: 3em; cursor: pointer"
-                  @click="router.push({ path: `/team-member/${userItem.sysUser.id}` })"
-                >
-                  {{ userItem.sysUser.realName }}
-                </div> -->
-
-    <!--公司内角色---->
-    <!-- <div style="margin: 10px">
-                  {{ userItem.sysUser.companyRole }}
-                </div> -->
-
-    <!--注册信息-->
-    <!-- <div style="margin: 10px">
-                  {{ userItem.sysUser.licensedInfo }}
-                </div> -->
-    <!-- </div> -->
-    <!-- </div> -->
-    <!-- </div> -->
-    <!-- </div> -->
-    <!-- </el-carousel-item> -->
-    <!-- </el-carousel> -->
+    <MemberSwiper :users="userView"></MemberSwiper>
   </section>
 
   <!--Service Area-->
-
   <section class="section-card">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t("app.service") }}
+          {{ t('app.service') }}
         </div>
       </div>
     </div>
     <div class="card-content">
-      <div class="service-card" @click="router.push({ path: '/service/capital-markets' })">
-        <img :src="captialMarkets" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Capital Markets</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/corporate-m-a-and-private-equity' })">
-        <img :src="Corporate" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Corporate, M&A,and Private Equity</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/employment-labor-law' })">
-        <img :src="employment" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Employment & Labor Law</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/healthcare-life-sciences-compliance' })">
-        <img :src="healthcare" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Healthcare & Life Sciences Compliance</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/intellectual-property' })">
-        <img :src="intellectual" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Intellectual Property</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/immigration-law' })">
-        <img :src="immigration" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Immigration Law</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/wills-trusts-estates-planning' })">
-        <img :src="wills" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Wills, Trusts & Estates Planning</div>
-      </div>
-      <div class="service-card" @click="router.push({ path: '/service/civil-commercial-litigation' })">
-        <img :src="civil" style="width: 120px; height: 120px" />
-        <div class="service-card-title">Civil & Commercial Litigation</div>
+      <div
+        v-for="service in services"
+        :key="service.path"
+        class="service-card"
+        @click="router.push({ path: service.path })"
+      >
+        <div class="service-header">
+          {{ service.title }}
+        </div>
+        <div class="service-body">
+          <img :src="service.image" alt="" class="service-icon" />
+        </div>
       </div>
     </div>
   </section>
@@ -247,7 +228,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
         <div class="card-header-title-text">
-          {{ t("app.news") }}
+          {{ t('app.news') }}
         </div>
         <div class="card-header-title-text-description">
           The latest news on our deals, insights, events, and achievements
@@ -291,7 +272,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
           </div>
 
           <!--新闻内容-->
-          <div style="overflow: hidden; height: 55px; margin: 0px 0px; font-size: 0.8em; line-height: 1.5em">
+          <div style="overflow: hidden; height: 44px; font-size: 0.8em; line-height: 1.5em">
             {{ newsItem.news.brief }}
           </div>
 
@@ -305,13 +286,14 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   <section class="section-card">
     <div style="display: flex">
       <div style="font-size: x-large; text-align: left">
-        We recognize that the needs ofeach client are distinct. Our commitment lies in providing efficient
-        andprofessional legal services designed to facilitate your personal and businesssuccess. Please do not hesitate
-        to reach out at any time to discover how we can support you.
+        At SUNSEA LAW, we are dedicated to providing high-quality, client-focused legal services across diverse practice
+        areas. Our experienced attorneys deliver strategic, practical solutions for businesses, investors, and
+        individuals navigating complex legal and regulatory landscapes. We value long-term partnerships built on trust,
+        collaboration, and shared success.
       </div>
-      <div style="flex: 1">
+      <!-- <div style="flex: 1">
         <img :src="logoImg" style="width: 200px" />
-      </div>
+      </div> -->
     </div>
   </section>
 </template>
@@ -339,7 +321,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   background-color: white;
 }
 .card-header-title-text {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 60px;
   text-align: left;
   line-height: 82px;
@@ -349,7 +331,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
 }
 
 .card-header-title-text-description {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 20px;
   text-align: left;
   line-height: 42px;
@@ -371,7 +353,7 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   cursor: pointer;
   text-align: center;
   line-height: 32px;
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   transition: all 0.3s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   &:hover {
@@ -396,14 +378,6 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-
-/* .card-content-item-image-container:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.card-content-item-image-container:hover .highlight-overlay {
-  opacity: 1;
-} */
 
 .highlight-overlay {
   position: absolute;
@@ -458,39 +432,52 @@ const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   }
 }
+
 .service-card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  padding: 20px;
-  width: 200px;
-  height: 200px;
+  box-sizing: border-box;
+  height: 240px;
+  width: 240px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  transition: all 0.3s ease-in-out;
-  cursor: pointer;
-  &:hover {
-    transform: scale(1.05);
-  }
-  & > img {
-    width: 100px;
-    height: 100px;
-  }
+  font-family: 'Georgia', sans-serif;
 }
 
-.service-card-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
-  color: #333;
-  cursor: pointer;
-  &:hover {
-    color: #c00a30;
-    transform: scale(1.02);
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.service-header {
+  box-sizing: border-box;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #06456b;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-family: 'Georgia', serif;
+}
+
+.service-body {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
   }
 }
 

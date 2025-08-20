@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRouter, useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import {
   clearCookies,
   setUserCookies,
@@ -9,13 +9,13 @@ import {
   getUserName,
   getUserRealName,
   isAdmin,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
-import locationMap from "@/assets/staticmap_zh-CN.png";
+import locationMap from '@/assets/staticmap_zh-CN.png';
 </script>
 
 <template>
@@ -37,7 +37,7 @@ import locationMap from "@/assets/staticmap_zh-CN.png";
     <div class="news-container-outer">
       <div class="news-container-inner">
         <div style="font-size: 3em; cursor: pointer">
-          {{ t("app.visit_us") }}
+          {{ t('app.visit_us') }}
         </div>
       </div>
     </div>
@@ -58,9 +58,7 @@ import locationMap from "@/assets/staticmap_zh-CN.png";
     <div class="visit-us-container" style="flex: 1">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">Location</div>
-        <div style="text-align: left">
-          LA Address: 3350 Shelby Street Suite 200, Ontario,CA 91764
-        </div>
+        <div style="text-align: left">LA Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
       </div>
     </div>
     <div class="visit-us-container" style="flex: 1">

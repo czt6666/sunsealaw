@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,12 +13,12 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
+import { formatDate0, formatDate01 } from '@/utils/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -68,30 +68,21 @@ onMounted(async () => {});
   </div>
 
   <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">
-      Intellectual Property
-    </div>
+    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Intellectual Property</div>
 
     <p>
-      We help clients secure and enforce their intellectual property rights,
-      reduce risk exposure, and maximize the commercial value of innovation. Our
-      team advises across the full lifecycle of IP assets, from registration to
+      We help clients secure and enforce their intellectual property rights, reduce risk exposure, and maximize the
+      commercial value of innovation. Our team advises across the full lifecycle of IP assets, from registration to
       enforcement and dispute resolution, both domestically and internationally.
     </p>
 
     <p>Our IP services include:</p>
     <ul>
-      <li>
-        Trademark, patent, and copyright protection and portfolio management
-      </li>
+      <li>Trademark, patent, and copyright protection and portfolio management</li>
       <li>IP litigation and enforcement actions</li>
       <li>Licensing, technology transfer, and IP transactional support</li>
-      <li>
-        Cross-border infringement analysis for e-commerce and tech companies
-      </li>
-      <li>
-        Pre-litigation strategy, negotiation, and settlement of IP disputes
-      </li>
+      <li>Cross-border infringement analysis for e-commerce and tech companies</li>
+      <li>Pre-litigation strategy, negotiation, and settlement of IP disputes</li>
     </ul>
   </div>
 </template>

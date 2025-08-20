@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, computed } from "vue";
-import svgIcon from "@/components/SvgIcon.vue";
-
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
+import svgIcon from '@/components/SvgIcon.vue';
 
 const { toolbarRef } = defineProps<{
   toolbarRef?: HTMLDivElement | null | undefined;
 }>();
 
 const emit = defineEmits<{
-  (e: "update:showOptionsDropDown", value: boolean): void;
-  (e: "onFontSizeClick", fontsize: number): void;
+  (e: 'update:showOptionsDropDown', value: boolean): void;
+  (e: 'onFontSizeClick', fontsize: number): void;
 }>();
 const dropDownRef = ref<HTMLDivElement | null>(null);
 
@@ -21,12 +20,10 @@ onMounted(() => {
 
     dropDownRef.value.style.top = `${top + height}px`;
     if (left + dropdownRect.width > window.innerWidth)
-      dropDownRef.value.style.left = `${
-        window.innerWidth - dropdownRect.width - 20
-      }px`;
+      dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
     else dropDownRef.value.style.left = `${left}px`;
 
-    document.addEventListener("click", handle);
+    document.addEventListener('click', handle);
   }
 });
 
@@ -39,27 +36,24 @@ watch(
 
       dropDownRef.value.style.top = `${top + height}px`;
       if (left + dropdownRect.width > window.innerWidth)
-        dropDownRef.value.style.left = `${
-          window.innerWidth - dropdownRect.width - 20
-        }px`;
+        dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
       else dropDownRef.value.style.left = `${left}px`;
     }
-  }
+  },
 );
 
 function handle(event: Event) {
   const target = event.target as Node;
 
-  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target))
-    emit("update:showOptionsDropDown", false);
+  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target)) emit('update:showOptionsDropDown', false);
 }
 
 onUnmounted(() => {
-  document.removeEventListener("click", handle);
+  document.removeEventListener('click', handle);
 });
 
 const onFontSizeClick = (fontsize: number) => {
-  emit("onFontSizeClick", fontsize);
+  emit('onFontSizeClick', fontsize);
 };
 
 const range = (start: number, end: number) => {
@@ -74,12 +68,7 @@ const range = (start: number, end: number) => {
 <template>
   <div ref="dropDownRef" class="dropdown" style="z-index: 9999">
     <div class="drop-down-container">
-      <div
-        v-for="item in range(5, 120)"
-        :key="item"
-        class="font-item"
-        @click="onFontSizeClick(item)"
-      >
+      <div v-for="item in range(5, 120)" :key="item" class="font-item" @click="onFontSizeClick(item)">
         <div>
           {{ item }}
         </div>
@@ -89,7 +78,7 @@ const range = (start: number, end: number) => {
 </template>
 
 <style>
-@import url("@/assets/css/dropdown.css");
+@import url('@/assets/css/dropdown.css');
 .font-item {
   text-align: left;
   border-radius: 5px;

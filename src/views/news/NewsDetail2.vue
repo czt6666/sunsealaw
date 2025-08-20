@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, Ref, watch } from "vue";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { computed, onMounted, reactive, ref, Ref, watch } from 'vue';
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
 
-import type { FormInstance, FormRules } from "element-plus";
-import { IServerNews } from "@/server/ServerType";
+import type { FormInstance, FormRules } from 'element-plus';
+import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
   serverNewsUpdate,
@@ -13,13 +13,13 @@ import {
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsPhotoFileById,
   serverGetNewsById,
-} from "@/server/News";
+} from '@/server/News';
 
-import NewsPhoto from "@/components/news/NewsPhoto.vue";
-import { useI18n } from "vue-i18n";
+import NewsPhoto from '@/components/news/NewsPhoto.vue';
+import { useI18n } from 'vue-i18n';
 
-import { formatDate0, formatDate01 } from "@/utils/utils";
-import RenderHtml from "@/components/lexical/RenderHtml.vue";
+import { formatDate0, formatDate01 } from '@/utils/utils';
+import RenderHtml from '@/components/lexical/RenderHtml.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -28,17 +28,17 @@ const newsId = ref(0);
 const newsData = ref<IServerNews>({
   id: 0,
   createDateTime: new Date(),
-  title: "",
-  brief: "",
-  contentJson: "",
-  contentHtml: "",
-  titlePhoto: "",
+  title: '',
+  brief: '',
+  contentJson: '',
+  contentHtml: '',
+  titlePhoto: '',
   sysUserId: 0,
 });
 
 onBeforeRouteUpdate(async (to) => {
   console.log(to);
-  if (typeof to.params.id === "string") {
+  if (typeof to.params.id === 'string') {
     newsId.value = parseInt(to.params.id);
     await getNewsDataFromSever(parseInt(to.params.id));
   } else {
@@ -52,7 +52,7 @@ onBeforeRouteUpdate(async (to) => {
 onMounted(async () => {
   console.log(route.params);
   console.log(typeof route.params.id);
-  if (typeof route.params.id === "string") {
+  if (typeof route.params.id === 'string') {
     await getNewsDataFromSever(parseInt(route.params.id));
     newsId.value = parseInt(route.params.id);
   }
@@ -102,7 +102,7 @@ const getNewsDataFromSever = async (id: number) => {
   background-color: #0c162f;
   margin: 0px;
   color: white;
-  font-family: "Instrument Serif", serif;
+  font-family: 'Instrument Serif', serif;
   font-size: 20px;
   font-weight: 400;
   letter-spacing: 1.2px;
@@ -125,19 +125,20 @@ const getNewsDataFromSever = async (id: number) => {
   align-items: flex-start;
   justify-content: space-between;
 }
+
 .news-info {
   padding: 20px;
   width: 800px;
   margin: 0 auto;
 }
-::v-deep(.image-block) {
+:deep(.image-block) {
   text-align: center;
 }
-::v-deep(.image-block img) {
+:deep(.image-block img) {
   max-width: 554px;
   max-height: 369px;
 }
-::v-deep(p.content-paragraph) {
+:deep(p.content-paragraph) {
   text-indent: 2em;
 }
 </style>

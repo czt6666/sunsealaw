@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from "vue";
-import DOMPurify from "dompurify";
+import { onMounted, ref, reactive, computed } from 'vue';
+import DOMPurify from 'dompurify';
 
 const props = defineProps({
   htmlContent: {

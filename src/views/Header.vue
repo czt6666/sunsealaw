@@ -91,14 +91,13 @@ const logout = () => {
         style="
           top: 50%;
           position: absolute;
-          color: rgb(255, 255, 255);
+          color: #fff;
           font-size: 24px;
           line-height: 48px;
           cursor: pointer;
-          margin-top: 40px;
           text-align: left;
           left: 20%;
-          transform: translate(0, -60%);
+          transform: translate(0, -50%);
         "
       >
         <!--About-->
@@ -161,7 +160,17 @@ const logout = () => {
           {{ t('app.visit_us') }}
         </div>
       </div>
-      <div style="overflow: hidden; position: absolute; top: 24%; left: 50%; width: 500px; height: 500px">
+      <div
+        style="
+          overflow: hidden;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translateY(-50%);
+          width: 500px;
+          height: 500px;
+        "
+      >
         <img style="opacity: 0.3; width: 500px" src="@/assets/logo.png" alt="" />
       </div>
     </div>
@@ -214,7 +223,8 @@ const logout = () => {
     <div class="app-header-menu-item" style="margin-right: 10px" v-if="getUserName()">
       <el-dropdown>
         <el-button>
-          {{ getUserName() }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+          {{ getUserName() }}
+          <el-icon class="el-icon--right"><arrow-down /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
@@ -222,21 +232,21 @@ const logout = () => {
 
             <el-dropdown-item @click="router.push('/user-info')">{{ t('app.user_info') }}</el-dropdown-item>
 
-            <el-dropdown-item v-if="isAdmin()" divided @click="router.push('/manager-news')">{{
-              t('app.manager_news')
-            }}</el-dropdown-item>
+            <el-dropdown-item v-if="isAdmin()" divided @click="router.push('/manager-news')">
+              {{ t('app.manager_news') }}
+            </el-dropdown-item>
 
-            <el-dropdown-item v-if="isAdmin()" @click="router.push('/manager-contact-us')">{{
-              t('app.manager_contact_us')
-            }}</el-dropdown-item>
+            <el-dropdown-item v-if="isAdmin()" @click="router.push('/manager-contact-us')">
+              {{ t('app.manager_contact_us') }}
+            </el-dropdown-item>
 
-            <el-dropdown-item v-if="isAdmin()" @click="router.push('/manager-team-member')">{{
-              t('app.manager_team_member')
-            }}</el-dropdown-item>
+            <el-dropdown-item v-if="isAdmin()" @click="router.push('/manager-team-member')">
+              {{ t('app.manager_team_member') }}
+            </el-dropdown-item>
 
-            <el-dropdown-item v-if="isAdmin()" @click="router.push('/manager-carousel')">{{
-              t('app.manager_carousel')
-            }}</el-dropdown-item>
+            <el-dropdown-item v-if="isAdmin()" @click="router.push('/manager-carousel')">
+              {{ t('app.manager_carousel') }}
+            </el-dropdown-item>
 
             <el-dropdown-item divided @click="logout()">{{ t('app.logout') }}</el-dropdown-item>
           </el-dropdown-menu>

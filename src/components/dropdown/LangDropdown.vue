@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, computed } from "vue";
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
 
-import {
-  LangeuageOption,
-  defaultLanguageOption,
-  LANGUAGES_OPTIONS,
-} from "@/i18n/langtypes";
+import { LangeuageOption, defaultLanguageOption, LANGUAGES_OPTIONS } from '@/i18n/langtypes';
 
-import { useI18n } from "vue-i18n";
-import { getLocale } from "@/i18n";
+import { useI18n } from 'vue-i18n';
+import { getLocale } from '@/i18n';
 const { locale: i18nLanguage } = useI18n();
 
 const { t } = useI18n(); // 解构出t方法
@@ -18,8 +14,8 @@ const { toolbarRef } = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:showOptionsDropDown", value: boolean): void;
-  (e: "onItemClick", lang: LangeuageOption): void;
+  (e: 'update:showOptionsDropDown', value: boolean): void;
+  (e: 'onItemClick', lang: LangeuageOption): void;
 }>();
 const dropDownRef = ref<HTMLDivElement | null>(null);
 const currentLang = ref<LangeuageOption>(defaultLanguageOption);
@@ -32,12 +28,10 @@ onMounted(() => {
 
     dropDownRef.value.style.top = `${top + height}px`;
     if (left + dropdownRect.width > window.innerWidth)
-      dropDownRef.value.style.left = `${
-        window.innerWidth - dropdownRect.width - 20
-      }px`;
+      dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
     else dropDownRef.value.style.left = `${left}px`;
 
-    document.addEventListener("click", handle);
+    document.addEventListener('click', handle);
   }
 
   getStoreLanguage();
@@ -49,7 +43,7 @@ onMounted(() => {
 const getStoreLanguage = () => {
   let langStore = getLocale();
 
-  if (!langStore) langStore = "en";
+  if (!langStore) langStore = 'en';
 
   LANGUAGES_OPTIONS.forEach((item) => {
     if (item.value == langStore) {
@@ -57,7 +51,7 @@ const getStoreLanguage = () => {
     }
   });
 
-  console.log("currentLang", currentLang.value);
+  console.log('currentLang', currentLang.value);
 };
 
 watch(
@@ -69,31 +63,28 @@ watch(
 
       dropDownRef.value.style.top = `${top + height}px`;
       if (left + dropdownRect.width > window.innerWidth)
-        dropDownRef.value.style.left = `${
-          window.innerWidth - dropdownRect.width - 20
-        }px`;
+        dropDownRef.value.style.left = `${window.innerWidth - dropdownRect.width - 20}px`;
       else dropDownRef.value.style.left = `${left}px`;
     }
-  }
+  },
 );
 
 function handle(event: Event) {
   const target = event.target as Node;
 
-  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target))
-    emit("update:showOptionsDropDown", false);
+  if (!dropDownRef.value?.contains(target) && !toolbarRef?.contains(target)) emit('update:showOptionsDropDown', false);
 }
 
 onUnmounted(() => {
-  document.removeEventListener("click", handle);
+  document.removeEventListener('click', handle);
 });
 
 const onItemClick = (lang: LangeuageOption) => {
-  emit("onItemClick", lang);
+  emit('onItemClick', lang);
   currentLang.value = lang;
 
-  console.log("onChangeLang", lang);
-  localStorage.setItem("locale", lang.value); // 存入缓存
+  console.log('onChangeLang', lang);
+  localStorage.setItem('locale', lang.value); // 存入缓存
   i18nLanguage.value = lang.value;
 
   window.location.reload(); // 刷新页面，也可以不刷新，但是一般要修改ui框架的语言，就需要刷新
@@ -108,11 +99,7 @@ const onItemClick = (lang: LangeuageOption) => {
         :key="index"
         style="width: 160px"
         class="drop-down-line-width-item"
-        :class="`${
-          item.value == currentLang.value
-            ? 'drop-down-line-width-item-active'
-            : ''
-        }`"
+        :class="`${item.value == currentLang.value ? 'drop-down-line-width-item-active' : ''}`"
         @click="onItemClick(item)"
       >
         {{ item.label }}
@@ -122,8 +109,8 @@ const onItemClick = (lang: LangeuageOption) => {
 </template>
 
 <style>
-@import url("@/assets/css/toolbar.css");
-@import url("@/assets/css/dropdown.css");
+@import url('@/assets/css/toolbar.css');
+@import url('@/assets/css/dropdown.css');
 
 .drop-down-line-width-item {
   display: flex;

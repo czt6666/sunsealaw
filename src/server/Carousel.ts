@@ -3,7 +3,7 @@
  * @author hbs@bistu.edu.cn
  *
  */
-import { BASEURL, axios } from "@/http";
+import { BASEURL, axios } from '@/http';
 
 import type {
   Pageable,
@@ -19,23 +19,18 @@ import type {
   IServerNews,
   IServerNewView,
   IServerCarouselImageView,
-} from "./ServerType";
+} from './ServerType';
 
-import { clearCookies } from "@/cookies/user";
+import { clearCookies } from '@/cookies/user';
 
 /**
  * 增加
  * @param carousel
  * @returns
  */
-export async function serverCarouselAdd(
-  carousel: IServerCarousel
-): Promise<IServerResponseData<string>> {
+export async function serverCarouselAdd(carousel: IServerCarousel): Promise<IServerResponseData<string>> {
   try {
-    let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.carousel + "admin/add",
-      carousel
-    );
+    let res = await axios.post<any, IServerResponseData<string>>(BASEURL.carousel + 'admin/add', carousel);
     return res;
   } catch (err) {
     console.log(err);
@@ -48,14 +43,9 @@ export async function serverCarouselAdd(
  * @param carousel
  * @returns
  */
-export async function serverCarouselDelete(
-  carousel: IServerCarousel
-): Promise<IServerResponseData<number>> {
+export async function serverCarouselDelete(carousel: IServerCarousel): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.carousel + "admin/delete",
-      carousel
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.carousel + 'admin/delete', carousel);
     return res;
   } catch (err) {
     console.log(err);
@@ -68,14 +58,9 @@ export async function serverCarouselDelete(
  * @param carousel
  * @returns
  */
-export async function serverCarouselUpdate(
-  carousel: IServerCarousel
-): Promise<IServerResponseData<number>> {
+export async function serverCarouselUpdate(carousel: IServerCarousel): Promise<IServerResponseData<number>> {
   try {
-    let res = await axios.post<any, IServerResponseData<number>>(
-      BASEURL.carousel + "admin/update",
-      carousel
-    );
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.carousel + 'admin/update', carousel);
     return res;
   } catch (err) {
     console.log(err);
@@ -91,18 +76,15 @@ export async function serverCarouselUpdate(
  */
 export async function serverGetCarouselPage(
   pageNo: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IServerResponseData<Page<IServerCarousel>>> {
   try {
-    let res = await axios.get<any, IServerResponseData<Page<IServerCarousel>>>(
-      BASEURL.carousel + "admin/page",
-      {
-        params: {
-          page: pageNo,
-          size: pageSize,
-        },
-      }
-    );
+    let res = await axios.get<any, IServerResponseData<Page<IServerCarousel>>>(BASEURL.carousel + 'admin/page', {
+      params: {
+        page: pageNo,
+        size: pageSize,
+      },
+    });
 
     return res;
   } catch (err) {
@@ -116,13 +98,11 @@ export async function serverGetCarouselPage(
  * @param files
  * @returns
  */
-export async function serverAddCarouselPhotoUploadTempFiles(
-  files: FormData
-): Promise<IServerResponseData<string>> {
+export async function serverAddCarouselPhotoUploadTempFiles(files: FormData): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.carousel + "admin/add-carousel-photo-temp-file",
-      files
+      BASEURL.carousel + 'admin/add-carousel-photo-temp-file',
+      files,
     );
     return res;
   } catch (err) {
@@ -136,13 +116,11 @@ export async function serverAddCarouselPhotoUploadTempFiles(
  * @param files
  * @returns
  */
-export async function serverDeleteCarouselPhotoUploadTempFiles(
-  files: FormData
-): Promise<IServerResponseData<string>> {
+export async function serverDeleteCarouselPhotoUploadTempFiles(files: FormData): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.post<any, IServerResponseData<string>>(
-      BASEURL.carousel + "admin/delete-carousel-photo-temp-file",
-      files
+      BASEURL.carousel + 'admin/delete-carousel-photo-temp-file',
+      files,
     );
     return res;
   } catch (err) {
@@ -151,18 +129,13 @@ export async function serverDeleteCarouselPhotoUploadTempFiles(
   }
 }
 
-export async function serverGetCarouselPhotoFileById(
-  carouselId: number
-): Promise<IServerResponseData<string>> {
+export async function serverGetCarouselPhotoFileById(carouselId: number): Promise<IServerResponseData<string>> {
   try {
-    let res = await axios.get<any, IServerResponseData<string>>(
-      BASEURL.carousel + "download-photo-file-in-base64",
-      {
-        params: {
-          carouselId: carouselId,
-        },
-      }
-    );
+    let res = await axios.get<any, IServerResponseData<string>>(BASEURL.carousel + 'download-photo-file-in-base64', {
+      params: {
+        carouselId: carouselId,
+      },
+    });
 
     return res;
   } catch (err) {
@@ -171,13 +144,9 @@ export async function serverGetCarouselPhotoFileById(
   }
 }
 
-export async function serverGetAllCarouselPhotoFilesById(): Promise<
-  IServerResponseData<string[]>
-> {
+export async function serverGetAllCarouselPhotoFilesById(): Promise<IServerResponseData<string[]>> {
   try {
-    let res = await axios.get<any, IServerResponseData<string[]>>(
-      BASEURL.carousel + "download-photo-files-in-base64"
-    );
+    let res = await axios.get<any, IServerResponseData<string[]>>(BASEURL.carousel + 'download-photo-files-in-base64');
 
     return res;
   } catch (err) {
@@ -186,14 +155,11 @@ export async function serverGetAllCarouselPhotoFilesById(): Promise<
   }
 }
 
-export async function serverGetAllCarouselImageView(): Promise<
-  IServerResponseData<IServerCarouselImageView[]>
-> {
+export async function serverGetAllCarouselImageView(): Promise<IServerResponseData<IServerCarouselImageView[]>> {
   try {
-    let res = await axios.get<
-      any,
-      IServerResponseData<IServerCarouselImageView[]>
-    >(BASEURL.carousel + "get-all-carousel-image-view");
+    let res = await axios.get<any, IServerResponseData<IServerCarouselImageView[]>>(
+      BASEURL.carousel + 'get-all-carousel-image-view',
+    );
 
     return res;
   } catch (err) {

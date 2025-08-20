@@ -1,9 +1,9 @@
 //语言
 
-import { createI18n } from "vue-i18n"; //引入vue-i18n组件
-import zh from "./zh/index";
-import en from "./en/index";
-import hk from "./hk/index";
+import { createI18n } from 'vue-i18n'; //引入vue-i18n组件
+import zh from './zh/index';
+import en from './en/index';
+import hk from './hk/index';
 
 /**
  * 获得语言,
@@ -14,7 +14,7 @@ import hk from "./hk/index";
  * @returns
  */
 export function getLocale() {
-  const local = localStorage.getItem("locale");
+  const local = localStorage.getItem('locale');
 
   if (local) return local;
   else {
@@ -35,17 +35,17 @@ export function getLocale() {
     */
     var defaultValue = navigator.language;
 
-    if (defaultValue == "zh-CN") defaultValue = "zh";
+    if (defaultValue == 'zh-CN') defaultValue = 'zh';
     else {
       defaultValue = defaultValue.substring(0, 2); //截取lang前2位字符
-      if (defaultValue == "en") defaultValue = "en";
-      else if (defaultValue == "zh") defaultValue = "hk";
-      else if (defaultValue == "ja") defaultValue = "jp";
-      else if (defaultValue == "fr") defaultValue = "fr";
-      else if (defaultValue == "ru") defaultValue = "ru";
-      else if (defaultValue == "es") defaultValue = "es";
-      else if (defaultValue == "ko") defaultValue = "kr";
-      else defaultValue = "en";
+      if (defaultValue == 'en') defaultValue = 'en';
+      else if (defaultValue == 'zh') defaultValue = 'hk';
+      else if (defaultValue == 'ja') defaultValue = 'jp';
+      else if (defaultValue == 'fr') defaultValue = 'fr';
+      else if (defaultValue == 'ru') defaultValue = 'ru';
+      else if (defaultValue == 'es') defaultValue = 'es';
+      else if (defaultValue == 'ko') defaultValue = 'kr';
+      else defaultValue = 'en';
     }
     return defaultValue;
   }

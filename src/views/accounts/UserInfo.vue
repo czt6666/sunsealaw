@@ -1,23 +1,18 @@
 <script setup lang="ts">
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted } from 'vue';
 
-import { ElMessage, ElMessageBox } from "element-plus";
-import { useRouter, useRoute } from "vue-router";
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { useRouter, useRoute } from 'vue-router';
 
-import PythonLogo from "@/assets/python-logo-only.png";
+import PythonLogo from '@/assets/python-logo-only.png';
 
-import { View, Hide, Refresh } from "@element-plus/icons-vue";
-import type { FormInstance, FormRules } from "element-plus";
-import {
-  serverLogin,
-  serverGetPublicKey,
-  serverSignUp,
-  serverGetCaptchaJpg,
-} from "@/server/SysUser";
+import { View, Hide, Refresh } from '@element-plus/icons-vue';
+import type { FormInstance, FormRules } from 'element-plus';
+import { serverLogin, serverGetPublicKey, serverSignUp, serverGetCaptchaJpg } from '@/server/SysUser';
 
-import { IServerSysUserLoginResult } from "@/server/ServerType";
+import { IServerSysUserLoginResult } from '@/server/ServerType';
 
-import { JSEncrypt } from "jsencrypt";
+import { JSEncrypt } from 'jsencrypt';
 
 import {
   clearCookies,
@@ -29,12 +24,12 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
-import { userStore } from "@/store/user";
+import { userStore } from '@/store/user';
 
 //服务器返回到前端的类型
-import { IServerSysUser } from "@/server/ServerType";
+import { IServerSysUser } from '@/server/ServerType';
 
 import {
   serverGetUserBySysUserId,
@@ -42,17 +37,11 @@ import {
   serverGetUserPhotoFileById,
   serverAddUserPhotoUploadTempFilesByAuthenticatedUser,
   serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser,
-} from "@/server/SysUser";
+} from '@/server/SysUser';
 
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 
-import type {
-  UploadInstance,
-  UploadProps,
-  UploadRawFile,
-  UploadUserFile,
-  UploadRequestOptions,
-} from "element-plus";
+import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from 'element-plus';
 
 const router = useRouter();
 const route = useRoute();
@@ -61,8 +50,8 @@ const { t } = useI18n();
 const store = userStore();
 
 const show = ref(false);
-const Authorization = ref("");
-const captchaLabel = ref("验证码");
+const Authorization = ref('');
+const captchaLabel = ref('验证码');
 const captchaLabelCountDown = ref(120);
 const showPwd = ref(false); //是否显示密码明文
 
@@ -84,7 +73,7 @@ const getSysUserFromServer = async () => {
       form.licensedInfo = ret.data.licensedInfo; //律师执业证信息
       form.details = ret.data.details; //详细信息
       form.email = ret.data.email; //email,电子邮件
-      form.photo= ret.data.photo; //照片
+      form.photo = ret.data.photo; //照片
       form.auth = ret.data.auth; //权限
 
       let res = await serverGetUserPhotoFileById(ret.data.id);
@@ -100,31 +89,31 @@ const userView = ref<IServerSysUser>();
 const ruleFormRef = ref<FormInstance>();
 
 const form = reactive({
-  userName: "",
-  realName: "",
-  password: "", //pwd,密码
-  companyRole: "", //公司内角色
-  licensedInfo: "", //律师执业证信息
-  details: "", //详细信息
-  email: "", //email,电子邮件
-  photo: "", //照片
+  userName: '',
+  realName: '',
+  password: '', //pwd,密码
+  companyRole: '', //公司内角色
+  licensedInfo: '', //律师执业证信息
+  details: '', //详细信息
+  email: '', //email,电子邮件
+  photo: '', //照片
   auth: 0, //权限
 });
 
 // 表单验证规则
 const rules = reactive<FormRules>({
-  userName: [{ required: true, message: "User Name", trigger: "blur" }],
-  realName: [{ required: true, message: "Real Name", trigger: "blur" }],
-  password: [{ required: true, message: "Password", trigger: "blur" }],
-  companyRole: [{ required: true, message: "Company Role", trigger: "blur" }],
-  licensedInfo: [{ required: true, message: "Licensed Info", trigger: "blur" }],
-  email: [{ required: true, message: "Email", trigger: "blur" }],
-  photo: [{ required: true, message: "Photo", trigger: "blur" }],
-  auth: [{ required: true, message: "Auth", trigger: "blur" }],
+  userName: [{ required: true, message: 'User Name', trigger: 'blur' }],
+  realName: [{ required: true, message: 'Real Name', trigger: 'blur' }],
+  password: [{ required: true, message: 'Password', trigger: 'blur' }],
+  companyRole: [{ required: true, message: 'Company Role', trigger: 'blur' }],
+  licensedInfo: [{ required: true, message: 'Licensed Info', trigger: 'blur' }],
+  email: [{ required: true, message: 'Email', trigger: 'blur' }],
+  photo: [{ required: true, message: 'Photo', trigger: 'blur' }],
+  auth: [{ required: true, message: 'Auth', trigger: 'blur' }],
 });
 
 const submitForm = async (formEl: FormInstance | undefined) => {
-  console.log(form)
+  console.log(form);
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid && userView.value) {
@@ -132,7 +121,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         id: userView.value.id, //id,主键
         userName: userView.value.userName, //user_name,学号或工号等，用户登录ID
         realName: form.realName, //real_name,用户名称
-        password: "", //pwd,密码
+        password: '', //pwd,密码
         companyRole: form.companyRole, //公司内角色
         licensedInfo: form.licensedInfo, //律师执业证信息
         details: form.details, //详细信息
@@ -141,12 +130,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         auth: userView.value.auth, //权限
       };
 
-      console.log(user)
+      console.log(user);
 
       await serverUserUpdateOwnInfo(user);
       await getSysUserFromServer();
     } else {
-      console.log("error submit!", fields);
+      console.log('error submit!', fields);
     }
   });
 };
@@ -159,32 +148,27 @@ const resetForm = (formEl: FormInstance | undefined) => {
 const fileList = ref<UploadUserFile[]>([]);
 const imageData = ref<string[]>([]);
 
-const dialogImageUrl = ref("");
+const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
 const upload = ref<UploadInstance>();
 
-const handleRemove: UploadProps["onRemove"] = async (
-  uploadFile,
-  uploadFiles
-) => {
-
-
+const handleRemove: UploadProps['onRemove'] = async (uploadFile, uploadFiles) => {
   if (form.photo) {
     const formData = new FormData();
 
-    formData.append("fileName", form.photo);
+    formData.append('fileName', form.photo);
 
     const ret = await serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser(formData);
     if (ret && ret.code == 200 && ret.data) {
       ElMessage({
-        type: "success",
-        message: "删除成功",
+        type: 'success',
+        message: '删除成功',
       });
     } else ElMessage.success(`删除失败`);
   }
 };
 
-const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   dialogVisible.value = true;
 };
@@ -194,7 +178,7 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
  * @param files
  * @param uploadFiles
  */
-const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
+const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
   ElMessage.warning(`最大上传文件个数为1个，已经超过最大值。`);
 };
 
@@ -203,10 +187,7 @@ const handleExceed: UploadProps["onExceed"] = (files, uploadFiles) => {
  * @param uploadFile
  * @param uploadFiles
  */
-const handleUploadImageChange: UploadProps["onChange"] = (
-  uploadFile,
-  uploadFiles
-) => {
+const handleUploadImageChange: UploadProps['onChange'] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 };
 
@@ -215,7 +196,7 @@ const handleUploadImageChange: UploadProps["onChange"] = (
  * @param rawFile
  */
 const beforeUpload = (rawFile: UploadRawFile) => {
-  const extension = rawFile.name.substring(rawFile.name.lastIndexOf(".") + 1);
+  const extension = rawFile.name.substring(rawFile.name.lastIndexOf('.') + 1);
 };
 
 /**
@@ -223,12 +204,10 @@ const beforeUpload = (rawFile: UploadRawFile) => {
  * @param uploadFile
  * @param uploadFiles
  */
-const beforeRemove: UploadProps["beforeRemove"] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(
-    `Cancel the transfert of ${uploadFile.name} ?`
-  ).then(
+const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
+  return ElMessageBox.confirm(`Cancel the transfert of ${uploadFile.name} ?`).then(
     () => true,
-    () => false
+    () => false,
   );
 };
 
@@ -240,14 +219,14 @@ const httpRequest = async (options: UploadRequestOptions) => {
   const fileObj = options.file;
 
   const formData = new FormData();
-  formData.append("file", fileObj);
+  formData.append('file', fileObj);
 
   const ret = await serverAddUserPhotoUploadTempFilesByAuthenticatedUser(formData);
   if (ret && ret.code == 200 && ret.data) {
     form.photo = ret.data;
     ElMessage({
-      type: "success",
-      message: "Success",
+      type: 'success',
+      message: 'Success',
     });
   } else ElMessage.error(`Failed`);
 };
@@ -264,33 +243,19 @@ const httpRequest = async (options: UploadRequestOptions) => {
       style="width: 600px; margin: auto; margin-bottom: 20px"
     >
       <el-form-item label="User Name" prop="userName">
-        <el-input
-          v-model="form.userName"
-          placeholder="Please input user name" disabled
-        />
+        <el-input v-model="form.userName" placeholder="Please input user name" disabled />
       </el-form-item>
 
       <el-form-item label="Real Name" prop="realName">
-        <el-input
-          v-model="form.realName"
-          placeholder="Please input real name"
-        />
+        <el-input v-model="form.realName" placeholder="Please input real name" />
       </el-form-item>
 
-      
-
       <el-form-item label="Company Role" prop="companyRole">
-        <el-input
-          v-model="form.companyRole"
-          placeholder="Please input company role" disabled
-        />
+        <el-input v-model="form.companyRole" placeholder="Please input company role" disabled />
       </el-form-item>
 
       <el-form-item label="Licensed Info" prop="licensedInfo">
-        <el-input
-          v-model="form.licensedInfo"
-          placeholder="Please input licensed info"
-        />
+        <el-input v-model="form.licensedInfo" placeholder="Please input licensed info" />
       </el-form-item>
 
       <el-form-item label="Email" prop="email">
@@ -318,10 +283,7 @@ const httpRequest = async (options: UploadRequestOptions) => {
         </el-upload>
       </el-form-item>
 
-
-      <el-button type="primary" @click="submitForm(ruleFormRef)">
-        修改
-      </el-button>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">修改</el-button>
       <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
     </el-form>
   </div>

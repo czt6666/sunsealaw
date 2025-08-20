@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from "vue";
+import { onMounted, ref, reactive, computed } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { View, Hide, Search, Plus } from "@element-plus/icons-vue";
+import { useRouter, useRoute } from 'vue-router';
+import { View, Hide, Search, Plus } from '@element-plus/icons-vue';
 import {
   serverUserAdd,
   serverUserDelete,
   serverUserUpdate,
   serverUserResetPwd,
   serverGetUserPage,
-} from "@/server/SysUser";
-import {
-  IServerSysUser,
-  Pageable,
-  Page,
-  SimplePage,
-  convertPage,
-} from "@/server/ServerType";
+} from '@/server/SysUser';
+import { IServerSysUser, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 
 import {
   clearCookies,
@@ -28,14 +22,14 @@ import {
   isAdmin,
   getUserPageSize,
   setUserPageSize,
-} from "@/cookies/user";
+} from '@/cookies/user';
 
-import UserPhoto from "@/components/member/UserPhoto.vue";
-import NewMemberDialog from "@/components/member/NewMemberDialog.vue";
-import UpdateMemberDialog from "@/components/member/UpdateMemberDialog.vue";
-import { useI18n } from "vue-i18n";
+import UserPhoto from '@/components/member/UserPhoto.vue';
+import NewMemberDialog from '@/components/member/NewMemberDialog.vue';
+import UpdateMemberDialog from '@/components/member/UpdateMemberDialog.vue';
+import { useI18n } from 'vue-i18n';
 
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const router = useRouter();
 const route = useRoute();
@@ -51,7 +45,7 @@ const updateSysUser = ref<IServerSysUser>(); //修改对话框中要修改的用
 const textElipsisValue = ref(false); //超长文本中多余的内容是否用...显示
 
 onMounted(async () => {
-  if (!isAdmin()) router.push("/login");
+  if (!isAdmin()) router.push('/login');
   await getUserPageDataFromSever();
 });
 
@@ -99,76 +93,58 @@ const handleNewMemberCancel = () => {
   dialogNewVisible.value = false;
 };
 
-const onRowEditButtonClick = async (
-  userItem: IServerSysUser,
-  userIndex: number
-) => {
+const onRowEditButtonClick = async (userItem: IServerSysUser, userIndex: number) => {
   updateSysUser.value = userItem;
   dialogUpdateVisible.value = true;
 };
 
-const onRowDeleteButtonClick = async (
-  userItem: IServerSysUser,
-  userIndex: number
-) => {
-  ElMessageBox.confirm("Are you sure you want to delete this user?", "Warning", {
-    confirmButtonText: "OK",
-    cancelButtonText: "Cancel",
-    type: "warning",
+const onRowDeleteButtonClick = async (userItem: IServerSysUser, userIndex: number) => {
+  ElMessageBox.confirm('Are you sure you want to delete this user?', 'Warning', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
   })
     .then(async () => {
       await serverUserResetPwd(userItem);
 
-    
-
       ElMessage({
-        type: "success",
-        message: "Success",
+        type: 'success',
+        message: 'Success',
       });
     })
     .catch(() => {
       ElMessage({
-        type: "info",
-        message: "Failed",
+        type: 'info',
+        message: 'Failed',
       });
     });
-
 
   await getUserPageDataFromSever();
 };
 
-const onResetPasswordByAdminButtonClick=async(  userItem: IServerSysUser,
-  userIndex: number
-) => {
-
-  ElMessageBox.confirm("Are you sure you want to reset the user's password to 123456?", "Warning", {
-    confirmButtonText: "OK",
-    cancelButtonText: "Cancel",
-    type: "warning",
+const onResetPasswordByAdminButtonClick = async (userItem: IServerSysUser, userIndex: number) => {
+  ElMessageBox.confirm("Are you sure you want to reset the user's password to 123456?", 'Warning', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
   })
     .then(async () => {
       await serverUserDelete(userItem);
 
-    
-
       ElMessage({
-        type: "success",
-        message: "Success",
+        type: 'success',
+        message: 'Success',
       });
     })
     .catch(() => {
       ElMessage({
-        type: "info",
-        message: "Failed",
+        type: 'info',
+        message: 'Failed',
       });
     });
-
-  
 };
 
 const handleUpdateMemberOk = async (sysUser: IServerSysUser) => {
-  
-
   const ret = await serverUserUpdate(sysUser);
   await getUserPageDataFromSever();
 
@@ -212,7 +188,7 @@ const goBack = () => {
       <!--新增按钮-->
       <div>
         <el-button :icon="Plus" type="primary" @click="onNewButtonClick">
-          {{ t("app.new") }}
+          {{ t('app.new') }}
         </el-button>
       </div>
 
@@ -242,17 +218,18 @@ const goBack = () => {
             white-space: pre-wrap;
             line-height: 1.5;
             margin-top: 10px;
-            margin-bottom: -5px;text-align: left;
+            margin-bottom: -5px;
+            text-align: left;
           "
         >
-          <el-col :span="1">No. </el-col>
-          <el-col :span="3"> User Name</el-col>
-          <el-col :span="3"> Real Name</el-col>
-          <el-col :span="3"> Email</el-col>
-          <el-col :span="2">Role </el-col>
-          <el-col :span="6">License Info </el-col>
-          <el-col :span="4"> Photo</el-col>
-          <el-col :span="2"> Operation </el-col>
+          <el-col :span="1">No.</el-col>
+          <el-col :span="3">User Name</el-col>
+          <el-col :span="3">Real Name</el-col>
+          <el-col :span="3">Email</el-col>
+          <el-col :span="2">Role</el-col>
+          <el-col :span="6">License Info</el-col>
+          <el-col :span="4">Photo</el-col>
+          <el-col :span="2">Operation</el-col>
         </el-row>
 
         <el-row
@@ -329,30 +306,15 @@ const goBack = () => {
           <!--照片-->
           <el-col :span="4">
             <div style="display: flex; align-items: center">
-              <UserPhoto
-                :userId="userItem.id"
-                :img-width="40"
-                :img-height="40"
-              ></UserPhoto>
+              <UserPhoto :userId="userItem.id" :img-width="40" :img-height="40"></UserPhoto>
             </div>
           </el-col>
 
           <!--操作-->
           <el-col :span="2">
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <el-button
-                type="primary"
-                size="small"
-                @click="onRowEditButtonClick(userItem, userIndex)"
-              >
-                {{ t("app.edit") }}
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+              <el-button type="primary" size="small" @click="onRowEditButtonClick(userItem, userIndex)">
+                {{ t('app.edit') }}
               </el-button>
 
               <el-button
@@ -362,7 +324,7 @@ const goBack = () => {
                 style="margin-left: 0px; margin-top: 5px"
                 @click="onRowDeleteButtonClick(userItem, userIndex)"
               >
-                {{ t("app.delete") }}
+                {{ t('app.delete') }}
               </el-button>
 
               <el-button
@@ -372,9 +334,8 @@ const goBack = () => {
                 style="margin-left: 0px; margin-top: 5px"
                 @click="onResetPasswordByAdminButtonClick(userItem, userIndex)"
               >
-                {{ t("app.reset_password") }}
+                {{ t('app.reset_password') }}
               </el-button>
-
             </div>
           </el-col>
         </el-row>
