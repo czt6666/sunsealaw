@@ -46,17 +46,6 @@ const getStoreLanguage = () => {
   });
 };
 
-const imgs = reactive<string[]>([]);
-const getCarouselAllDataFromServer = async () => {
-  imgs.length = 0;
-  const ret = await serverGetAllCarouselPhotoFilesById();
-  if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
-    for (let i = 0; i < ret.data.length; i++) {
-      imgs.push(ret.data[i]);
-    }
-  }
-};
-
 const handleClose = (done: () => void) => {
   done();
 };
