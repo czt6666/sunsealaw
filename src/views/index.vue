@@ -449,6 +449,15 @@ const services = ref([
   font-family: 'Georgia', sans-serif;
 }
 
+@media screen and (max-width: 800px) {
+  .card-content {
+    gap: 20px;
+  }
+  .service-card {
+    width: 42%;
+  }
+}
+
 .service-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);

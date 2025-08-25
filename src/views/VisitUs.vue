@@ -45,16 +45,7 @@ import locationMap from '@/assets/staticmap_zh-CN.png';
   <div style="margin: 40px">
     <img :src="locationMap" alt="locationMap" style="width: 80%" />
   </div>
-  <div
-    style="
-      display: flex;
-      margin: auto;
-      width: 1300px;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-    "
-  >
+  <div style="display: flex; margin: auto; flex-direction: column; align-items: flex-start; justify-content: center">
     <div class="visit-us-container" style="flex: 1">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">Location</div>

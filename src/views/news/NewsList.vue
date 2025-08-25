@@ -26,7 +26,8 @@ const route = useRoute();
 const { t } = useI18n();
 const pageData = ref<SimplePage<IServerNews>>();
 const pageNo = ref(0); //第几页
-const pageSize = ref(getUserPageSize()); //每页多少数据
+// const pageSize = ref(getUserPageSize()); //每页多少数据
+const pageSize = ref(2); //每页多少数据
 const loading = ref(false);
 const dialogNewVisible = ref(false); //新增对话框是否可见
 const dialogUpdateVisible = ref(false); //修改对话框是否可见
@@ -100,7 +101,7 @@ const goBack = () => {
   </div>
 
   <div class="tab-container">
-    <div style="margin: 20px">
+    <div class="ss-section">
       <div
         v-for="(newsItem, newsIndex) in tableData"
         class="news-container"
@@ -108,24 +109,13 @@ const goBack = () => {
         :gutter="20"
         @click="onMemberClick(newsItem)"
       >
-        <!--新闻信息-->
-
         <!--图像-->
-        <!-- <div
-            v-if="newsItem.titlePhoto"
-            style="
-              flex-shrink: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <NewsPhoto
-              :newsId="newsItem.id"
-              :img-width="100"
-              :img-height="100"
-            ></NewsPhoto>
-          </div>-->
+        <div
+          v-if="newsItem.titlePhoto"
+          style="flex-shrink: 0; display: flex; align-items: center; justify-content: center"
+        >
+          <NewsPhoto :newsId="newsItem.id" :img-width="300"></NewsPhoto>
+        </div>
         <!--新闻-->
         <div class="news-container-outer" @click="onMemberClick(newsItem)">
           <div class="news-container-inner">
@@ -134,7 +124,7 @@ const goBack = () => {
               {{ newsItem.title }}
             </div>
 
-            <!--新闻日期---->
+            <!--新闻日期-->
             <div
               style="font-size: 16px; margin-top: 10px; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif"
             >
@@ -163,6 +153,9 @@ const goBack = () => {
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .top-toolbar {
   display: flex;
 
@@ -203,11 +196,7 @@ const goBack = () => {
 }
 
 .news-container {
-  margin: 10px;
-  padding: 10px;
-
   border-radius: 5px;
-
   display: flex;
   cursor: pointer;
 }
