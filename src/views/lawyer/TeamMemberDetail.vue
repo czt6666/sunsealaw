@@ -83,7 +83,6 @@ const getUserDataFromSever = async (id: number) => {
       font-weight: 400;
       letter-spacing: 1.2px;
       line-height: 1.08;
-
       padding-top: 40px;
       padding-bottom: 40px;
       font-size: 3em;
@@ -91,9 +90,9 @@ const getUserDataFromSever = async (id: number) => {
   >
     Team Member
   </div>
-  <div style="display: flex; justify-content: center; align-items: center; margin: 20px">
+  <div class="ss-section">
     <!--成员主要信息-->
-    <div style="display: flex" v-if="userData.id > 0">
+    <div class="main-info" v-if="userData.id > 0">
       <!--头像-->
       <div style="width: 400px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; flex: 1">
         <UserPhoto :userId="userData.id" :img-width="300"></UserPhoto>
@@ -114,35 +113,28 @@ const getUserDataFromSever = async (id: number) => {
         </div>
       </div>
     </div>
-  </div>
-  <div
-    style="
-      display: flex;
-      margin: 10px;
-      padding: 20px;
-
-      width: 1300px;
-      margin: auto;
-      text-align: left;
-    "
-  >
-    <!--详细信息-->
-    <span
-      style="
-        width: 100%; /* 或具体宽度 */
-        overflow-wrap: break-word; /* 兼容性好 */
-        word-break: break-word; /* 更现代的方案 */
-        hyphens: auto; /* 自动添加连字符 */
-        line-height: 1.6; /* 良好的行高提升可读性 */
-        white-space: pre-wrap;
-      "
-    >
-      {{ userData.details }}
-    </span>
+    <div style="display: flex; margin: 10px; padding: 20px; margin: auto; text-align: left">
+      <!--详细信息-->
+      <span
+        style="
+          width: 100%; /* 或具体宽度 */
+          overflow-wrap: break-word; /* 兼容性好 */
+          word-break: break-word; /* 更现代的方案 */
+          hyphens: auto; /* 自动添加连字符 */
+          line-height: 1.6; /* 良好的行高提升可读性 */
+          white-space: pre-wrap;
+        "
+      >
+        {{ userData.details }}
+      </span>
+    </div>
   </div>
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .user-container {
   display: flex;
   align-items: center;
@@ -153,5 +145,21 @@ const getUserDataFromSever = async (id: number) => {
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+}
+.main-info {
+  display: flex;
+  flex-direction: row;
+}
+
+@media screen and (max-width: 760px) {
+  .main-info {
+    flex-direction: column;
+    align-items: center;
+  }
+  .user-container {
+    margin-bottom: 20px;
+    margin-left: 0px !important;
+    text-align: left;
+  }
 }
 </style>

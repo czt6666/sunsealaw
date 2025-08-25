@@ -98,6 +98,9 @@ const getNewsDataFromSever = async (id: number) => {
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .news-title-container {
   background-color: #0c162f;
   margin: 0px;
@@ -115,8 +118,6 @@ const getNewsDataFromSever = async (id: number) => {
   align-items: center;
   justify-content: center;
   margin: 10px;
-  padding: 10px;
-  padding-left: 40px;
   border-radius: 5px;
 }
 .news-container-inner {
@@ -128,15 +129,16 @@ const getNewsDataFromSever = async (id: number) => {
 
 .news-info {
   padding: 20px;
-  width: 800px;
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
 }
 :deep(.image-block) {
   text-align: center;
 }
 :deep(.image-block img) {
+  width: 100%;
   max-width: 554px;
-  max-height: 369px;
 }
 :deep(p.content-paragraph) {
   text-indent: 2em;

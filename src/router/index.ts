@@ -126,18 +126,17 @@ const routes: Array<RouteRecordRaw> = [
     path: '/manager-carousel',
     component: () => import('@/views/manage/CarouselManager.vue'),
   },
+  //联系我们管理
+  {
+    path: '/manager-contact-us',
+    component: () => import('@/views/manage/ContactUsManager.vue'),
+  },
 
   //联系我们
   {
     path: '/contact',
     name: 'Contact',
     component: () => import('@/views/contact/Contact.vue'),
-  },
-
-  //联系我们管理
-  {
-    path: '/manager-contact-us',
-    component: () => import('@/views/manage/ContactUsManager.vue'),
   },
 
   //关于我们

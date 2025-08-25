@@ -34,6 +34,18 @@ const dialogWidth = ref('1000px');
 const onOpen = () => {
   if (imgRef.value?.naturalWidth) return (dialogWidth.value = imgRef.value?.naturalWidth + 30 + 'px');
 };
+
+const styleWidth = computed(() => {
+  if (Number.isInteger(props.imgWidth)) return props.imgWidth + 'px';
+  if (props.imgWidth) return props.imgWidth;
+  return 'auto';
+});
+
+const styleHeight = computed(() => {
+  if (Number.isInteger(props.imgHeight)) return props.imgHeight + 'px';
+  if (props.imgHeight) return props.imgHeight;
+  return 'auto';
+});
 </script>
 
 <template>
@@ -47,7 +59,7 @@ const onOpen = () => {
     :src="imageData"
     alt="news photo"
     style="border-radius: 5px"
-    :style="{ width: props.imgWidth + 'px', height: props.imgHeight + 'px' }"
+    :style="{ width: styleWidth, height: styleHeight, objectFit: 'cover', cursor: 'pointer' }"
     @click="onPreview"
   />
 </template>

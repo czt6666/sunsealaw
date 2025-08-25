@@ -26,8 +26,7 @@ const route = useRoute();
 const { t } = useI18n();
 const pageData = ref<SimplePage<IServerNews>>();
 const pageNo = ref(0); //第几页
-// const pageSize = ref(getUserPageSize()); //每页多少数据
-const pageSize = ref(2); //每页多少数据
+const pageSize = ref(getUserPageSize()); //每页多少数据
 const loading = ref(false);
 const dialogNewVisible = ref(false); //新增对话框是否可见
 const dialogUpdateVisible = ref(false); //修改对话框是否可见
@@ -110,11 +109,9 @@ const goBack = () => {
         @click="onMemberClick(newsItem)"
       >
         <!--图像-->
-        <div
-          v-if="newsItem.titlePhoto"
-          style="flex-shrink: 0; display: flex; align-items: center; justify-content: center"
-        >
-          <NewsPhoto :newsId="newsItem.id" :img-width="300"></NewsPhoto>
+        <!-- v-if="newsItem.titlePhoto" -->
+        <div class="news-photo">
+          <NewsPhoto :newsId="newsItem.id" :img-width="'100%'"></NewsPhoto>
         </div>
         <!--新闻-->
         <div class="news-container-outer" @click="onMemberClick(newsItem)">
@@ -152,7 +149,7 @@ const goBack = () => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 * {
   box-sizing: border-box;
 }
@@ -198,6 +195,34 @@ const goBack = () => {
 .news-container {
   border-radius: 5px;
   display: flex;
+  flex-direction: row;
   cursor: pointer;
+  margin-bottom: 20px;
+
+  .news-photo {
+    width: 300px;
+    height: 200px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 30px 0 0;
+    border-radius: 6px;
+    background-color: #e4e4e4;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .news-container {
+    flex-direction: column;
+    margin-bottom: 12px;
+
+    .news-photo {
+      overflow: hidden;
+      width: 100%;
+      height: 250px;
+      margin: 0 0 10px 0;
+    }
+  }
 }
 </style>

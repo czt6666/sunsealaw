@@ -235,13 +235,7 @@ const httpRequest = async (options: UploadRequestOptions) => {
 <template>
   <div>
     <h1>User Settings</h1>
-    <el-form
-      ref="ruleFormRef"
-      :rules="rules"
-      label-width="200px"
-      :model="form"
-      style="width: 600px; margin: auto; margin-bottom: 20px"
-    >
+    <el-form ref="ruleFormRef" :rules="rules" label-width="200px" :model="form" class="form-container">
       <el-form-item label="User Name" prop="userName">
         <el-input v-model="form.userName" placeholder="Please input user name" disabled />
       </el-form-item>
@@ -289,4 +283,13 @@ const httpRequest = async (options: UploadRequestOptions) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.form-container {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+:deep(.el-form-item__label) {
+  width: 120px !important;
+}
+</style>

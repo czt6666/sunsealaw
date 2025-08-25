@@ -28,15 +28,15 @@ const { t } = useI18n();
       flex-direction: column;
     "
   >
-    <div style="width: 100%; background-color: #0c162f; color: #fff; display: flex; flex-wrap: wrap">
+    <div style="width: 100%; background-color: #0c162f; color: #fff; display: flex; flex-wrap: wrap; gap: 20px">
       <div class="footer-container" style="flex: 2">
         <div style="font-size: 2em; font-weight: bold">SUNSEA LAW GROUP P.C.</div>
-        <div class="footer-container-inner" style="flex-direction: row; gap: 20px; margin-top: 10px">
+        <div class="footer-container-inner" style="flex-direction: row; gap: 20px; margin: 10px">
           <router-link to="/about">{{ t('app.about') }}&gt;&gt;</router-link>
           <router-link to="/news">{{ t('app.news') }}&gt;&gt;</router-link>
           <router-link to="/team">{{ t('app.team_member') }}&gt;&gt;</router-link>
         </div>
-        <div style="width: 500px; margin-top: 10px; text-align: left; line-height: 1.5; margin-top: 20px">
+        <div style="margin-top: 10px; text-align: left; line-height: 1.5; margin-top: 20px">
           At SUNSEA LAW, we are dedicated to providing high-quality, client-focused legal services across diverse
           practice areas. Our experienced attorneys deliver strategic, practical solutions for businesses, investors,
           and individuals navigating complex legal and regulatory landscapes. We value long-term partnerships built on

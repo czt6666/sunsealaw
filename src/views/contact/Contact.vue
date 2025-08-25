@@ -150,6 +150,7 @@ const onCancel = () => {};
     style="
       margin-top: 100px;
       padding: 20px;
+      display: flex;
       flex-direction: column;
       margin-right: auto;
       justify-items: flex-end;

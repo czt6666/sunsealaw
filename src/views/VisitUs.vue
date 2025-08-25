@@ -42,26 +42,27 @@ import locationMap from '@/assets/staticmap_zh-CN.png';
       </div>
     </div>
   </div>
-  <div style="margin: 40px">
+
+  <div class="ss-text-container" style="margin-top: 20px">
     <img :src="locationMap" alt="locationMap" style="width: 80%" />
-  </div>
-  <div style="display: flex; margin: auto; flex-direction: column; align-items: flex-start; justify-content: center">
-    <div class="visit-us-container" style="flex: 1">
-      <div class="visit-us-container-inner">
-        <div class="visit-us-title">Location</div>
-        <div style="text-align: left">LA Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
+    <div class="info-container">
+      <div class="visit-us-container" style="flex: 1">
+        <div class="visit-us-container-inner">
+          <div class="visit-us-title">Location</div>
+          <div style="text-align: left">LA Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
+        </div>
       </div>
-    </div>
-    <div class="visit-us-container" style="flex: 1">
-      <div class="visit-us-container-inner">
-        <div class="visit-us-title">E-mail</div>
-        <div>info@sunsealaw.com</div>
+      <div class="visit-us-container" style="flex: 1">
+        <div class="visit-us-container-inner">
+          <div class="visit-us-title">E-mail</div>
+          <div>info@sunsealaw.com</div>
+        </div>
       </div>
-    </div>
-    <div class="visit-us-container" style="flex: 1">
-      <div class="visit-us-container-inner">
-        <div class="visit-us-title">Phone</div>
-        <div>(951) 790-3922</div>
+      <div class="visit-us-container" style="flex: 1">
+        <div class="visit-us-container-inner">
+          <div class="visit-us-title">Phone</div>
+          <div>(951) 790-3922</div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,5 +101,11 @@ import locationMap from '@/assets/staticmap_zh-CN.png';
   font-weight: bold; /* 加粗字体 */
   color: #333; /* 调整字体颜色 */
   margin-bottom: 10px; /* 调整底部间距 */
+}
+.info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 </style>
