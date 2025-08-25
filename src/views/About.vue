@@ -28,7 +28,6 @@ const { t } = useI18n();
       font-weight: 400;
       letter-spacing: 1.2px;
       line-height: 1.08;
-
       padding-top: 40px;
       padding-bottom: 40px;
     "
@@ -39,13 +38,13 @@ const { t } = useI18n();
       </div>
     </div>
   </div>
-  <div style="width: 1300px; margin: auto; margin-top: 20px">
+  <div class="section">
     <div style="font-size: 2em; font-weight: bold">OUR VISION</div>
     <div style="font-size: 1.5em; margin-top: 10px; line-height: 1.5; text-align: left">
       Navigating legal seas；Lighting your journey.
     </div>
   </div>
-  <div style="width: 1300px; margin: auto; margin-top: 20px">
+  <div class="section">
     <div style="font-size: 2em; font-weight: bold">OUR MISSION</div>
     <div style="font-size: 1.5em; margin-top: 10px; line-height: 1.5; text-align: left">
       At SUNSEA LAW, we are dedicated to providing high-quality, client-focused legal services across diverse practice
@@ -57,4 +56,13 @@ const { t } = useI18n();
   <div style="margin-top: 20px"></div>
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+.section {
+  padding: 40px 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+</style>

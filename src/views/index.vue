@@ -299,6 +299,7 @@ const services = ref([
 </template>
 <style scoped>
 .section-card {
+  box-sizing: border-box;
   background-color: white;
   padding: 40px 20px;
   width: 100%;
@@ -446,6 +447,15 @@ const services = ref([
   display: flex;
   flex-direction: column;
   font-family: 'Georgia', sans-serif;
+}
+
+@media screen and (max-width: 800px) {
+  .card-content {
+    gap: 20px;
+  }
+  .service-card {
+    width: 42%;
+  }
 }
 
 .service-card:hover {

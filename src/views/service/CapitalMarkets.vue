@@ -67,9 +67,8 @@ onMounted(async () => {});
     </div>
   </div>
 
-  <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
+  <div class="section">
     <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Capital Markets</div>
-
     <p>
       Our attorneys have served as securities counsel for numerous public companies, the majority of which are listed on
       the Nasdaq Stock Market and NYSE American. Our attorneys regularly represent issuers, underwriters, placement
@@ -92,4 +91,13 @@ onMounted(async () => {});
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+.section {
+  padding: 40px 20px;
+  width: 100%;
+  margin-top: 20px;
+}
+</style>

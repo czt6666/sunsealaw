@@ -122,6 +122,7 @@ const onCancel = () => {};
     :model="form"
     label-width="auto"
     style="max-width: 600px; margin: auto; margin-top: 60px"
+    class="ss-section"
   >
     <el-form-item label="Name" prop="name">
       <el-input v-model="form.name" />
@@ -167,6 +168,9 @@ const onCancel = () => {};
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .visit-us-container {
   display: flex;
   align-items: center;
