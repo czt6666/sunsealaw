@@ -299,10 +299,11 @@ const services = ref([
 </template>
 <style scoped>
 .section-card {
+  box-sizing: border-box;
   background-color: white;
   padding: 40px 20px;
   width: 100%;
-  max-width: 1300px;
+  max-width: 1920px;
   margin: 60px auto;
 }
 

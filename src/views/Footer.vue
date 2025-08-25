@@ -20,15 +20,15 @@ const { t } = useI18n();
   <div
     style="
       background-color: #0c162f;
-      height: 400px;
       color: #fff;
+      padding: 20px 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
     "
   >
-    <div style="background-color: #0c162f; height: 300px; color: #fff; display: flex">
+    <div style="width: 100%; background-color: #0c162f; color: #fff; display: flex; flex-wrap: wrap">
       <div class="footer-container" style="flex: 2">
         <div style="font-size: 2em; font-weight: bold">SUNSEA LAW GROUP P.C.</div>
         <div class="footer-container-inner" style="flex-direction: row; gap: 20px; margin-top: 10px">
@@ -76,7 +76,7 @@ const { t } = useI18n();
     </div>
     <div style="height: 1px; background-color: white"></div>
     <div class="footer-container" style="flex: 1">
-      <div class="footer-container-inner" style="flex-direction: row; gap: 20px; margin-top: 10px">
+      <div class="footer-container-inner" style="flex-direction: row; gap: 20px; margin-top: 30px">
         <div>
           <router-link to="/privacy">{{ t('app.privacy_policy') }}</router-link>
         </div>
