@@ -11,6 +11,10 @@
         <el-input v-model="form.brief" type="textarea" placeholder="请输入新闻摘要" :rows="3" resize="none" />
       </el-form-item>
 
+      <el-form-item label="发布时间" required>
+        <el-date-picker v-model="form.createDateTime" type="datetime" placeholder="请选择发布时间" />
+      </el-form-item>
+
       <el-form-item label="标题图片" required>
         <el-upload
           ref="upload"
@@ -272,7 +276,7 @@ const publishNews = async (): Promise<void> => {
     const newsData: IServerNews = {
       ...form,
       sysUserId: userId,
-      createDateTime: new Date(),
+      createDateTime: form.createDateTime,
       contentJson: form.contentJson,
       contentHtml: form.contentHtml,
     };

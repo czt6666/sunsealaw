@@ -11,7 +11,7 @@ import { LANGUAGES_OPTIONS } from '@/i18n/langtypes';
 
 import { getToken, getUserName, getUserRealName, isAdmin, clearCookies } from '@/cookies/user';
 
-import { serverGetAllCarouselPhotoFilesById } from '@/server/Carousel';
+import { serverGetAllCarouselPhotoPath } from '@/server/Carousel';
 
 const { t } = useI18n(); // 解构出t方法
 
@@ -44,6 +44,17 @@ const getStoreLanguage = () => {
       currentLang.value = item;
     }
   });
+};
+
+const imgs = reactive<string[]>([]);
+const getCarouselAllDataFromServer = async () => {
+  imgs.length = 0;
+  const ret = await serverGetAllCarouselPhotoPath();
+  if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
+    for (let i = 0; i < ret.data.length; i++) {
+      imgs.push(ret.data[i]);
+    }
+  }
 };
 
 const handleClose = (done: () => void) => {
@@ -180,7 +191,9 @@ const logout = () => {
       <i class="fa-solid fa-bars" style="font-size: 32px; color: #fff" @click="drawer = !drawer"></i>
     </div>
 
-    <div style="flex: 1; font-size: larger">SUNSEA LAW</div>
+    <div style="flex: 1; font-size: 32px; font-weight: bold; font-family: 'Instrument Serif', serif; text-align: left">
+      SUNSEA LAW
+    </div>
 
     <div style="width: 160px">
       <div

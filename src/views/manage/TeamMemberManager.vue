@@ -105,12 +105,14 @@ const onRowDeleteButtonClick = async (userItem: IServerSysUser, userIndex: numbe
     type: 'warning',
   })
     .then(async () => {
-      await serverUserResetPwd(userItem);
+      await serverUserDelete(userItem);
 
       ElMessage({
         type: 'success',
         message: 'Success',
       });
+
+      await getUserPageDataFromSever();
     })
     .catch(() => {
       ElMessage({
@@ -118,8 +120,6 @@ const onRowDeleteButtonClick = async (userItem: IServerSysUser, userIndex: numbe
         message: 'Failed',
       });
     });
-
-  await getUserPageDataFromSever();
 };
 
 const onResetPasswordByAdminButtonClick = async (userItem: IServerSysUser, userIndex: number) => {
@@ -227,8 +227,9 @@ const goBack = () => {
           <el-col :span="3">Real Name</el-col>
           <el-col :span="3">Email</el-col>
           <el-col :span="2">Role</el-col>
-          <el-col :span="6">License Info</el-col>
-          <el-col :span="4">Photo</el-col>
+          <el-col :span="2">License Info</el-col>
+          <el-col :span="6">Details</el-col>
+          <el-col :span="2">Photo</el-col>
           <el-col :span="2">Operation</el-col>
         </el-row>
 
@@ -295,7 +296,7 @@ const goBack = () => {
           </el-col>
 
           <!--律师执业证信息-->
-          <el-col :span="6">
+          <el-col :span="2">
             <div style="display: flex; align-items: center">
               <div :class="{ textEllipsis: textElipsisValue }">
                 {{ userItem.licensedInfo }}
@@ -303,10 +304,19 @@ const goBack = () => {
             </div>
           </el-col>
 
-          <!--照片-->
-          <el-col :span="4">
+          <!--详细信息-->
+          <el-col :span="6">
             <div style="display: flex; align-items: center">
-              <UserPhoto :userId="userItem.id" :img-width="40" :img-height="40"></UserPhoto>
+              <div :class="{ textEllipsis: textElipsisValue }">
+                {{ userItem.details }}
+              </div>
+            </div>
+          </el-col>
+
+          <!--照片-->
+          <el-col :span="2">
+            <div style="display: flex; align-items: center">
+              <UserPhoto :user="userItem" :img-width="0" :img-height="40"></UserPhoto>
             </div>
           </el-col>
 

@@ -33,7 +33,7 @@ import {
   serverGetCarouselPage,
   serverAddCarouselPhotoUploadTempFiles,
   serverDeleteCarouselPhotoUploadTempFiles,
-  serverGetCarouselPhotoFileById,
+  getCarouselPhotoUrlByCarousel,
 } from '@/server/Carousel';
 import { useI18n } from 'vue-i18n';
 import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from 'element-plus';
@@ -94,9 +94,8 @@ const onOpenDialog = async () => {
     form.style = props.carousel.style;
 
     fileList.value = [];
-    let res = await serverGetCarouselPhotoFileById(props.carousel.id);
-    if (res && res.code == 200 && res.data) {
-      fileList.value.push({ name: form.photo, url: res.data });
+    if (props.carousel.photo) {
+      fileList.value.push({ name: props.carousel.photo, url: getCarouselPhotoUrlByCarousel(props.carousel) });
     }
   }
 };

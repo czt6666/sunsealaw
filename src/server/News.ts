@@ -8,7 +8,17 @@
  */
 import { BASEURL, axios } from '@/http';
 
-import type { Page, IServerResponseData, IServerNews, IServerNewsWithPhotoView } from './ServerType';
+import type { Page, IServerResponseData, IServerNews, IServerNewsWithPhotoView, IServerCarousel } from './ServerType';
+import { getCarouselPhotoUrl } from './Carousel';
+
+export function getNewsPhotoUrl(photo: string) {
+  if (photo) return '/static/' + photo;
+  return '/static/default_news.png';
+}
+
+export function getNewsPhotoUrlByNews(news: IServerNews) {
+  return getNewsPhotoUrl(news.titlePhoto);
+}
 
 /**
  * 增加
@@ -132,24 +142,9 @@ export async function serverDeleteNewsPhotoUploadTempFiles(files: FormData): Pro
   }
 }
 
-export async function serverGetNewsPhotoFileById(newsId: number): Promise<IServerResponseData<string>> {
+export async function serverGetTopNews(): Promise<IServerResponseData<IServerNews[]>> {
   try {
-    let res = await axios.get<any, IServerResponseData<string>>(BASEURL.news + 'download-photo-file-in-base64', {
-      params: {
-        newsId: newsId,
-      },
-    });
-
-    return res;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-}
-
-export async function serverGetNewsPhotoView(): Promise<IServerResponseData<IServerNewsWithPhotoView[]>> {
-  try {
-    let res = await axios.get<any, IServerResponseData<IServerNewsWithPhotoView[]>>(BASEURL.news + 'get-top-news');
+    let res = await axios.get<any, IServerResponseData<IServerNews[]>>(BASEURL.news + 'top-news');
 
     return res;
   } catch (err) {

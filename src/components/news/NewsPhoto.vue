@@ -3,9 +3,9 @@ import { computed, onMounted, reactive, ref, Ref } from 'vue';
 
 //服务器返回到前端的类型
 
-import { serverGetNewsPhotoFileById } from '@/server/News';
+import { getNewsPhotoUrl, getNewsPhotoUrlByNews } from '@/server/News';
 
-const props = defineProps(['newsId', 'imgWidth', 'imgHeight']);
+const props = defineProps(['news', 'imgWidth', 'imgHeight']);
 
 const imageData = ref('');
 
@@ -14,11 +14,12 @@ onMounted(async () => {
 });
 
 const getImgUrl = async () => {
-  if (!props.newsId) return '';
-  let res = await serverGetNewsPhotoFileById(props.newsId);
-  console.log(res);
+  if (!props.news) return '';
+  // let res = await serverGetNewsPhotoFileById(props.newsId);
+  // console.log(res);
 
-  if (res && res.code == 200) imageData.value = res.data;
+  // if (res && res.code == 200) imageData.value = res.data;
+  imageData.value = getNewsPhotoUrlByNews(props.news);
   return '';
 };
 const dialogImageUrl = ref('');
@@ -34,18 +35,6 @@ const dialogWidth = ref('1000px');
 const onOpen = () => {
   if (imgRef.value?.naturalWidth) return (dialogWidth.value = imgRef.value?.naturalWidth + 30 + 'px');
 };
-
-const styleWidth = computed(() => {
-  if (Number.isInteger(props.imgWidth)) return props.imgWidth + 'px';
-  if (props.imgWidth) return props.imgWidth;
-  return 'auto';
-});
-
-const styleHeight = computed(() => {
-  if (Number.isInteger(props.imgHeight)) return props.imgHeight + 'px';
-  if (props.imgHeight) return props.imgHeight;
-  return 'auto';
-});
 </script>
 
 <template>
@@ -59,7 +48,7 @@ const styleHeight = computed(() => {
     :src="imageData"
     alt="news photo"
     style="border-radius: 5px"
-    :style="{ width: styleWidth, height: styleHeight, objectFit: 'cover', cursor: 'pointer' }"
+    :style="{ width: props.imgWidth + 'px', height: props.imgHeight + 'px' }"
     @click="onPreview"
   />
 </template>

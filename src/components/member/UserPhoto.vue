@@ -2,10 +2,10 @@
 import { computed, onMounted, reactive, ref, Ref } from 'vue';
 
 //服务器返回到前端的类型
+import { getUserPhotoUrlBySysUser } from '@/server/SysUser';
+import { IServerCarousel } from '../../server/ServerType';
 
-import { serverGetUserPhotoFileById } from '@/server/SysUser';
-
-const props = defineProps(['userId', 'imgWidth', 'imgHeight']);
+const props = defineProps(['user', 'imgWidth', 'imgHeight']);
 
 const imageData = ref('');
 
@@ -14,11 +14,13 @@ onMounted(async () => {
 });
 
 const getImgUrl = async () => {
-  if (!props.userId) return '';
-  let res = await serverGetUserPhotoFileById(props.userId);
-  console.log(res);
+  if (!props.user) return '';
+  //let res = await serverGetUserPhotoFileById(props.userId);
+  //console.log(res);
 
-  if (res && res.code == 200) imageData.value = res.data;
+  //if (res && res.code == 200) imageData.value = res.data;
+
+  imageData.value = getUserPhotoUrlBySysUser(props.user);
   return '';
 };
 const dialogImageUrl = ref('');
@@ -37,19 +39,34 @@ const onOpen = () => {
 </script>
 
 <template>
-  <el-dialog v-model="dialogVisible" @open="onOpen" :z-index="9999" :append-to-body="true" :width="dialogWidth">
-    <img :src="dialogImageUrl" alt="Preview Image" />
-  </el-dialog>
-
-  <img
-    v-if="imageData"
-    ref="imgRef"
-    :src="imageData"
-    alt="user photo"
-    style="border-radius: 5px"
-    :style="{ width: props.imgWidth + 'px', height: props.imgHeight + 'px' }"
-    @click="onPreview"
-  />
+  <div class="preview-container" v-if="imgWidth > 0">
+    <img id="previewImage" :src="imageData" alt="图片预览" />
+  </div>
+  <div v-else>
+    <img :src="imageData" alt="图片预览" style="width: 64px; border-radius: 5px" />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.preview-container {
+  width: 256px;
+  height: 352px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f8f9fa;
+
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+  background: #f0f0f0;
+  border-radius: 20px;
+}
+</style>

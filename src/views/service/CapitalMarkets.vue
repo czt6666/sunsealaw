@@ -11,7 +11,6 @@ import {
   serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
   serverGetNewsById,
 } from '@/server/News';
 
@@ -19,6 +18,7 @@ import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { useI18n } from 'vue-i18n';
 
 import { formatDate0, formatDate01 } from '@/utils/utils';
+import serviceArea from './serviceArea.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -39,6 +39,7 @@ onMounted(async () => {});
       font-weight: 400;
       letter-spacing: 1.2px;
       line-height: 1.08;
+
       padding-top: 40px;
       padding-bottom: 40px;
     "
@@ -62,13 +63,17 @@ onMounted(async () => {});
     <!--新闻-->
     <div class="news-container-outer">
       <div class="news-container-inner">
-        <div style="font-size: 3em; cursor: pointer">PRACTICE AREAS</div>
+        <div style="font-size: 3em; cursor: pointer">{{ t('app.service').toUpperCase() }}</div>
       </div>
     </div>
   </div>
+  <div></div>
 
-  <div class="section">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Capital Markets</div>
+  <div class="service-container">
+    <h1>Capital Markets</h1>
+
+    <img src="/practiceareas/Capital Market.png" alt="Capital Markets" style="width: 100%" />
+
     <p>
       Our attorneys have served as securities counsel for numerous public companies, the majority of which are listed on
       the Nasdaq Stock Market and NYSE American. Our attorneys regularly represent issuers, underwriters, placement
@@ -89,15 +94,9 @@ onMounted(async () => {});
       <li>Sarbanes-Oxley, Dodd-Frank Act, and JOBS Act compliance and advice</li>
     </ul>
   </div>
+  <serviceArea />
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-.section {
-  padding: 40px 20px;
-  width: 100%;
-  margin-top: 20px;
-}
+@import './service.css';
 </style>

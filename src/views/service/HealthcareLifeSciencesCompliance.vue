@@ -11,7 +11,6 @@ import {
   serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
   serverGetNewsById,
 } from '@/server/News';
 
@@ -19,7 +18,7 @@ import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { useI18n } from 'vue-i18n';
 
 import { formatDate0, formatDate01 } from '@/utils/utils';
-
+import serviceArea from './serviceArea.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -62,14 +61,14 @@ onMounted(async () => {});
     <!--新闻-->
     <div class="news-container-outer">
       <div class="news-container-inner">
-        <div style="font-size: 3em; cursor: pointer">PRACTICE AREAS</div>
+        <div style="font-size: 3em; cursor: pointer">{{ t('app.service').toUpperCase() }}</div>
       </div>
     </div>
   </div>
 
-  <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Healthcare & Life Sciences Compliance</div>
-
+  <div class="service-container">
+    <h1>Healthcare & Life Sciences Compliance</h1>
+    <img src="/practiceareas/Health care.png" alt="Health care" style="width: 100%; height: 100%" />
     <p>
       We advise life sciences and healthcare companies navigating the U.S. regulatory landscape. Our attorneys bring
       technical and legal experience to help clients mitigate compliance risks and streamline product development,
@@ -90,6 +89,9 @@ onMounted(async () => {});
       <li>Develop policies, procedures and trainings to address internally-developed digital tools</li>
     </ul>
   </div>
+  <serviceArea />
 </template>
 
-<style scoped></style>
+<style scoped>
+@import './service.css';
+</style>

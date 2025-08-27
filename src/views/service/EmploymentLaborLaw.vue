@@ -11,7 +11,6 @@ import {
   serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
   serverGetNewsById,
 } from '@/server/News';
 
@@ -19,7 +18,7 @@ import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { useI18n } from 'vue-i18n';
 
 import { formatDate0, formatDate01 } from '@/utils/utils';
-
+import serviceArea from './serviceArea.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -59,17 +58,21 @@ onMounted(async () => {});
         :img-height="100"
       ></NewsPhoto>
     </div>-->
-    <!--新闻-->
+
     <div class="news-container-outer">
       <div class="news-container-inner">
-        <div style="font-size: 3em; cursor: pointer">PRACTICE AREAS</div>
+        <div style="font-size: 3em; cursor: pointer">{{ t('app.service').toUpperCase() }}</div>
       </div>
     </div>
   </div>
 
-  <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Employment & Labor Law</div>
-
+  <div class="service-container">
+    <h1>Employment & Labor Law</h1>
+    <img
+      src="/practiceareas/Employment & Labor Law.png"
+      alt="Employment & Labor Law"
+      style="width: 100%; height: 100%"
+    />
     <p>
       We support businesses in building compliant, fair, and productive workplaces. Our attorneys counsel clients on a
       wide range of employment and labor law matters, from workforce structuring to regulatory compliance and dispute
@@ -85,6 +88,9 @@ onMounted(async () => {});
       <li>Defense against wrongful termination and employment-related claims</li>
     </ul>
   </div>
+  <serviceArea />
 </template>
 
-<style scoped></style>
+<style scoped>
+@import './service.css';
+</style>

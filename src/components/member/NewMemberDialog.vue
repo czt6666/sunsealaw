@@ -83,7 +83,9 @@ const dialogFormVisible = computed({
   },
 });
 
-const onOpenDialog = async () => {};
+const onOpenDialog = async () => {
+  resetForm();
+};
 
 const handleClose = () => {
   emit('onDilalogCancel');
@@ -134,6 +136,7 @@ const onCancel = () => {
 // 重置表单
 const resetForm = () => {
   formRef.value?.resetFields();
+  fileList.value = [];
 };
 
 const fileList = ref<UploadUserFile[]>([]);

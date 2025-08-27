@@ -34,7 +34,6 @@ import { IServerSysUser } from '@/server/ServerType';
 import {
   serverGetUserBySysUserId,
   serverUserUpdateOwnInfo,
-  serverGetUserPhotoFileById,
   serverAddUserPhotoUploadTempFilesByAuthenticatedUser,
   serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser,
 } from '@/server/SysUser';
@@ -235,7 +234,13 @@ const httpRequest = async (options: UploadRequestOptions) => {
 <template>
   <div>
     <h1>User Settings</h1>
-    <el-form ref="ruleFormRef" :rules="rules" label-width="200px" :model="form" class="form-container">
+    <el-form
+      ref="ruleFormRef"
+      :rules="rules"
+      label-width="200px"
+      :model="form"
+      style="width: 600px; margin: auto; margin-bottom: 20px"
+    >
       <el-form-item label="User Name" prop="userName">
         <el-input v-model="form.userName" placeholder="Please input user name" disabled />
       </el-form-item>
@@ -283,13 +288,4 @@ const httpRequest = async (options: UploadRequestOptions) => {
   </div>
 </template>
 
-<style scoped>
-.form-container {
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-:deep(.el-form-item__label) {
-  width: 120px !important;
-}
-</style>
+<style scoped></style>

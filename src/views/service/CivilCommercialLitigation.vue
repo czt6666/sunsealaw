@@ -11,7 +11,6 @@ import {
   serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
   serverGetNewsById,
 } from '@/server/News';
 
@@ -19,7 +18,7 @@ import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { useI18n } from 'vue-i18n';
 
 import { formatDate0, formatDate01 } from '@/utils/utils';
-
+import serviceArea from './serviceArea.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -59,17 +58,21 @@ onMounted(async () => {});
         :img-height="100"
       ></NewsPhoto>
     </div>-->
-    <!--新闻-->
+
     <div class="news-container-outer">
       <div class="news-container-inner">
-        <div style="font-size: 3em; cursor: pointer">PRACTICE AREAS</div>
+        <div style="font-size: 3em; cursor: pointer">{{ t('app.service').toUpperCase() }}</div>
       </div>
     </div>
   </div>
 
-  <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Civil & Commercial Litigation</div>
-
+  <div class="service-container">
+    <h1>Civil & Commercial Litigation</h1>
+    <img
+      src="/practiceareas/Civil & Commercial Litigation.png"
+      alt="Civil & Commercial Litigation"
+      style="width: 100%; height: 100%"
+    />
     <p>
       Our litigation team is highly experienced in civil and commercial dispute resolution, protecting clients’ rights
       and business interests through strategic litigation and arbitration approaches.
@@ -84,6 +87,9 @@ onMounted(async () => {});
       <li>Pre-litigation counseling and risk mitigation strategy</li>
     </ul>
   </div>
+  <serviceArea />
 </template>
 
-<style scoped></style>
+<style scoped>
+@import './service.css';
+</style>

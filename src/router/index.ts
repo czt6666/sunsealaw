@@ -34,8 +34,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/news-detail/:id',
 
-    component: () => import('@/views/news/NewsDetail.vue'),
+    component: () => import('@/views/news/NewsDetail2.vue'),
   },
+  {
+    path: '/news-detail2/:id',
+
+    component: () => import('@/views/news/NewsDetail2.vue'),
+  },
+
   //新闻管理
   {
     path: '/manager-news',
@@ -126,17 +132,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/manager-carousel',
     component: () => import('@/views/manage/CarouselManager.vue'),
   },
-  //联系我们管理
-  {
-    path: '/manager-contact-us',
-    component: () => import('@/views/manage/ContactUsManager.vue'),
-  },
 
   //联系我们
   {
     path: '/contact',
     name: 'Contact',
     component: () => import('@/views/contact/Contact.vue'),
+  },
+
+  //联系我们管理
+  {
+    path: '/manager-contact-us',
+    component: () => import('@/views/manage/ContactUsManager.vue'),
   },
 
   //关于我们

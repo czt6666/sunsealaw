@@ -6,16 +6,17 @@ import { computed, onMounted, reactive, ref, Ref } from 'vue';
 import { IServerCarousel } from '@/server/ServerType';
 
 import {
+  getCarouselPhotoUrl,
+  getCarouselPhotoUrlByCarousel,
   serverCarouselAdd,
   serverCarouselDelete,
   serverCarouselUpdate,
   serverGetCarouselPage,
   serverAddCarouselPhotoUploadTempFiles,
   serverDeleteCarouselPhotoUploadTempFiles,
-  serverGetCarouselPhotoFileById,
 } from '@/server/Carousel';
 
-const props = defineProps(['carouselId', 'imgWidth', 'imgHeight']);
+const props = defineProps(['carousel', 'imgWidth', 'imgHeight']);
 
 const imageData = ref('');
 
@@ -24,12 +25,13 @@ onMounted(async () => {
 });
 
 const getImgUrl = async () => {
-  if (!props.carouselId) return '';
-  let res = await serverGetCarouselPhotoFileById(props.carouselId);
-  console.log(res);
+  if (!props.carousel) return '';
+  //  let res = await serverGetCarouselPhotoFileById(props.carouselId);
+  //  console.log(res);
 
-  if (res && res.code == 200) imageData.value = res.data;
-  return '';
+  //  if (res && res.code == 200) imageData.value = res.data;
+  //  return '';
+  imageData.value = getCarouselPhotoUrlByCarousel(props.carousel);
 };
 const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
