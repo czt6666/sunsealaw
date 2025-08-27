@@ -53,9 +53,7 @@ import visit_us_3 from '@/assets/visit_us_3.jpg';
       <img :src="visit_us_3" alt="visit_us_3" class="visit-us-pic" />
     </div>
   </div>
-  <div
-    style="display: flex; margin-left: 10%; flex-direction: column; align-items: flex-start; justify-content: center"
-  >
+  <div class="ss-text-container" style="margin-top: 20px">
     <div class="visit-us-container" style="flex: 1">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">Location</div>

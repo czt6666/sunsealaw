@@ -18,21 +18,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <div
-    style="
-      background-color: #0c162f;
-      margin: 0px;
-      color: white;
-      font-family: 'Instrument Serif', serif;
-      font-size: 20px;
-      font-weight: 400;
-      letter-spacing: 1.2px;
-      line-height: 1.08;
-
-      padding-top: 40px;
-      padding-bottom: 40px;
-    "
-  >
+  <div class="ss-text-container">
     <div class="news-container-outer">
       <div class="news-container-inner">
         <div style="font-size: 3em; cursor: pointer">
