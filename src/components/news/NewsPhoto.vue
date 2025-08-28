@@ -3,9 +3,9 @@ import { computed, onMounted, reactive, ref, Ref } from 'vue';
 
 //服务器返回到前端的类型
 
-import { serverGetNewsPhotoFileById } from '@/server/News';
+import { getNewsPhotoUrl, getNewsPhotoUrlByNews } from '@/server/News';
 
-const props = defineProps(['newsId', 'imgWidth', 'imgHeight']);
+const props = defineProps(['news', 'imgWidth', 'imgHeight']);
 
 const imageData = ref('');
 
@@ -14,11 +14,12 @@ onMounted(async () => {
 });
 
 const getImgUrl = async () => {
-  if (!props.newsId) return '';
-  let res = await serverGetNewsPhotoFileById(props.newsId);
-  console.log(res);
+  if (!props.news) return '';
+  // let res = await serverGetNewsPhotoFileById(props.newsId);
+  // console.log(res);
 
-  if (res && res.code == 200) imageData.value = res.data;
+  // if (res && res.code == 200) imageData.value = res.data;
+  imageData.value = getNewsPhotoUrlByNews(props.news);
   return '';
 };
 const dialogImageUrl = ref('');

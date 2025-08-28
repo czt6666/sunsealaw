@@ -153,7 +153,7 @@ const goBack = () => {
       <div style="display: flex; align-items: center; justify-content: center; flex-direction: column">
         <!--头像-->
         <div class="member-photo">
-          <UserPhoto :userId="userItem.id" :img-width="300"></UserPhoto>
+          <UserPhoto :user="userItem" :img-width="300" :img-height="300"></UserPhoto>
         </div>
         <!--姓名及注册信息等-->
         <div class="user-container-outter" @click="onMemberClick(userItem)">

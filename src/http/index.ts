@@ -10,9 +10,8 @@ const router = useRouter();
 
 const BASEURL = {
   // apiUrl: 'http://211.68.36.45:8000', //学校机房production
-  apiUrl: 'https://testapi.pythonkaoshi.com', //阿里云
-  // apiUrl: 'https://api.us-sunsealaw.com', //阿里云
-  // apiUrl: 'http://127.0.0.1:9100', //dev
+  apiUrl: 'https://api.us-sunsealaw.com', //阿里云
+  //apiUrl: 'http://127.0.0.1:9100', //dev
 
   sysuser: '/sysuser/v1/', //用户管理
   carousel: '/carousel/v1/', //轮播图管理
@@ -49,7 +48,7 @@ axios.interceptors.response.use(
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
 
-    if (error.response.status === 401) {
+    if (error.response.status === 401 || error.response.status === 500) {
       // 401 说明 token 验证失败
       // 可以直接跳转到登录页面，重新登录获取 token
       clearCookies();

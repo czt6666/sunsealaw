@@ -23,6 +23,15 @@ import type {
 
 import { clearCookies } from '@/cookies/user';
 
+export function getCarouselPhotoUrl(photo: string) {
+  if (photo) return '/static/' + photo;
+  return '/static/default_carousel.png';
+}
+
+export function getCarouselPhotoUrlByCarousel(carousel: IServerCarousel) {
+  return getCarouselPhotoUrl(carousel.photo);
+}
+
 /**
  * 增加
  * @param carousel
@@ -93,6 +102,17 @@ export async function serverGetCarouselPage(
   }
 }
 
+export async function serverGetAllCarousel(): Promise<IServerResponseData<IServerCarousel[]>> {
+  try {
+    let res = await axios.get<any, IServerResponseData<IServerCarousel[]>>(BASEURL.carousel + 'get-all-carousel');
+
+    return res;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 /**
  * 增加临时文件
  * @param files
@@ -129,24 +149,9 @@ export async function serverDeleteCarouselPhotoUploadTempFiles(files: FormData):
   }
 }
 
-export async function serverGetCarouselPhotoFileById(carouselId: number): Promise<IServerResponseData<string>> {
+export async function serverGetAllCarouselPhotoPath(): Promise<IServerResponseData<string[]>> {
   try {
-    let res = await axios.get<any, IServerResponseData<string>>(BASEURL.carousel + 'download-photo-file-in-base64', {
-      params: {
-        carouselId: carouselId,
-      },
-    });
-
-    return res;
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-}
-
-export async function serverGetAllCarouselPhotoFilesById(): Promise<IServerResponseData<string[]>> {
-  try {
-    let res = await axios.get<any, IServerResponseData<string[]>>(BASEURL.carousel + 'download-photo-files-in-base64');
+    let res = await axios.get<any, IServerResponseData<string[]>>(BASEURL.carousel + 'get-all-carousel-images');
 
     return res;
   } catch (err) {

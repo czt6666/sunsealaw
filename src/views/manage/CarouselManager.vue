@@ -13,13 +13,14 @@ import {
 import { IServerCarousel, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 
 import {
+  getCarouselPhotoUrl,
+  getCarouselPhotoUrlByCarousel,
   serverCarouselAdd,
   serverCarouselDelete,
   serverCarouselUpdate,
   serverGetCarouselPage,
   serverAddCarouselPhotoUploadTempFiles,
   serverDeleteCarouselPhotoUploadTempFiles,
-  serverGetCarouselPhotoFileById,
 } from '@/server/Carousel';
 
 import {
@@ -59,6 +60,7 @@ const getCarouselPageDataFromSever = async () => {
   const ret = await serverGetCarouselPage(pageNo.value, pageSize.value);
   console.log(ret);
   if (ret && ret.code == 200) {
+    console.log(ret.data);
     pageData.value = convertPage(ret.data);
   }
 };
@@ -187,7 +189,7 @@ const goBack = () => {
         </el-row>
 
         <el-row
-          v-for="(userItem, userIndex) in tableData"
+          v-for="(carouselItem, userIndex) in tableData"
           style="
             width: 100%;
             font: 0.8em sans-serif;
@@ -211,16 +213,16 @@ const goBack = () => {
 
           <el-col :span="4">
             <div style="display: flex; align-items: center; justify-content: center">
-              <span class="textEllipsis" :title="userItem.title">
-                {{ userItem.title }}
+              <span class="textEllipsis" :title="carouselItem.title">
+                {{ carouselItem.title }}
               </span>
             </div>
           </el-col>
 
           <el-col :span="10">
             <div style="display: flex; align-items: center; justify-content: center">
-              <span class="textEllipsis" :title="userItem.subTitle">
-                {{ userItem.subTitle }}
+              <span class="textEllipsis" :title="carouselItem.subTitle">
+                {{ carouselItem.subTitle }}
               </span>
             </div>
           </el-col>
@@ -228,21 +230,21 @@ const goBack = () => {
           <!--照片-->
           <el-col :span="5">
             <div style="display: flex; align-items: center; justify-content: center">
-              <CarouselPhoto :carouselId="userItem.id" :img-width="100" :img-height="100"></CarouselPhoto>
+              <CarouselPhoto :carousel="carouselItem" :img-width="100" :img-height="100"></CarouselPhoto>
             </div>
           </el-col>
 
           <!--是否有效-->
           <el-col :span="2">
             <div style="display: flex; align-items: center; justify-content: center">
-              {{ userItem.style == 1 ? 'Show' : 'Hide' }}
+              {{ carouselItem.style == 1 ? 'Show' : 'Hide' }}
             </div>
           </el-col>
 
           <!--操作-->
           <el-col :span="2">
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
-              <el-button type="primary" size="small" @click="onRowEditButtonClick(userItem, userIndex)">
+              <el-button type="primary" size="small" @click="onRowEditButtonClick(carouselItem, userIndex)">
                 {{ t('app.edit') }}
               </el-button>
 
@@ -250,7 +252,7 @@ const goBack = () => {
                 size="small"
                 type="danger"
                 style="margin-left: 0px; margin-top: 5px"
-                @click="onRowDeleteButtonClick(userItem, userIndex)"
+                @click="onRowDeleteButtonClick(carouselItem, userIndex)"
               >
                 {{ t('app.delete') }}
               </el-button>

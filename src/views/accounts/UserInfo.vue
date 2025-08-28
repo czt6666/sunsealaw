@@ -34,7 +34,6 @@ import { IServerSysUser } from '@/server/ServerType';
 import {
   serverGetUserBySysUserId,
   serverUserUpdateOwnInfo,
-  serverGetUserPhotoFileById,
   serverAddUserPhotoUploadTempFilesByAuthenticatedUser,
   serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser,
 } from '@/server/SysUser';

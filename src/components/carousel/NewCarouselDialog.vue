@@ -33,7 +33,6 @@ import {
   serverGetCarouselPage,
   serverAddCarouselPhotoUploadTempFiles,
   serverDeleteCarouselPhotoUploadTempFiles,
-  serverGetCarouselPhotoFileById,
 } from '@/server/Carousel';
 import { useI18n } from 'vue-i18n';
 import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from 'element-plus';

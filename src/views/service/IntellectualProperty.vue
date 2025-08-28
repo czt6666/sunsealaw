@@ -11,7 +11,6 @@ import {
   serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
   serverGetNewsById,
 } from '@/server/News';
 
@@ -19,7 +18,7 @@ import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { useI18n } from 'vue-i18n';
 
 import { formatDate0, formatDate01 } from '@/utils/utils';
-
+import serviceArea from './serviceArea.vue';
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
@@ -62,14 +61,14 @@ onMounted(async () => {});
     <!--新闻-->
     <div class="news-container-outer">
       <div class="news-container-inner">
-        <div style="font-size: 3em; cursor: pointer">PRACTICE AREAS</div>
+        <div style="font-size: 3em; cursor: pointer">{{ t('app.service').toUpperCase() }}</div>
       </div>
     </div>
   </div>
 
-  <div style="width: 1300px; margin: auto; text-align: left; line-height: 1.5">
-    <div style="font-size: 2em; font-weight: bold; margin: 20px 0px">Intellectual Property</div>
-
+  <div class="service-container">
+    <h1>Intellectual Property</h1>
+    <img src="/practiceareas/Intellectual Property.png" alt="Intellectual Property" style="width: 100%; height: 100%" />
     <p>
       We help clients secure and enforce their intellectual property rights, reduce risk exposure, and maximize the
       commercial value of innovation. Our team advises across the full lifecycle of IP assets, from registration to
@@ -85,6 +84,9 @@ onMounted(async () => {});
       <li>Pre-litigation strategy, negotiation, and settlement of IP disputes</li>
     </ul>
   </div>
+  <serviceArea />
 </template>
 
-<style scoped></style>
+<style scoped>
+@import './service.css';
+</style>

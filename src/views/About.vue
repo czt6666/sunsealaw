@@ -28,6 +28,7 @@ const { t } = useI18n();
       font-weight: 400;
       letter-spacing: 1.2px;
       line-height: 1.08;
+
       padding-top: 40px;
       padding-bottom: 40px;
     "

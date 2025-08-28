@@ -14,25 +14,20 @@
       >
         <div
           v-for="(user, index) in loopedUsers"
-          :key="`${user.sysUser?.id || index}-${index}`"
+          :key="`${user.id || index}-${index}`"
           class="lawyer-card"
           :class="{ active: isCardActive(index) }"
-          @click="() => router.push({ path: `/team-member/${user.sysUser.id}` })"
+          @click="() => router.push({ path: `/team-member/${user.id}` })"
         >
           <div class="lawyer-image-container">
             <div class="image-wrapper">
-              <img :src="user.photoBase64" :alt="user.sysUser?.realName || 'Lawyer'" class="lawyer-image" />
+              <img :src="getUserPhotoUrlBySysUser(user)" :alt="user.realName || 'Lawyer'" class="lawyer-image" />
               <div class="image-overlay"></div>
             </div>
 
-            <div class="lawyer-badge" v-if="user.sysUser?.licensedInfo">
-              <i class="fas fa-balance-scale"></i>
-              <span class="badge-tooltip">Licensed Attorney</span>
-            </div>
-
             <div class="lawyer-info">
-              <h3 class="lawyer-name">{{ user.sysUser?.realName || 'Unknown' }}</h3>
-              <p class="lawyer-role">{{ user.sysUser?.companyRole || 'Attorney' }}</p>
+              <h3 class="lawyer-name">{{ user.realName || 'Unknown' }}</h3>
+              <p class="lawyer-role">{{ user.companyRole || 'Attorney' }}</p>
             </div>
           </div>
         </div>
@@ -58,14 +53,15 @@
 </template>
 
 <script setup lang="ts">
-import { IServerUserWithPhotoView } from '@/server/ServerType';
+import { IServerSysUser } from '@/server/ServerType';
+import { getUserPhotoUrlBySysUser } from '@/server/SysUser';
 import { useRouter, useRoute } from 'vue-router';
 import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue';
 
 const router = useRouter();
 const props = withDefaults(
   defineProps<{
-    users: IServerUserWithPhotoView[];
+    users: IServerSysUser[];
     visibleCards?: number;
     interval?: number;
   }>(),
@@ -180,6 +176,7 @@ function startAutoPlay() {
 
 // 生命周期
 onMounted(() => {
+  console.log(props.users);
   startAutoPlay();
 });
 

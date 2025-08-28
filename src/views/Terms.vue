@@ -18,21 +18,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <div
-    style="
-      background-color: #0c162f;
-      margin: 0px;
-      color: white;
-      font-family: 'Instrument Serif', serif;
-      font-size: 20px;
-      font-weight: 400;
-      letter-spacing: 1.2px;
-      line-height: 1.08;
-
-      padding-top: 40px;
-      padding-bottom: 40px;
-    "
-  >
+  <div class="ss-text-container">
     <div class="news-container-outer">
       <div class="news-container-inner">
         <div style="font-size: 3em; cursor: pointer">
@@ -41,7 +27,17 @@ const { t } = useI18n();
       </div>
     </div>
   </div>
-  <div class="ss-text-container">
+  <div
+    style="
+      font-family: Georgia, serif;
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.6;
+      color: #333;
+      padding: 40px;
+      text-align: left;
+    "
+  >
     <h1 style="text-align: center; font-size: 26px; font-weight: bold; margin-bottom: 30px">
       Terms and Conditions – SUNSEA LAW GROUP P.C.
     </h1>
@@ -54,7 +50,7 @@ const { t } = useI18n();
       <strong>SUNSEA LAW GROUP P.C.</strong>
       (“we,” “us,” or “our”). These Terms and Conditions (“Terms”) govern your access to and use of our website located
       at
-      <a href="http://www.sunsealaw.com" style="color: #0056b3; text-decoration: none">www.sunsealaw.com</a>
+      <a href="http://www.us-sunsealaw.com" style="color: #0056b3; text-decoration: none">www.us-sunsealaw.com</a>
       (the “Website”).
     </p>
     <p>

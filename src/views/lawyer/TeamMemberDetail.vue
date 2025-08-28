@@ -83,6 +83,7 @@ const getUserDataFromSever = async (id: number) => {
       font-weight: 400;
       letter-spacing: 1.2px;
       line-height: 1.08;
+
       padding-top: 40px;
       padding-bottom: 40px;
       font-size: 3em;
@@ -90,76 +91,85 @@ const getUserDataFromSever = async (id: number) => {
   >
     Team Member
   </div>
-  <div class="ss-section">
-    <!--成员主要信息-->
-    <div class="main-info" v-if="userData.id > 0">
-      <!--头像-->
-      <div style="width: 400px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; flex: 1">
-        <UserPhoto :userId="userData.id" :img-width="300"></UserPhoto>
-      </div>
+
+  <!--成员主要信息-->
+  <div class="user-outer-container" v-if="userData.id > 0">
+    <!--头像-->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+      <UserPhoto :user="userData" :img-width="300"></UserPhoto>
+
+      <div style="margin-top: 10px; font-size: 1.2em">{{ userData.email }}</div>
+    </div>
+    <div class="user-text-container">
       <!--姓名及注册信息等-->
-      <div class="user-container" style="margin-left: 40px; flex: 2">
+      <div class="user-container">
         <div class="user-container-inner">
           <!--姓名-->
-          <div style="font-size: 3em; cursor: pointer">
-            {{ userData.realName }}
+          <div style="display: flex; align-items: baseline">
+            <div style="font-size: 2em">{{ userData.realName }}</div>
+            <div style="margin: 0 30px; width: 2px; height: 20px; background-color: lightslategray"></div>
+            <div style="font-size: 1.5em; color: midnightblue">{{ userData.companyRole }}</div>
           </div>
 
-          <!--公司内角色---->
-          <div style="margin: 10px">{{ userData.companyRole }}</div>
-
           <!--注册信息-->
-          <div style="margin: 10px">{{ userData.licensedInfo }}</div>
+          <div style="margin: 10px; font-size: 1.4em; font-style: italic">{{ userData.licensedInfo }}</div>
         </div>
       </div>
-    </div>
-    <div style="display: flex; margin: 10px; padding: 20px; margin: auto; text-align: left">
-      <!--详细信息-->
-      <span
-        style="
-          width: 100%; /* 或具体宽度 */
-          overflow-wrap: break-word; /* 兼容性好 */
-          word-break: break-word; /* 更现代的方案 */
-          hyphens: auto; /* 自动添加连字符 */
-          line-height: 1.6; /* 良好的行高提升可读性 */
-          white-space: pre-wrap;
-        "
-      >
-        {{ userData.details }}
-      </span>
+
+      <div style="display: flex; padding: 20px; margin: auto; text-align: left">
+        <!--详细信息-->
+        <span
+          style="
+            width: 100%; /* 或具体宽度 */
+            overflow-wrap: break-word; /* 兼容性好 */
+            word-break: break-word; /* 更现代的方案 */
+            hyphens: auto; /* 自动添加连字符 */
+            line-height: 1.6; /* 良好的行高提升可读性 */
+            white-space: pre-wrap;
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.2em;
+          "
+        >
+          {{ userData.details }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
+.user-outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  max-width: 1000px;
+  margin: 40px auto;
 }
 .user-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: first baseline;
+  padding: 10px;
 }
 .user-container-inner {
+  font-family: 'Instrument Serif', serif;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: first baseline;
+  justify-content: flex-start;
 }
-.main-info {
-  display: flex;
-  flex-direction: row;
+.user-text-container {
+  text-align: left;
+  margin-left: 40px;
 }
 
-@media screen and (max-width: 760px) {
-  .main-info {
+@media (max-width: 768px) {
+  .user-outer-container {
     flex-direction: column;
-    align-items: center;
   }
-  .user-container {
-    margin-bottom: 20px;
-    margin-left: 0px !important;
-    text-align: left;
+  .user-text-container {
+    margin-left: 0px;
   }
 }
 </style>

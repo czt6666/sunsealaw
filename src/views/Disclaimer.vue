@@ -59,4 +59,8 @@ const { t } = useI18n();
   <div style="margin-top: 20px"></div>
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+</style>

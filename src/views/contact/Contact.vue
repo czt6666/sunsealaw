@@ -43,11 +43,10 @@ const formRef = ref<FormInstance>();
 
 // 表单验证规则
 const rules = reactive<FormRules>({
-  name: [{ required: true, message: 'User Name', trigger: 'blur' }],
-  address: [{ required: true, message: 'Real Name', trigger: 'blur' }],
-  phone: [{ required: true, message: 'Password', trigger: 'blur' }],
-  email: [{ required: true, message: 'Company Role', trigger: 'blur' }],
-  message: [{ required: true, message: 'Licensed Info', trigger: 'blur' }],
+  name: [{ required: true, message: 'Please input your name', trigger: 'blur' }],
+  address: [{ required: false, message: 'Please input your address', trigger: 'blur' }],
+  phone: [{ required: true, message: 'Please input your phone/email', trigger: 'blur' }],
+  message: [{ required: true, message: 'Please input your message', trigger: 'blur' }],
 });
 
 // 重置表单
@@ -55,17 +54,108 @@ const resetForm = () => {
   formRef.value?.resetFields();
 };
 
+function extractContactInfo(input: string): {
+  phones: string[];
+  emails: string[];
+  originalText: string;
+} {
+  // 更精确的电话号码正则表达式，区分固定电话和移动电话
+  const phoneRegex =
+    /(?:\+?(\d{1,4})[-\s.]?)?(?:\(?(\d{1,6})\)?[-\s.]?)?(\d{1,5})[-\s.]?(\d{1,5})[-\s.]?(\d{1,9})(?:\s*(?:ext|ex|xtn|xt|#|x|转|分机|extension)\s*(\d{1,6}))?/gi;
+
+  // 邮箱地址正则表达式
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi;
+
+  // 提取所有匹配的电话号码和邮箱地址
+  const phones: string[] = [];
+  const emails: string[] = [];
+
+  // 存储已处理的电话号码以避免重复
+  const processedPhones = new Set<string>();
+
+  let phoneMatch;
+  while ((phoneMatch = phoneRegex.exec(input)) !== null) {
+    const fullMatch = phoneMatch[0];
+    const countryCode = phoneMatch[1] || '';
+    const areaCode = phoneMatch[2] || '';
+    const part1 = phoneMatch[3] || '';
+    const part2 = phoneMatch[4] || '';
+    const part3 = phoneMatch[5] || '';
+    const extension = phoneMatch[6] || '';
+
+    // 计算数字总长度（去掉非数字字符）
+    const digitLength = fullMatch.replace(/\D/g, '').length;
+
+    // 过滤掉明显不是电话号码的短数字序列
+    if (digitLength < 7) continue;
+
+    // 重构电话号码格式
+    let formattedPhone = '';
+
+    // 添加国家代码（如果有）
+    if (countryCode) {
+      formattedPhone += `+${countryCode} `;
+    }
+
+    // 添加区号（如果有）
+    if (areaCode) {
+      formattedPhone += `(${areaCode}) `;
+    }
+
+    // 添加主号码部分
+    if (part1 && part2 && part3) {
+      formattedPhone += `${part1}-${part2}-${part3}`;
+    } else if (part1 && part2) {
+      formattedPhone += `${part1}-${part2}`;
+    } else if (part1) {
+      formattedPhone += part1;
+    }
+
+    // 添加分机号（如果有）
+    if (extension) {
+      formattedPhone += ` ext.${extension}`;
+    }
+
+    const finalPhone = formattedPhone.trim();
+
+    // 避免添加重复的电话号码
+    if (!processedPhones.has(finalPhone)) {
+      phones.push(finalPhone);
+      processedPhones.add(finalPhone);
+    }
+  }
+
+  // 提取邮箱地址
+  let emailMatch;
+  while ((emailMatch = emailRegex.exec(input)) !== null) {
+    emails.push(emailMatch[0]);
+  }
+
+  return {
+    phones,
+    emails,
+    originalText: input,
+  };
+}
+
 const onOk = () => {
   formRef.value?.validate(async (valid) => {
-    console.log(form);
     if (valid) {
       try {
+        const { phones, emails, originalText } = extractContactInfo(form.phone);
+        console.log(phones);
+        console.log(emails);
+        if (phones.length === 0 && emails.length === 0) {
+          ElMessage.error('Please input your phone/email');
+          return;
+        }
+        //
         const contactUs: IServerContactUs = {
           id: 0,
           name: form.name,
           address: form.address,
-          phone: form.phone,
-          email: form.email,
+          phone: phones.join(';'),
+          email: emails.join(';'),
           message: form.message,
         };
 
@@ -122,19 +212,15 @@ const onCancel = () => {};
     :model="form"
     label-width="auto"
     style="max-width: 600px; margin: auto; margin-top: 60px"
-    class="ss-section"
   >
     <el-form-item label="Name" prop="name">
       <el-input v-model="form.name" />
     </el-form-item>
-    <el-form-item label="Address" prop="address">
+    <el-form-item label="Region" prop="address">
       <el-input v-model="form.address" />
     </el-form-item>
-    <el-form-item label="Phone" prop="phone">
+    <el-form-item label="Phone/Email" prop="phone">
       <el-input v-model="form.phone" />
-    </el-form-item>
-    <el-form-item label="Email" prop="email">
-      <el-input v-model="form.email" />
     </el-form-item>
     <el-form-item label="Message" prop="message">
       <el-input v-model="form.message" type="textarea" :rows="4" />
@@ -150,7 +236,6 @@ const onCancel = () => {};
     style="
       margin-top: 100px;
       padding: 20px;
-      display: flex;
       flex-direction: column;
       margin-right: auto;
       justify-items: flex-end;
@@ -169,9 +254,6 @@ const onCancel = () => {};
 </template>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
 .visit-us-container {
   display: flex;
   align-items: center;

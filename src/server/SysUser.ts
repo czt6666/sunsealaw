@@ -17,6 +17,15 @@ import { clearCookies } from '@/cookies/user';
 
 import { Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
 
+export function getUserPhotoUrl(photo: string) {
+  if (photo) return '/static/' + photo;
+  return '/static/default_user.svg';
+}
+
+export function getUserPhotoUrlBySysUser(sysUser: IServerSysUser) {
+  return getUserPhotoUrl(sysUser.photo);
+}
+
 /**
  * 用户登录
  * @param username
@@ -253,6 +262,23 @@ export async function serverGetUserBySysUserId(id: number): Promise<IServerRespo
 }
 
 /**
+ * 获得所有用户，不包括管理员
+ * @returns
+ */
+export async function serverGetAllUserWithoutAdmin(): Promise<IServerResponseData<IServerSysUser[]>> {
+  try {
+    let res = await axios.get<any, IServerResponseData<IServerSysUser[]>>(
+      BASEURL.sysuser + 'get-all-user-without-admin',
+    );
+
+    return res;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+/**
  * 获得用户
  * @param name
  * @param note
@@ -353,7 +379,7 @@ export async function serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser(
   }
 }
 
-export async function serverGetUserPhotoFileById(userId: number): Promise<IServerResponseData<string>> {
+export async function serverGetUserPhotoFileInBase64ById(userId: number): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.get<any, IServerResponseData<string>>(BASEURL.sysuser + 'download-photo-file-in-base64', {
       params: {
@@ -368,10 +394,12 @@ export async function serverGetUserPhotoFileById(userId: number): Promise<IServe
   }
 }
 
-export async function serverGetAllUserWithPhotoView(): Promise<IServerResponseData<IServerUserWithPhotoView[]>> {
+export async function serverGetAllUserWithPhotoViewInBase64(): Promise<
+  IServerResponseData<IServerUserWithPhotoView[]>
+> {
   try {
     let res = await axios.get<any, IServerResponseData<IServerUserWithPhotoView[]>>(
-      BASEURL.sysuser + 'get-all-user-view',
+      BASEURL.sysuser + 'get-all-user-view-in-base64',
     );
 
     return res;

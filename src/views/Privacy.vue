@@ -67,7 +67,7 @@ const { t } = useI18n();
     </p>
     <p>
       This Policy applies when you visit our website (
-      <a href="http://www.sunsealaw.com" style="color: #0056b3; text-decoration: none">www.sunsealaw.com</a>
+      <a href="http://www.us-sunsealaw.com" style="color: #0056b3; text-decoration: none">www.us-sunsealaw.com</a>
       ), engage our legal services, interact with us at events, or otherwise provide us with your personal information.
     </p>
     <p>

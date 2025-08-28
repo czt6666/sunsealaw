@@ -100,7 +100,7 @@ const goBack = () => {
   </div>
 
   <div class="tab-container">
-    <div class="ss-section">
+    <div style="margin: 20px">
       <div
         v-for="(newsItem, newsIndex) in tableData"
         class="news-container"
@@ -108,11 +108,24 @@ const goBack = () => {
         :gutter="20"
         @click="onMemberClick(newsItem)"
       >
+        <!--新闻信息-->
+
         <!--图像-->
-        <!-- v-if="newsItem.titlePhoto" -->
-        <div class="news-photo">
-          <NewsPhoto :newsId="newsItem.id" :img-width="'100%'"></NewsPhoto>
-        </div>
+        <!-- <div
+            v-if="newsItem.titlePhoto"
+            style="
+              flex-shrink: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <NewsPhoto
+              :newsId="newsItem.id"
+              :img-width="100"
+              :img-height="100"
+            ></NewsPhoto>
+          </div>-->
         <!--新闻-->
         <div class="news-container-outer" @click="onMemberClick(newsItem)">
           <div class="news-container-inner">
@@ -121,7 +134,7 @@ const goBack = () => {
               {{ newsItem.title }}
             </div>
 
-            <!--新闻日期-->
+            <!--新闻日期---->
             <div
               style="font-size: 16px; margin-top: 10px; margin-bottom: 10px; font-family: Arial, Helvetica, sans-serif"
             >
@@ -149,10 +162,7 @@ const goBack = () => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
+<style scoped>
 .top-toolbar {
   display: flex;
 
@@ -193,36 +203,12 @@ const goBack = () => {
 }
 
 .news-container {
+  margin: 10px;
+  padding: 10px;
+
   border-radius: 5px;
+
   display: flex;
-  flex-direction: row;
   cursor: pointer;
-  margin-bottom: 20px;
-
-  .news-photo {
-    width: 300px;
-    height: 200px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 30px 0 0;
-    border-radius: 6px;
-    background-color: #e4e4e4;
-  }
-}
-
-@media screen and (max-width: 760px) {
-  .news-container {
-    flex-direction: column;
-    margin-bottom: 12px;
-
-    .news-photo {
-      overflow: hidden;
-      width: 100%;
-      height: 250px;
-      margin: 0 0 10px 0;
-    }
-  }
 }
 </style>

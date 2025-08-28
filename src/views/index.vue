@@ -13,7 +13,7 @@ import {
   getUserRealName,
   isAdmin,
 } from '@/cookies/user';
-import { serverGetAllCarouselPhotoFilesById, serverGetAllCarouselImageView } from '@/server/Carousel';
+import { serverGetAllCarousel, serverGetAllCarouselImageView } from '@/server/Carousel';
 
 import {
   IServerNewsWithPhotoView,
@@ -21,9 +21,10 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
+  IServerCarousel,
 } from '@/server/ServerType';
-import { serverGetNewsPhotoView } from '@/server/News';
-import { serverGetAllUserWithPhotoView } from '@/server/SysUser';
+import { serverGetTopNews, getNewsPhotoUrlByNews } from '@/server/News';
+import { serverGetAllUserWithPhotoViewInBase64, serverGetAllUserWithoutAdmin } from '@/server/SysUser';
 import UserPhoto from '@/components/member/UserPhoto.vue';
 import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { formatDate0, formatDate01 } from '@/utils/utils';
@@ -35,8 +36,8 @@ const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
-const newsList: Ref<IServerNewsWithPhotoView[]> = ref([]);
-const userView: Ref<IServerUserWithPhotoView[]> = ref([]);
+const newsList: Ref<IServerNews[]> = ref([]);
+const userList: Ref<IServerSysUser[]> = ref([]);
 
 import logoImg from '@/assets/logo.png';
 import captialMarkets from '@/assets/captialMarkets.png';
@@ -48,7 +49,7 @@ import immigration from '@/assets/immigration.png';
 import wills from '@/assets/wills.png';
 import civil from '@/assets/civil.png';
 
-const carouselImageViewArray = ref<IServerCarouselImageView[]>([]);
+const carouselArray = ref<IServerCarousel[]>([]);
 
 onMounted(async () => {
   getCarouselAllDataFromServer();
@@ -57,21 +58,13 @@ onMounted(async () => {
 });
 
 const getCarouselAllDataFromServer = async () => {
-  carouselImageViewArray.value.length = 0;
-  const ret = await serverGetAllCarouselImageView();
+  carouselArray.value.length = 0;
+  const ret = await serverGetAllCarousel();
   if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
-    for (let i = 0; i < ret.data.length; i++) {
-      const info = {
-        ...ret.data[i],
-        subTitle: ret.data[i].subTitle.replace('；', '<br>'),
-      };
-      console.log(info);
-
-      carouselImageViewArray.push(info);
-    }
+    carouselArray.value = ret.data;
   }
 
-  console.log('getCarouselAllDataFromServer', carouselImageViewArray.value);
+  // console.log('getCarouselAllDataFromServer', carouselArray.value);
 };
 
 /**
@@ -79,28 +72,23 @@ const getCarouselAllDataFromServer = async () => {
  */
 const getTopNewsDataFromServer = async () => {
   newsList.value.length = 0;
-  const ret = await serverGetNewsPhotoView();
+  const ret = await serverGetTopNews();
   if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
-    newsList.value.length = 0;
-    for (let i = 0; i < ret.data.length; i++) {
-      newsList.value.push(ret.data[i]);
-    }
+    newsList.value = ret.data;
   }
-  console.log('getTopNewsDataFromServer', newsList.value);
+  // console.log('getTopNewsDataFromServer', newsList.value);
 };
 
 /**
  * 获取所有的用户数据
  */
 const getUserAllDataFromServer = async () => {
-  userView.value.length = 0;
-  const ret = await serverGetAllUserWithPhotoView();
+  userList.value.length = 0;
+  const ret = await serverGetAllUserWithoutAdmin();
   if (ret && ret.code == 200 && ret.data && ret.data.length > 0) {
-    userView.value.length = 0;
-    for (let i = 0; i < ret.data.length; i++) {
-      userView.value.push(ret.data[i]);
-    }
-    console.log('getUserAllDataFromServer', userView.value);
+    userList.value = ret.data;
+
+    //  console.log('getUserAllDataFromServer', userList.value);
   }
 };
 
@@ -117,13 +105,13 @@ const newsTails = computed(() => {
   }
 });
 
-const onNewsClick = (newsView: IServerNewsWithPhotoView | null) => {
-  if (!newsView) {
+const onNewsClick = (news: IServerNews | null) => {
+  if (!news) {
     router.push({ path: '/news' });
     return;
   }
 
-  router.push({ path: `/news-detail/${newsView.news.id}` });
+  router.push({ path: `/news-detail/${news.id}` });
 };
 
 const services = ref([
@@ -179,7 +167,7 @@ const services = ref([
 </script>
 <template>
   <CookieBanner />
-  <Carousel :items="carouselImageViewArray" :autoPlay="true" :interval="3000" />
+  <Carousel :items="carouselArray" :autoPlay="true" :interval="3000" />
 
   <!--成员轮播图-->
   <section class="section-card">
@@ -194,7 +182,7 @@ const services = ref([
       </div>
     </div>
 
-    <MemberSwiper :users="userView"></MemberSwiper>
+    <MemberSwiper :users="userList"></MemberSwiper>
   </section>
 
   <!--Service Area-->
@@ -206,11 +194,11 @@ const services = ref([
         </div>
       </div>
     </div>
-    <div class="flex-cards">
+    <div class="card-content">
       <div
         v-for="service in services"
         :key="service.path"
-        class="flex-card-item service-item"
+        class="service-card"
         @click="router.push({ path: service.path })"
       >
         <div class="service-header">
@@ -223,7 +211,7 @@ const services = ref([
     </div>
   </section>
 
-  <!-- 新闻 -->
+  <!--新闻-->
   <section class="section-card">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px">
       <div class="card-header-title">
@@ -238,18 +226,45 @@ const services = ref([
         <div class="card-header-read-more-button" @click="router.push({ path: '/news' })">View All</div>
       </div>
     </div>
-    <!-- 新闻 cards -->
-    <div class="flex-cards">
-      <div v-for="newsItem in newsList" class="flex-card-item news-item" @click="onNewsClick(newsItem)">
-        <div class="news-img">
-          <img :src="newsItem.photoBase64" alt="news photo" />
+    <div class="card-content">
+      <!--新闻-->
+      <div v-for="newsItem in newsList" class="card-content-item">
+        <!--图像-->
+        <div class="card-content-item-image-container" @click="onNewsClick(newsItem)">
+          <img :src="getNewsPhotoUrlByNews(newsItem)" alt="news photo" />
           <div class="highlight-overlay"></div>
         </div>
-        <div class="news-content">
-          <h3 class="title">{{ newsItem.news.title || 'no title' }}</h3>
-          <span>{{ formatDate01(newsItem.news.createDateTime) || 'no date' }}</span>
-          <p class="brief">{{ newsItem.news.brief || 'no brief' }}</p>
-          <span class="news-read-more">READ MORE>></span>
+        <!--新闻-->
+        <div
+          style="
+            box-sizing: border-box;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 180px;
+            padding: 0 15px;
+            text-align: left;
+          "
+        >
+          <!--新闻标题-->
+          <div
+            style="color: #06456b; font-size: 1.5em; font-weight: 600; cursor: pointer"
+            @click="onNewsClick(newsItem)"
+          >
+            {{ newsItem.title }}
+          </div>
+
+          <!--新闻日期---->
+          <div>
+            {{ formatDate01(newsItem.createDateTime) }}
+          </div>
+
+          <!--新闻内容-->
+          <div style="overflow: hidden; height: 44px; font-size: 0.8em; line-height: 1.5em">
+            {{ newsItem.brief }}
+          </div>
+
+          <div class="card-button-read-more" @click="onNewsClick(newsItem)">READ MORE>></div>
         </div>
       </div>
     </div>
@@ -270,88 +285,148 @@ const services = ref([
     </div>
   </section>
 </template>
-<style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
-
+<style scoped>
 .section-card {
-  box-sizing: border-box;
   background-color: white;
   padding: 40px 20px;
   width: 100%;
   max-width: 1300px;
   margin: 60px auto;
-
-  .card-header-title {
-    display: flex;
-    justify-content: left;
-    flex-direction: column;
-    background-color: white;
-  }
-
-  .card-header-title-text {
-    font-family: 'Manrope', sans-serif;
-    font-size: 60px;
-    text-align: left;
-    line-height: 82px;
-    font-weight: 600;
-    background-color: white;
-    color: #c00a30;
-  }
-
-  .card-header-title-text-description {
-    font-family: 'Manrope', sans-serif;
-    font-size: 20px;
-    text-align: left;
-    line-height: 42px;
-    background-color: white;
-  }
-
-  .card-header-read-more {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .card-header-read-more-button {
-    width: 120px;
-    padding: 10px 0px;
-    background-color: #c00a30;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    line-height: 32px;
-    font-family: 'Manrope', sans-serif;
-    transition: all 0.3s ease-in-out;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    &:hover {
-      background-color: #06456b;
-      transform: scale(1.02);
-    }
-  }
 }
 
-.flex-cards {
+.section-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 40px;
+  background-color: black;
+}
+
+.card-header-title {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  background-color: white;
+}
+.card-header-title-text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 60px;
+  text-align: left;
+  line-height: 82px;
+  font-weight: 600;
+  background-color: white;
+  color: #c00a30;
+}
+
+.card-header-title-text-description {
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  text-align: left;
+  line-height: 42px;
+  background-color: white;
+}
+.card-header-read-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-header-read-more-button {
+  width: 120px;
+  height: 32px;
+  padding: 10px 0px;
+  background-color: #c00a30;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 32px;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.3s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  &:hover {
+    background-color: #06456b;
+    transform: scale(1.02);
+  }
+}
+.card-content-item-image-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  height: 260px;
+  margin-bottom: 12px;
+}
+
+.card-content-item-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.highlight-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%; /* 覆盖图像下半部分 */
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.7), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+.card-content {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
+  padding: 20px 0px;
   gap: 40px;
 }
 
-.flex-card-item {
-  // border: 1px solid #e4e4e4;
+.card-content-item {
+  box-sizing: border-box;
+  height: 440px;
+  width: 400px;
+  border: 1px solid #e4e4e4;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
-.service-item {
+.card-button-read-more {
+  color: #06456b;
+  font-size: 0.8em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    color: #c00a30;
+    transform: scale(1.02);
+  }
+}
+
+.memger-photo {
+  width: 400px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.service-card {
   box-sizing: border-box;
   height: 240px;
   width: 240px;
   background: white;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
@@ -359,126 +434,103 @@ const services = ref([
   display: flex;
   flex-direction: column;
   font-family: 'Georgia', sans-serif;
+}
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-  }
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
 
-  .service-header {
-    box-sizing: border-box;
-    height: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #06456b;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    font-family: 'Georgia', serif;
-  }
+.service-header {
+  box-sizing: border-box;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #06456b;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-family: 'Georgia', serif;
+}
 
-  .service-body {
-    box-sizing: border-box;
-    flex: 1 1 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.service-body {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    > img {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-    }
+  > img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
   }
 }
 
-.news-item {
-  overflow: hidden;
-  width: 440px;
-  padding-bottom: 12px;
-  cursor: pointer;
-  border: 1px solid #e4e4e4;
-  border-radius: 6px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+.user-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 40px;
+}
+.user-container-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
 
-  .news-img {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    width: 100%;
-    height: 260px;
+.news-container-outer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 10px;
+  padding: 10px;
+  padding-left: 20px;
+  border-radius: 5px;
+}
+.news-container-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  text-align: left;
+}
 
-    > img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
+.news-container {
+  margin: 10px;
+  padding: 10px;
 
-    .highlight-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 50%; /* 覆盖图像下半部分 */
-      background: linear-gradient(to top, rgba(255, 255, 255, 0.7), transparent);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      z-index: 1;
-    }
-  }
+  border-radius: 5px;
 
-  .news-content {
-    overflow: hidden;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 15px;
-    text-align: left;
+  display: flex;
+}
 
-    .title {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2; /* 限制显示 2 行 */
-      overflow: hidden;
-      height: 70px;
-      color: #06456b;
-      font-size: 1.5em;
-      font-weight: 600;
-      text-overflow: ellipsis;
-      margin: 10px 0;
-    }
+/* WebKit 内核浏览器 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+/* 通用滚动条样式 */
+html {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #888 #f1f1f1; /* Firefox */
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
 
-    .brief {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2; /* 限制显示 2 行 */
-      overflow: hidden;
-      height: 44px;
-      margin: 8px 0px;
-      color: #333;
-      line-height: 1.5em;
-      text-overflow: ellipsis;
-      height: 44px;
-      font-size: 14px;
-    }
-  }
-  .news-read-more {
-    color: #06456b;
-    font-size: 0.8em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
 
-    &:hover {
-      color: #c00a30;
-      transform: scale(1.02);
-    }
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 @media screen and (max-width: 760px) {

@@ -6,11 +6,11 @@
         :key="index"
         class="slide"
         :class="{ active: currentIndex === index }"
-        :style="{ backgroundImage: `url(${item.image})` }"
+        :style="{ backgroundImage: `url(${getCarouselPhotoUrlByCarousel(item)})` }"
       >
         <div class="content">
           <h2 class="title">{{ item.title }}</h2>
-          <p class="subtitle" v-html="item.subTitle"></p>
+          <p class="subtitle">{{ item.subTitle }}</p>
         </div>
       </div>
     </div>
@@ -43,11 +43,14 @@ import {
   IServerSysUser,
   IServerNews,
   IServerCarouselImageView,
+  IServerCarousel,
 } from '@/server/ServerType';
+
+import { getCarouselPhotoUrlByCarousel } from '@/server/Carousel';
 
 const props = defineProps({
   items: {
-    type: Array as PropType<IServerCarouselImageView[]>,
+    type: Array as PropType<IServerCarousel[]>,
     required: true,
   },
   autoPlay: {

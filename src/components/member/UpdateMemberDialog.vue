@@ -29,7 +29,8 @@ import { IServerSysUser } from '@/server/ServerType';
 import {
   serverAddUserPhotoUploadTempFiles,
   serverDeleteUserPhotoUploadTempFiles,
-  serverGetUserPhotoFileById,
+  getUserPhotoUrl,
+  getUserPhotoUrlBySysUser,
 } from '@/server/SysUser';
 import { useI18n } from 'vue-i18n';
 import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from 'element-plus';
@@ -101,10 +102,10 @@ const onOpenDialog = async () => {
     form.photo = props.sysUser.photo;
     form.auth = props.sysUser.auth;
 
-    let res = await serverGetUserPhotoFileById(props.sysUser.id);
-    if (res && res.code == 200 && res.data) {
-      fileList.value.push({ name: form.photo, url: res.data });
-    }
+    // let res = await serverGetUserPhotoFileById(props.sysUser.id);
+    // if (res && res.code == 200 && res.data) {
+    fileList.value.push({ name: form.photo, url: getUserPhotoUrlBySysUser(props.sysUser) });
+    // }
   }
 };
 
@@ -274,6 +275,10 @@ const httpRequest = async (options: UploadRequestOptions) => {
 
       <el-form-item label="Email" prop="email">
         <el-input v-model="form.email" placeholder="Please input email" />
+      </el-form-item>
+
+      <el-form-item label="Details" prop="details">
+        <el-input v-model="form.details" type="textarea" autosize :rows="4" placeholder="Please input details" />
       </el-form-item>
 
       <el-form-item label="Photo" prop="photo">

@@ -11,6 +11,10 @@
         <el-input v-model="form.brief" type="textarea" placeholder="请输入新闻摘要" :rows="3" resize="none" />
       </el-form-item>
 
+      <el-form-item label="发布时间" required>
+        <el-date-picker v-model="form.createDateTime" type="datetime" placeholder="请选择发布时间" />
+      </el-form-item>
+
       <el-form-item label="标题图片" required>
         <el-upload
           ref="upload"
@@ -49,7 +53,7 @@
       </el-button>
       <el-button @click="publishNews" type="primary" size="large">
         <el-icon><Promotion /></el-icon>
-        发布新闻
+        更新新闻
       </el-button>
     </div>
   </div>
@@ -79,7 +83,9 @@ import {
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
   serverGetNewsById,
-  serverGetNewsPhotoFileById,
+  getNewsPhotoUrl,
+  getNewsPhotoUrlByNews,
+  serverNewsUpdate,
 } from '@/server/News';
 import router from '@/router';
 import { getUserID } from '@/cookies/user';
@@ -201,7 +207,9 @@ const convertToHtml = (data: OutputData): string => {
         htmlContent += `<p class="content-paragraph">${block.data.text}</p>`;
         break;
       case 'image':
-        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${block.data.caption || ''}" class="content-image">`;
+        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${
+          block.data.caption || ''
+        }" class="content-image">`;
         if (block.data.caption) {
           htmlContent += `<p class="image-caption">${block.data.caption}</p>`;
         }
@@ -284,13 +292,12 @@ const publishNews = async (): Promise<void> => {
     const newsData: IServerNews = {
       ...form,
       sysUserId: userId,
-      createDateTime: new Date(),
       contentJson: form.contentJson,
       contentHtml: form.contentHtml,
     };
 
     console.log('发布数据:', newsData);
-    await serverNewsAdd(newsData);
+    await serverNewsUpdate(newsData);
     ElMessage.success('新闻发布成功');
     router.push('/manager-news');
   } catch (error) {
@@ -375,7 +382,7 @@ onMounted(async () => {
   await initEditor();
   if (typeof route.params.id === 'string') {
     newsId.value = parseInt(route.params.id);
-    await getUserDataFromSever(parseInt(route.params.id));
+    await getNewsDataFromSever(parseInt(route.params.id));
   }
 });
 
@@ -393,7 +400,7 @@ onMounted(async () => {
 //   console.log(newsId.value);
 // });
 
-const getUserDataFromSever = async (id: number) => {
+const getNewsDataFromSever = async (id: number) => {
   if (!id) return;
 
   const ret = await serverGetNewsById(id);
@@ -415,12 +422,14 @@ const getUserDataFromSever = async (id: number) => {
     }
 
     fileList.value = [];
-    let res = await serverGetNewsPhotoFileById(form.id);
-    if (res && res.code == 200 && res.data) {
-      fileList.value.push({ name: form.titlePhoto, url: res.data });
-    }
+    // let res = await serverGetNewsPhotoFileById(form.id);
+    // if (res && res.code == 200 && res.data) {
+    //   fileList.value.push({ name: form.titlePhoto, url: res.data });
+    // }
+    fileList.value.push({ name: form.titlePhoto, url: getNewsPhotoUrl(ret.data.titlePhoto) });
+    console.log(fileList.value);
 
-    console.log(form);
+    //   console.log('form', form);
   }
 };
 </script>

@@ -15,7 +15,10 @@ const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
 
-import locationMap from '@/assets/staticmap_zh-CN.png';
+import locationMap from '@/assets/visit_us_map.png';
+import visit_us_1 from '@/assets/visit_us_1.jpg';
+import visit_us_2 from '@/assets/visit_us_2.jpg';
+import visit_us_3 from '@/assets/visit_us_3.jpg';
 </script>
 
 <template>
@@ -42,27 +45,31 @@ import locationMap from '@/assets/staticmap_zh-CN.png';
       </div>
     </div>
   </div>
-
+  <div style="width: 80%; margin: auto; margin-top: 20px">
+    <img :src="locationMap" alt="locationMap" style="width: 100%" />
+    <div class="visit-us-pic-container">
+      <img :src="visit_us_1" alt="visit_us_1" class="visit-us-pic" />
+      <img :src="visit_us_2" alt="visit_us_2" class="visit-us-pic" />
+      <img :src="visit_us_3" alt="visit_us_3" class="visit-us-pic" />
+    </div>
+  </div>
   <div class="ss-text-container" style="margin-top: 20px">
-    <img :src="locationMap" alt="locationMap" style="width: 80%" />
-    <div class="info-container">
-      <div class="visit-us-container" style="flex: 1">
-        <div class="visit-us-container-inner">
-          <div class="visit-us-title">Location</div>
-          <div style="text-align: left">LA Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
-        </div>
+    <div class="visit-us-container" style="flex: 1">
+      <div class="visit-us-container-inner">
+        <div class="visit-us-title">Location</div>
+        <div style="text-align: left">LA Address: 18300 Von Karman Ave, Suite 970, Irvine, CA 92612</div>
       </div>
-      <div class="visit-us-container" style="flex: 1">
-        <div class="visit-us-container-inner">
-          <div class="visit-us-title">E-mail</div>
-          <div>info@sunsealaw.com</div>
-        </div>
+    </div>
+    <div class="visit-us-container" style="flex: 1">
+      <div class="visit-us-container-inner">
+        <div class="visit-us-title">E-mail</div>
+        <div>info@sunsealaw.com</div>
       </div>
-      <div class="visit-us-container" style="flex: 1">
-        <div class="visit-us-container-inner">
-          <div class="visit-us-title">Phone</div>
-          <div>(951) 790-3922</div>
-        </div>
+    </div>
+    <div class="visit-us-container" style="flex: 1">
+      <div class="visit-us-container-inner">
+        <div class="visit-us-title">Phone</div>
+        <div>(951) 790-3922</div>
       </div>
     </div>
   </div>
@@ -102,10 +109,35 @@ import locationMap from '@/assets/staticmap_zh-CN.png';
   color: #333; /* 调整字体颜色 */
   margin-bottom: 10px; /* 调整底部间距 */
 }
-.info-container {
+
+.visit-us-pic-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.visit-us-pic {
+  width: 32%;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .footer-container-content-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .visit-us-pic-container {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .visit-us-pic {
+    width: 100%;
+    margin-top: 20px;
+  }
 }
 </style>

@@ -20,7 +20,8 @@ import {
   serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
+  getNewsPhotoUrl,
+  getNewsPhotoUrlByNews,
 } from '@/server/News';
 
 import { IServerSysUser, Pageable, Page, SimplePage, convertPage, IServerNews } from '@/server/ServerType';
@@ -37,6 +38,8 @@ import {
 } from '@/cookies/user';
 import NewsPhoto from '@/components/news/NewsPhoto.vue';
 import { useI18n } from 'vue-i18n';
+
+import { formatDate1 } from '@/utils/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -91,8 +94,11 @@ const onRowEditButtonClick = async (userItem: IServerNews, userIndex: number) =>
 };
 
 const onRowDeleteButtonClick = async (userItem: IServerNews, userIndex: number) => {
-  const ret = await serverNewsDelete(userItem);
-  await getNewsPageDataFromSever();
+  //删除之前询问是否删除
+  if (confirm('Are you sure you want to delete this news?')) {
+    const ret = await serverNewsDelete(userItem);
+    await getNewsPageDataFromSever();
+  }
 };
 
 const goBack = () => {
@@ -149,7 +155,8 @@ const goBack = () => {
           <el-col :span="1">No.</el-col>
           <el-col :span="6">Title</el-col>
           <el-col :span="3">TitlePhoto</el-col>
-          <el-col :span="12">Content</el-col>
+          <el-col :span="2">Date</el-col>
+          <el-col :span="10">Content</el-col>
           <el-col :span="2">操作</el-col>
         </el-row>
 
@@ -191,12 +198,21 @@ const goBack = () => {
           <!--TitlePhoto-->
           <el-col :span="3">
             <div style="display: flex; align-items: center">
-              <NewsPhoto :newsId="newsItem.id" :img-width="100" :img-height="100"></NewsPhoto>
+              <NewsPhoto :news="newsItem" :img-width="100" :img-height="100"></NewsPhoto>
+            </div>
+          </el-col>
+
+          <!--Date-->
+          <el-col :span="2">
+            <div style="display: flex; align-items: center">
+              <div :class="{ textEllipsis: textElipsisValue }">
+                {{ formatDate1(newsItem.createDateTime) }}
+              </div>
             </div>
           </el-col>
 
           <!--Content-->
-          <el-col :span="12">
+          <el-col :span="10">
             <div style="display: flex; align-items: center; text-align: left; overflow: hidden">
               <div :class="{ textEllipsis: textElipsisValue }">
                 {{ newsItem.contentHtml }}
