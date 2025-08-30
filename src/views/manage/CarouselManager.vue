@@ -43,7 +43,7 @@ const route = useRoute();
 const { t } = useI18n();
 
 const pageData = ref<SimplePage<IServerCarousel>>();
-const pageNo = ref(0); //第几页
+const pageNo = ref(1); //第几页
 const pageSize = ref(getUserPageSize()); //每页多少数据
 const loading = ref(false);
 const dialogNewVisible = ref(false); //新增对话框是否可见
@@ -57,7 +57,7 @@ onMounted(async () => {
 });
 
 const getCarouselPageDataFromSever = async () => {
-  const ret = await serverGetCarouselPage(pageNo.value, pageSize.value);
+  const ret = await serverGetCarouselPage(pageNo.value - 1, pageSize.value);
   console.log(ret);
   if (ret && ret.code == 200) {
     console.log(ret.data);
@@ -207,7 +207,7 @@ const goBack = () => {
           <!--序号-->
           <el-col :span="1">
             <div style="display: flex; align-items: center; justify-content: center">
-              {{ pageNo * pageSize + userIndex + 1 }}
+              {{ (pageNo - 1) * pageSize + userIndex + 1 }}
             </div>
           </el-col>
 

@@ -19,8 +19,6 @@ export interface ICaptcha {
 export interface Pageable {
   pageNumber: number; // 当前页码（从0开始）
   pageSize: number; // 每页数量
-  totalPages: number; // 总页数
-  totalElements: number; // 总记录数
   sorted?: boolean; // 是否排序
   // 其他可能的字段...
 }
@@ -34,6 +32,8 @@ export interface Page<T> {
   number: number; // 当前页码（同pageNumber）
   size: number; // 当前页大小（同pageSize）
   empty: boolean; // 数据是否为空
+  totalPages: number; // 总页数
+  totalElements: number; // 总记录数
 }
 
 //简单页面
@@ -51,8 +51,8 @@ export function convertPage<T>(page: Page<T>): SimplePage<T> {
     content: page.content,
     currentPage: page.number + 1, // 转为1-based
     pageSize: page.size,
-    totalPages: page.pageable.totalPages,
-    totalItems: page.pageable.totalElements,
+    totalPages: page.totalPages,
+    totalItems: page.totalElements,
   };
 }
 

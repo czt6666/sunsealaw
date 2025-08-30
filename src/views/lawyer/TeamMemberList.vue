@@ -21,7 +21,7 @@ const route = useRoute();
 const { t } = useI18n();
 
 const pageData = ref<SimplePage<IServerSysUser>>();
-const pageNo = ref(0); //第几页
+const pageNo = ref(1); //第几页
 const pageSize = ref(getUserPageSize()); //每页多少数据
 const loading = ref(false);
 const dialogNewVisible = ref(false); //新增对话框是否可见
@@ -34,7 +34,7 @@ onMounted(async () => {
 });
 
 const getUserPageDataFromSever = async () => {
-  const ret = await serverGetUserPage(pageNo.value, pageSize.value);
+  const ret = await serverGetUserPage(pageNo.value - 1, pageSize.value);
   console.log(ret);
   if (ret && ret.code == 200) {
     pageData.value = convertPage(ret.data);

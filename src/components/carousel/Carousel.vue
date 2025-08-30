@@ -10,7 +10,7 @@
       >
         <div class="content">
           <h2 class="title">{{ item.title }}</h2>
-          <p class="subtitle">{{ item.subTitle }}</p>
+          <p class="subtitle" v-html="item.subTitle"></p>
         </div>
       </div>
     </div>
