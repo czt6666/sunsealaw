@@ -180,6 +180,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'VisitUs',
     component: () => import('@/views/VisitUs.vue'),
   },
+  //联系我们管理
+  {
+    path: '/maintenance',
+    name: 'Maintenance',
+    component: () => import('@/views/Maintenance.vue'),
+  },
 
   //首页
   {
@@ -192,4 +198,15 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+const IS_MAINTENANCE = import.meta.env.VITE_MAINTENANCE === 'true';
+
+router.beforeEach((to, from, next) => {
+  if (IS_MAINTENANCE && to.path !== '/maintenance') {
+    next('/maintenance');
+  } else {
+    next();
+  }
+});
+
 export default router;
