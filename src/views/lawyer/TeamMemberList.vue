@@ -142,7 +142,7 @@ const goBack = () => {
   <!--工具栏-->
   <div class="member-container">
     <div
-      v-for="(userItem, userIndex) in tableData"
+      v-for="userItem in tableData"
       class="user-container"
       :key="userItem.id"
       v-loading="loading"

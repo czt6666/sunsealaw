@@ -57,7 +57,7 @@ const onLoginClick = async () => {
   let publicKeyResponse = await serverGetPublicKey();
 
   if (publicKeyResponse) {
-    if ((publicKeyResponse.code = 200)) {
+    if (publicKeyResponse.code === 200) {
       //获得了公钥，使用公钥加密，服务器端使用私钥解密
       let encrypt = new JSEncrypt();
       let publicKey = publicKeyResponse.data;
@@ -87,7 +87,7 @@ const onSignUPClick = async () => {
   let publicKeyResponse = await serverGetPublicKey();
   console.log(publicKeyResponse);
   if (publicKeyResponse) {
-    if ((publicKeyResponse.code = 200)) {
+    if (publicKeyResponse.code === 200) {
       //获得了公钥，使用公钥加密，服务器端使用私钥解密
       let encrypt = new JSEncrypt();
       let publicKey = publicKeyResponse.data;
@@ -130,7 +130,7 @@ const onRefreshCode = async () => {
   let ret = await serverGetCaptchaJpg();
   console.log(ret);
   if (ret) {
-    if ((ret.code = 200)) {
+    if (ret.code === 200) {
       formLogin.captchaCode = ret.data.code; //验证图像
       formLogin.captchaKey = ret.data.key; //验证图像对应的key
       formLogin.code = '';

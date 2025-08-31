@@ -235,7 +235,12 @@ const services = ref([
     </div>
     <!-- 新闻 cards -->
     <div class="flex-cards">
-      <div v-for="newsItem in newsList" class="flex-card-item news-item" @click="onNewsClick(newsItem)">
+      <div
+        v-for="newsItem in newsList"
+        :key="newsItem.id"
+        class="flex-card-item news-item"
+        @click="onNewsClick(newsItem)"
+      >
         <div class="news-img">
           <img :src="getNewsPhotoUrlByNews(newsItem)" alt="news photo" />
           <div class="highlight-overlay"></div>

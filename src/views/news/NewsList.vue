@@ -103,6 +103,7 @@ const goBack = () => {
     <div style="margin: 20px">
       <div
         v-for="(newsItem, newsIndex) in tableData"
+        :key="newsIndex"
         class="news-container"
         v-loading="loading"
         :gutter="20"

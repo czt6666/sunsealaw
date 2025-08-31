@@ -203,7 +203,7 @@ const convertToHtml = (data: OutputData): string => {
         }
         htmlContent += `</div>`;
         break;
-      case 'list':
+      case 'list': {
         const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
         htmlContent += `<${tag} class="content-list">`;
         block.data.items.forEach((item: string) => {
@@ -211,6 +211,7 @@ const convertToHtml = (data: OutputData): string => {
         });
         htmlContent += `</${tag}>`;
         break;
+      }
       case 'quote':
         htmlContent += `<blockquote class="quote-block">${block.data.text}`;
         if (block.data.caption) {
