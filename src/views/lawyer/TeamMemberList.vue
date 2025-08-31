@@ -158,11 +158,6 @@ const goBack = () => {
         <!--姓名及注册信息等-->
         <div class="user-container-outter" @click="onMemberClick(userItem)">
           <div class="user-container-inner">
-            <!--姓名-->
-            <div style="font-size: 2em; cursor: pointer">
-              {{ userItem.realName }}
-            </div>
-
             <!--公司内角色---->
             <div style="margin: 10px">{{ userItem.companyRole }}</div>
 
@@ -171,34 +166,31 @@ const goBack = () => {
           </div>
         </div>
       </div>
-
-      <el-pagination
-        :hide-on-single-page="true"
-        class="page-class"
-        background
-        v-model:current-page="pageNo"
-        v-model:page-size="pageSize"
-        :page-sizes="[10, 50, 100, 200, 300, 400]"
-        layout="total, sizes, prev, pager, next"
-        :total="totalCount"
-        @prev-click="onPagePrevClick"
-        @next-click="onPageNextClick"
-        @current-change="onPageCurrentChange"
-        @size-change="onPageSizeChange"
-      />
     </div>
   </div>
+  <el-pagination
+    :hide-on-single-page="true"
+    class="page-class"
+    background
+    v-model:current-page="pageNo"
+    v-model:page-size="pageSize"
+    :page-sizes="[10, 50, 100, 200, 300, 400]"
+    layout="total, sizes, prev, pager, next"
+    :total="totalCount"
+    @prev-click="onPagePrevClick"
+    @next-click="onPageNextClick"
+    @current-change="onPageCurrentChange"
+    @size-change="onPageSizeChange"
+  />
 </template>
 
 <style scoped>
 .member-container {
   width: 100%;
-
   margin: 50px 0px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
 }
@@ -243,11 +235,9 @@ const goBack = () => {
 }
 
 .user-container {
-  margin: 10px;
+  width: calc(50% - 40px);
   padding: 10px;
-
   border-radius: 5px;
-
   display: flex;
   cursor: pointer;
 }
