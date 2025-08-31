@@ -21,12 +21,12 @@
         >
           <div class="lawyer-image-container">
             <div class="image-wrapper">
-              <img :src="getUserPhotoUrlBySysUser(user)" :alt="user.realName || 'Lawyer'" class="lawyer-image" />
+              <img :src="getUserPhotoUrlBySysUser(user)" :alt="user.userName || 'Lawyer'" class="lawyer-image" />
               <div class="image-overlay"></div>
             </div>
 
             <div class="lawyer-info">
-              <h3 class="lawyer-name">{{ user.realName || 'Unknown' }}</h3>
+              <h3 class="lawyer-name">{{ user.userName || 'Unknown' }}</h3>
               <p class="lawyer-role">{{ user.companyRole || 'Attorney' }}</p>
             </div>
           </div>

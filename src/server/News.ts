@@ -152,3 +152,8 @@ export async function serverGetTopNews(): Promise<IServerResponseData<IServerNew
     throw err;
   }
 }
+
+// serverGetNewsPhotoFileById
+export async function serverGetNewsPhotoFileById(id: string): Promise<IServerResponseData<Blob>> {
+  throw new Error('Function not implemented.');
+}
