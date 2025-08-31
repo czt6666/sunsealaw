@@ -1,62 +1,108 @@
+<template>
+  <div class="news-publish-container">
+    <h1>Update News</h1>
+
+    <el-form :model="form" label-position="top" ref="formRef">
+      <el-form-item label="标题" required>
+        <el-input v-model="form.title" placeholder="请输入新闻标题" size="large" />
+      </el-form-item>
+
+      <el-form-item label="摘要" required>
+        <el-input v-model="form.brief" type="textarea" placeholder="请输入新闻摘要" :rows="3" resize="none" />
+      </el-form-item>
+
+      <el-form-item label="发布时间" required>
+        <el-date-picker v-model="form.createDateTime" type="datetime" placeholder="请选择发布时间" />
+      </el-form-item>
+
+      <el-form-item label="标题图片" required>
+        <el-upload
+          ref="upload"
+          v-model:file-list="fileList"
+          action=""
+          :limit="1"
+          multiple
+          :auto-upload="true"
+          accept=".png, .jpg, .jpeg, .gif"
+          list-type="picture-card"
+          :on-exceed="handleExceed"
+          :http-request="httpRequest"
+          :on-remove="handleRemove"
+        >
+          <el-icon><Plus /></el-icon>
+        </el-upload>
+      </el-form-item>
+
+      <el-form-item label="新闻内容" required>
+        <div id="editorjs" ref="editorRef" class="editor-container"></div>
+      </el-form-item>
+    </el-form>
+
+    <el-card class="preview-card" shadow="never">
+      <div class="preview-header">
+        <span>新闻预览</span>
+        <el-tag type="success" size="small">实时更新</el-tag>
+      </div>
+      <div class="preview-content" v-html="previewHtml"></div>
+    </el-card>
+
+    <div class="action-buttons">
+      <el-button @click="resetForm" type="info" size="large" plain>
+        <el-icon><Refresh /></el-icon>
+        重置
+      </el-button>
+      <el-button @click="publishNews" type="primary" size="large">
+        <el-icon><Promotion /></el-icon>
+        更新新闻
+      </el-button>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from 'vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router';
-import { View, Hide, Search, Plus } from '@element-plus/icons-vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
+import EditorJS, { OutputData } from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import ImageTool from '@editorjs/image';
+import Paragraph from '@editorjs/paragraph';
+import Delimiter from '@editorjs/delimiter';
+import Embed from '@editorjs/embed';
 import {
-  serverContactUsAdd,
-  serverContactUsDelete,
-  serverContactUsUpdate,
-  serverGetContactUsPage,
-} from '@/server/ContactUs';
-import { IServerContactUs, Pageable, Page, SimplePage, convertPage } from '@/server/ServerType';
-import {
-  clearCookies,
-  setUserCookies,
-  getToken,
-  getUserID,
-  getUserName,
-  getUserRealName,
-  isAdmin,
-  getUserPageSize,
-  setUserPageSize,
-} from '@/cookies/user';
+  ElMessage,
+  ElMessageBox,
+  FormInstance,
+  UploadProps,
+  UploadRawFile,
+  UploadRequestOptions,
+  UploadUserFile,
+} from 'element-plus';
+import { Refresh, Promotion, Plus } from '@element-plus/icons-vue';
 
-import LexicalRichTextEditor from '@/components/lexical/LexicalRichTextEditor.vue';
-import RenderHtml from '@/components/lexical/RenderHtml.vue';
-import { useI18n } from 'vue-i18n';
-import type { FormInstance, FormRules } from 'element-plus';
-import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile, UploadRequestOptions } from 'element-plus';
-
-import { IServerNews } from '@/server/ServerType';
 import {
   serverNewsAdd,
-  serverNewsUpdate,
-  serverNewsDelete,
-  serverGetNewsPage,
   serverAddNewsPhotoUploadTempFiles,
   serverDeleteNewsPhotoUploadTempFiles,
-  serverGetNewsPhotoFileById,
   serverGetNewsById,
+  getNewsPhotoUrl,
+  getNewsPhotoUrlByNews,
+  serverNewsUpdate,
 } from '@/server/News';
+import router from '@/router';
+import { getUserID } from '@/cookies/user';
+import { isAdmin } from '@/cookies/user';
+import { IServerNews } from '@/server/ServerType';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
-const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
-const editorResult = ref();
-const htmlString = ref('');
-const jsonString = ref('');
+
+const formRef = ref<FormInstance>();
+const fileList = ref<UploadUserFile[]>([]);
+const editorRef = ref<HTMLElement | null>(null);
+const editorInstance = ref<EditorJS | null>(null);
+const previewHtml = ref("<div class='preview-placeholder'>编辑内容后，此处将显示预览</div>");
+const editorData = ref<OutputData | null>(null);
 
 const newsId = ref(0);
-
-const onContentChangedJson = (jsonText: string) => {
-  jsonString.value = jsonText;
-};
-
-const onContentChangedHtml = (htmlText: string) => {
-  htmlString.value = htmlText;
-};
-
 const form = reactive<IServerNews>({
   id: 0,
   createDateTime: new Date(),
@@ -65,44 +111,296 @@ const form = reactive<IServerNews>({
   contentJson: '',
   contentHtml: '',
   titlePhoto: '',
-  sysUserId: 0,
-});
-// 表单引用
-const formRef = ref<FormInstance>();
-
-// 表单验证规则
-const rules = reactive<FormRules>({
-  title: [{ required: true, message: 'title', trigger: 'blur' }],
-  content: [{ required: true, message: 'content', trigger: 'blur' }],
+  sysUserId: getUserID() || 0,
 });
 
-onBeforeRouteUpdate(async (to) => {
-  if (!isAdmin()) router.push('/login');
-  console.log(to);
-  if (typeof to.params.id === 'string') {
-    newsId.value = parseInt(to.params.id);
-    await getUserDataFromSever(parseInt(to.params.id));
-  } else {
-    getUserDataFromSever(parseInt(to.params.id[0]));
-    newsId.value = parseInt(to.params.id[0]);
+// 初始化编辑器
+const initEditor = async () => {
+  if (editorInstance.value) {
+    editorInstance.value.destroy();
   }
 
-  console.log(newsId.value);
-});
+  editorInstance.value = new EditorJS({
+    holder: 'editorjs',
+    placeholder: '请输入新闻内容...',
+
+    onReady: () => {
+      console.log('Editor.js 已就绪');
+    },
+
+    tools: {
+      header: {
+        class: Header as any,
+        config: {
+          placeholder: '输入标题...',
+          levels: [1, 2, 3, 4],
+          defaultLevel: 2,
+        },
+      },
+      image: {
+        class: ImageTool,
+        config: {
+          uploader: {
+            async uploadByFile(file: File) {
+              return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  resolve({
+                    success: 1,
+                    file: {
+                      url: e.target?.result as string, // 直接返回Base64数据
+                    },
+                  });
+                };
+                reader.readAsDataURL(file); // 读取文件为Base64
+              });
+            },
+            async uploadByUrl(url: string) {
+              // 可选：处理URL上传（根据需求实现）
+              return { success: 0 };
+            },
+          },
+        },
+      },
+      paragraph: {
+        class: Paragraph as any,
+        inlineToolbar: true,
+      },
+      delimiter: Delimiter,
+      embed: Embed as any,
+    },
+
+    onChange: async () => {
+      await saveEditorContent();
+    },
+  });
+};
+
+// 保存编辑器内容并更新预览
+const saveEditorContent = async (): Promise<void> => {
+  if (editorInstance.value) {
+    try {
+      const outputData = await editorInstance.value.save();
+      editorData.value = outputData;
+      form.contentJson = JSON.stringify(outputData);
+      form.contentHtml = convertToHtml(outputData);
+      previewHtml.value = form.contentHtml;
+    } catch (error) {
+      console.error('保存编辑器内容时出错:', error);
+      ElMessage.error('保存内容失败');
+    }
+  }
+};
+
+// 将编辑器内容转换为HTML
+const convertToHtml = (data: OutputData): string => {
+  if (!data || !data.blocks) return '';
+
+  let htmlContent = '';
+
+  data.blocks.forEach((block) => {
+    switch (block.type) {
+      case 'header':
+        htmlContent += `<h${block.data.level} class="content-header">${block.data.text}</h${block.data.level}>`;
+        break;
+      case 'paragraph':
+        htmlContent += `<p class="content-paragraph">${block.data.text}</p>`;
+        break;
+      case 'image':
+        htmlContent += `<div class="image-block"><img src="${block.data.file.url}" alt="${
+          block.data.caption || ''
+        }" class="content-image">`;
+        if (block.data.caption) {
+          htmlContent += `<p class="image-caption">${block.data.caption}</p>`;
+        }
+        htmlContent += `</div>`;
+        break;
+      case 'list':
+        const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
+        htmlContent += `<${tag} class="content-list">`;
+        block.data.items.forEach((item: string) => {
+          htmlContent += `<li>${item}</li>`;
+        });
+        htmlContent += `</${tag}>`;
+        break;
+      case 'quote':
+        htmlContent += `<blockquote class="quote-block">${block.data.text}`;
+        if (block.data.caption) {
+          htmlContent += `<cite class="quote-cite">${block.data.caption}</cite>`;
+        }
+        htmlContent += `</blockquote>`;
+        break;
+      case 'code':
+        htmlContent += `<pre class="code-pre"><code class="code-block">${block.data.code}</code></pre>`;
+        break;
+      case 'table':
+        htmlContent += `<div class="table-container"><table class="content-table"><tbody>`;
+        block.data.content.forEach((row: string[], rowIndex: number) => {
+          htmlContent += `<tr>`;
+          row.forEach((cell: string) => {
+            const tag = rowIndex === 0 ? 'th' : 'td';
+            htmlContent += `<${tag}>${cell}</${tag}>`;
+          });
+          htmlContent += `</tr>`;
+        });
+        htmlContent += `</tbody></table></div>`;
+        break;
+      case 'delimiter':
+        htmlContent += `<hr class="delimiter">`;
+        break;
+      case 'embed':
+        htmlContent += `<div class="embed-block">${block.data.embed}</div>`;
+        break;
+      default:
+        htmlContent += `<div class="block-${block.type}">[${block.type} 内容块]</div>`;
+    }
+  });
+
+  return htmlContent;
+};
+
+// 发布新闻
+const publishNews = async (): Promise<void> => {
+  const userId = getUserID();
+  if (!userId) {
+    ElMessageBox.alert('Please login', 'Warning', {
+      confirmButtonText: 'OK',
+      callback: () => router.push('/login'),
+    });
+    return;
+  }
+
+  if (!form.title) {
+    ElMessageBox.alert('Please input title', 'Warning', {
+      confirmButtonText: 'OK',
+    });
+    return;
+  }
+
+  if (!form.contentHtml) {
+    ElMessageBox.alert('Please input content', 'Warning', {
+      confirmButtonText: 'OK',
+    });
+    return;
+  }
+
+  try {
+    // 确保获取最新的编辑器内容
+    await saveEditorContent();
+
+    // 更新表单数据
+    const newsData: IServerNews = {
+      ...form,
+      sysUserId: userId,
+      contentJson: form.contentJson,
+      contentHtml: form.contentHtml,
+    };
+
+    console.log('发布数据:', newsData);
+    await serverNewsUpdate(newsData);
+    ElMessage.success('新闻发布成功');
+    router.push('/manager-news');
+  } catch (error) {
+    console.error('发布失败:', error);
+    ElMessage.error('新闻发布失败');
+  }
+};
+
+// 重置表单和编辑器
+const resetForm = async () => {
+  // 重置表单数据
+  Object.assign(form, {
+    title: '',
+    brief: '',
+    contentJson: '',
+    contentHtml: '',
+    titlePhoto: '',
+  });
+
+  // 重置图片上传
+  fileList.value = [];
+
+  // 重置编辑器
+  if (editorInstance.value) {
+    editorInstance.value.clear();
+    editorData.value = null;
+  }
+
+  // 重置预览
+  previewHtml.value = "<div class='preview-placeholder'>编辑内容后，此处将显示预览</div>";
+
+  ElMessage.success('表单已重置');
+};
+
+const handleRemove: UploadProps['onRemove'] = async (uploadFile, uploadFiles) => {
+  if (form.titlePhoto) {
+    const formData = new FormData();
+    formData.append('fileName', form.titlePhoto);
+
+    try {
+      const ret = await serverDeleteNewsPhotoUploadTempFiles(formData);
+      if (ret && ret.code == 200 && ret.data) {
+        ElMessage.success('图片删除成功');
+        form.titlePhoto = '';
+      } else {
+        ElMessage.error('图片删除失败');
+      }
+    } catch (error) {
+      console.error('删除图片失败:', error);
+      ElMessage.error('图片删除失败');
+    }
+  }
+};
+
+const handleExceed: UploadProps['onExceed'] = () => {
+  ElMessage.warning('最多只能上传一张标题图片');
+};
+
+const httpRequest = async (options: UploadRequestOptions) => {
+  const fileObj = options.file;
+
+  const formData = new FormData();
+  formData.append('file', fileObj);
+
+  try {
+    const ret = await serverAddNewsPhotoUploadTempFiles(formData);
+    if (ret && ret.code == 200 && ret.data) {
+      form.titlePhoto = ret.data;
+      ElMessage.success('图片上传成功');
+    } else {
+      ElMessage.error('图片上传失败');
+    }
+  } catch (error) {
+    console.error('图片上传失败:', error);
+    ElMessage.error('图片上传失败');
+  }
+};
 
 onMounted(async () => {
   if (!isAdmin()) router.push('/login');
-  console.log(route.params);
-  console.log(typeof route.params.id);
+
+  await initEditor();
   if (typeof route.params.id === 'string') {
-    await getUserDataFromSever(parseInt(route.params.id));
     newsId.value = parseInt(route.params.id);
+    await getNewsDataFromSever(parseInt(route.params.id));
   }
-  console.log(newsId.value);
 });
 
-const getUserDataFromSever = async (id: number) => {
-  console.log(id);
+// onBeforeRouteUpdate(async (to) => {
+//   if (!isAdmin()) router.push("/login");
+//   console.log(to);
+//   if (typeof to.params.id === "string") {
+//     newsId.value = parseInt(to.params.id);
+//     await getUserDataFromSever(parseInt(to.params.id));
+//   } else {
+//     getUserDataFromSever(parseInt(to.params.id[0]));
+//     newsId.value = parseInt(to.params.id[0]);
+//   }
+
+//   console.log(newsId.value);
+// });
+
+const getNewsDataFromSever = async (id: number) => {
   if (!id) return;
 
   const ret = await serverGetNewsById(id);
@@ -116,225 +414,230 @@ const getUserDataFromSever = async (id: number) => {
     form.sysUserId = ret.data.sysUserId;
     form.id = ret.data.id;
     form.createDateTime = ret.data.createDateTime;
-    editorResult.value.loadJson(ret.data.contentJson);
-    fileList.value = [];
-    let res = await serverGetNewsPhotoFileById(form.id);
-    if (res && res.code == 200 && res.data) {
-      fileList.value.push({ name: form.titlePhoto, url: res.data });
+    // 更新 editorjs 的内容
+    if (form.contentJson && editorInstance.value) {
+      await editorInstance.value.isReady; // 等待就绪
+      await editorInstance.value.render(JSON.parse(form.contentJson)); // 设置内容
+      saveEditorContent();
     }
 
-    console.log(form);
+    fileList.value = [];
+    // let res = await serverGetNewsPhotoFileById(form.id);
+    // if (res && res.code == 200 && res.data) {
+    //   fileList.value.push({ name: form.titlePhoto, url: res.data });
+    // }
+    fileList.value.push({ name: form.titlePhoto, url: getNewsPhotoUrl(ret.data.titlePhoto) });
+    console.log(fileList.value);
+
+    //   console.log('form', form);
   }
-};
-
-const onOk = async () => {
-  let userId = getUserID();
-  if (!userId) {
-    ElMessageBox.alert('Please login', 'Warning', {
-      confirmButtonText: 'OK',
-    });
-    router.push('/login');
-    return;
-  }
-
-  if (!form.title) {
-    ElMessageBox.alert('Please input title', 'Warning', {
-      confirmButtonText: 'OK',
-    });
-
-    return;
-  }
-  if (!htmlString.value) {
-    ElMessageBox.alert('Please input content', 'Warning', {
-      confirmButtonText: 'OK',
-    });
-    return;
-  }
-
-  try {
-    const news: IServerNews = {
-      id: 0,
-      createDateTime: new Date(),
-      title: form.title,
-      brief: form.brief,
-      contentJson: jsonString.value,
-      contentHtml: htmlString.value,
-      titlePhoto: form.titlePhoto,
-      sysUserId: userId,
-    };
-    console.log(news);
-    await serverNewsAdd(news);
-    ElMessage.success('Success');
-    router.push('/manager-news'); // 跳转到新闻列表页面，或者根据需要进行其他操作
-  } catch (error) {
-    ElMessage.error('Failed');
-    console.error('Failed', error);
-  }
-};
-
-// 重置表单
-const resetForm = () => {
-  formRef.value?.resetFields();
-  editorResult.value.clearText();
-};
-
-const fileList = ref<UploadUserFile[]>([]);
-const imageData = ref<string[]>([]);
-
-const dialogImageUrl = ref('');
-const dialogVisible = ref(false);
-const upload = ref<UploadInstance>();
-
-const handleRemove: UploadProps['onRemove'] = async (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles);
-
-  if (form.titlePhoto) {
-    const formData = new FormData();
-
-    formData.append('fileName', form.titlePhoto);
-
-    const ret = await serverDeleteNewsPhotoUploadTempFiles(formData);
-    if (ret && ret.code == 200 && ret.data) {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      });
-    } else ElMessage.success(`删除失败`);
-  }
-};
-
-const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
-  dialogImageUrl.value = uploadFile.url!;
-  dialogVisible.value = true;
-};
-
-/**
- * 超过文件上传最大个数
- * @param files
- * @param uploadFiles
- */
-const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
-  ElMessage.warning(`最大上传文件个数为1个，已经超过最大值。`);
-};
-
-/**
- * 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
- * @param uploadFile
- * @param uploadFiles
- */
-const handleUploadImageChange: UploadProps['onChange'] = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles);
-};
-
-/**
- * 上传文件之前的钩子，参数为上传的文件， 若返回false或者返回 Promise 且被 reject，则停止上传。
- * @param rawFile
- */
-const beforeUpload = (rawFile: UploadRawFile) => {
-  const extension = rawFile.name.substring(rawFile.name.lastIndexOf('.') + 1);
-};
-
-/**
- * 删除文件之前的钩子，参数为上传的文件和文件列表， 若返回 false 或者返回 Promise 且被 reject，则停止删除。
- * @param uploadFile
- * @param uploadFiles
- */
-const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
-  return ElMessageBox.confirm(`Cancel the transfert of ${uploadFile.name} ?`).then(
-    () => true,
-    () => false,
-  );
-};
-
-/**
- * 向服务器上传数据
- * @param options
- */
-const httpRequest = async (options: UploadRequestOptions) => {
-  const fileObj = options.file;
-
-  const formData = new FormData();
-  formData.append('file', fileObj);
-
-  const ret = await serverAddNewsPhotoUploadTempFiles(formData);
-  if (ret && ret.code == 200 && ret.data) {
-    form.titlePhoto = ret.data;
-    ElMessage({
-      type: 'success',
-      message: 'Success',
-    });
-  } else ElMessage.error(`Failed`);
-};
-
-const onGenerateBrief = async () => {
-  if (!htmlString.value) {
-    ElMessage.warning(`Please input content`);
-    return;
-  }
-
-  form.brief = editorResult.value.getBrief();
 };
 </script>
 
-<template>
-  <h1>Update News</h1>
-  <div style="text-align: left; margin: 10px">
-    <div style="width: 160px">Title</div>
-    <div style="margin-left: 20px">
-      <el-input v-model="form.title" placeholder="Please input user name" />
-    </div>
+<style scoped>
+.news-publish-container {
+  text-align: left;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
 
-    <div style="width: 160px; margin-top: 20px">Brief</div>
-    <div style="margin-left: 20px">
-      <el-input v-model="form.brief" placeholder="Please input brief" />
-      <el-button type="primary" @click="onGenerateBrief">Auto Generate Brief</el-button>
-    </div>
+h1 {
+  text-align: center;
+  color: #1a365d;
+  margin-bottom: 30px;
+  font-weight: 600;
+  font-size: 28px;
+}
 
-    <div style="width: 160px; margin-top: 20px">Title Photo</div>
-    <div style="margin-left: 20px">
-      <el-upload
-        ref="upload"
-        v-model:file-list="fileList"
-        action=""
-        :limit="1"
-        multiple
-        :auto-upload="true"
-        accept=".png, .jpg, .jpeg, .gif"
-        list-type="picture-card"
-        :on-exceed="handleExceed"
-        :on-change="handleUploadImageChange"
-        :before-upload="beforeUpload"
-        :http-request="httpRequest"
-        :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove"
-      >
-        <el-icon><Plus /></el-icon>
-      </el-upload>
-    </div>
+.editor-container {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 400px;
+  background-color: white;
+  transition: border-color 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 
-    <div style="width: 160px; margin-top: 20px">Content</div>
-    <div style="margin-left: 20px">
-      <LexicalRichTextEditor
-        style="width: calc(100% - 40px)"
-        ref="editorResult"
-        @onContentChangedHtml="onContentChangedHtml"
-        @onContentChangedJson="onContentChangedJson"
-      />
-    </div>
+.editor-container:hover {
+  border-color: #cbd5e0;
+}
 
-    <div style="display: flex; justify-content: center; align-items: center; margin: 10px">
-      <el-button type="primary" @click="onOk">{{ t('app.ok') }}</el-button>
-      <el-button @click="resetForm">{{ t('app.reset') }}</el-button>
-    </div>
-  </div>
+.preview-card {
+  margin-top: 30px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
 
-  <!--Html预览-->
-  <div style="margin: 10px">
-    <h3>Html预览</h3>
-    <div style="margin: 10px; border: 1px solid gray">
-      <RenderHtml :html-content="htmlString" />
-    </div>
-  </div>
-</template>
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f2f5;
+  font-weight: 600;
+  color: #1a365d;
+}
 
-<style scoped></style>
+.preview-content {
+  padding: 25px;
+  min-height: 300px;
+  text-align: left;
+  background-color: #f9fafb;
+  border-radius: 0 0 12px 12px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+/* 预览内容样式 */
+.content-header {
+  color: #1a365d;
+  margin: 25px 0 15px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.content-paragraph {
+  line-height: 1.8;
+  margin-bottom: 15px;
+  color: #4a5568;
+}
+
+.image-block {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.content-image {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-caption {
+  text-align: center;
+  font-style: italic;
+  color: #718096;
+  margin-top: 8px;
+}
+
+.content-list {
+  margin: 15px 0;
+  padding-left: 25px;
+}
+
+.content-list li {
+  margin-bottom: 8px;
+}
+
+.quote-block {
+  background-color: #f8fafc;
+  border-left: 4px solid #4299e1;
+  padding: 15px 20px;
+  margin: 20px 0;
+  font-style: italic;
+  color: #4a5568;
+}
+
+.quote-cite {
+  display: block;
+  margin-top: 10px;
+  color: #718096;
+}
+
+.code-pre {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.content-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.content-table th,
+.content-table td {
+  border: 1px solid #cbd5e0;
+  padding: 12px;
+  text-align: left;
+}
+
+.content-table th {
+  background-color: #edf2f7;
+  font-weight: 600;
+}
+
+.delimiter {
+  border: none;
+  border-top: 2px dashed #cbd5e0;
+  margin: 30px 0;
+}
+
+.preview-placeholder {
+  text-align: center;
+  color: #a0aec0;
+  padding: 40px 0;
+  font-style: italic;
+}
+
+::v-deep(.editor-container) {
+  /* 文字居左 */
+  .codex-editor__redactor {
+    padding-left: 70px;
+  }
+  .ce-block__content {
+    max-width: 100%;
+    margin: 0px;
+    text-align: left;
+  }
+  .ce-toolbar__content {
+    max-width: 100%;
+    margin: 0;
+    position: relative;
+  }
+  .ce-toolbar__actions {
+    position: absolute;
+    left: 0;
+    right: unset;
+  }
+
+  /* 图片居中 */
+  .image-tool {
+    text-align: center;
+  }
+  .image-tool__image img {
+    margin: 0 auto;
+  }
+}
+
+:deep(.image-block) {
+  text-align: center;
+}
+:deep(.image-block img) {
+  max-width: 554px;
+  max-height: 369px;
+}
+:deep(.content-paragraph) {
+  text-indent: 2em;
+}
+</style>

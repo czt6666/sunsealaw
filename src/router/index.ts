@@ -51,13 +51,13 @@ const routes: Array<RouteRecordRaw> = [
   //新闻添加
   {
     path: '/manager-news-add',
-    component: () => import('@/views/manage/news/AddNews2.vue'),
+    component: () => import('@/views/manage/news/AddNews.vue'),
   },
 
   //新闻更新
   {
     path: '/manager-news-update/:id',
-    component: () => import('@/views/manage/news/UpdateNews2.vue'),
+    component: () => import('@/views/manage/news/UpdateNews.vue'),
   },
 
   //服务:Capital Markets
