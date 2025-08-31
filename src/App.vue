@@ -6,7 +6,7 @@ import Footer from '@/views/Footer.vue';
 
 <template>
   <el-container>
-    <el-header style="padding: 0px; height: 100px"><Header></Header></el-header>
+    <el-header style="padding: 0px; height: 100px; width: 100%; overflow: hidden"><Header></Header></el-header>
     <el-main style="padding: 0px"><router-view></router-view></el-main>
     <el-footer style="padding: 0px"><Footer></Footer></el-footer>
   </el-container>

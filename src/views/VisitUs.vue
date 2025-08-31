@@ -45,7 +45,7 @@ import visit_us_3 from '@/assets/visit_us_3.jpg';
       </div>
     </div>
   </div>
-  <div style="width: 80%; margin: auto; margin-top: 20px">
+  <div class="ss-section" style="width: 100%; max-width: 800px; margin: auto; margin-top: 20px">
     <img :src="locationMap" alt="locationMap" style="width: 100%" />
     <div class="visit-us-pic-container">
       <img :src="visit_us_1" alt="visit_us_1" class="visit-us-pic" />
@@ -53,7 +53,7 @@ import visit_us_3 from '@/assets/visit_us_3.jpg';
       <img :src="visit_us_3" alt="visit_us_3" class="visit-us-pic" />
     </div>
   </div>
-  <div class="ss-text-container" style="margin-top: 20px">
+  <div class="ss-text-container">
     <div class="visit-us-container" style="flex: 1">
       <div class="visit-us-container-inner">
         <div class="visit-us-title">Location</div>
@@ -79,7 +79,6 @@ import visit_us_3 from '@/assets/visit_us_3.jpg';
 .visit-us-container {
   display: flex;
   align-items: center;
-  justify-content: center;
   margin: 10px;
 }
 .visit-us-container-inner {
