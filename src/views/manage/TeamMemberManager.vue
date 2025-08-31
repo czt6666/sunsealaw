@@ -224,8 +224,6 @@ const goBack = () => {
         >
           <el-col :span="1">No.</el-col>
           <el-col :span="3">User Name</el-col>
-          <el-col :span="3">Real Name</el-col>
-          <el-col :span="3">Email</el-col>
           <el-col :span="2">Role</el-col>
           <el-col :span="2">License Info</el-col>
           <el-col :span="6">Details</el-col>
@@ -264,24 +262,6 @@ const goBack = () => {
             <div style="display: flex; align-items: center">
               <div :class="{ textEllipsis: textElipsisValue }">
                 {{ userItem.userName }}
-              </div>
-            </div>
-          </el-col>
-
-          <!--用户名称-->
-          <el-col :span="3">
-            <div style="display: flex; align-items: center">
-              <div :class="{ textEllipsis: textElipsisValue }">
-                {{ userItem.realName }}
-              </div>
-            </div>
-          </el-col>
-
-          <!--电子邮件-->
-          <el-col :span="3">
-            <div style="display: flex; align-items: center">
-              <div :class="{ textEllipsis: textElipsisValue }">
-                {{ userItem.email }}
               </div>
             </div>
           </el-col>

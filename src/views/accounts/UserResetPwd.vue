@@ -58,7 +58,6 @@ const getSysUserFromServer = async () => {
       userView.value = ret.data;
 
       ruleForm.userName = ret.data.userName;
-      ruleForm.realName = ret.data.realName;
     }
   }
 };
@@ -69,7 +68,6 @@ const ruleFormRef = ref<FormInstance>();
 
 const ruleForm = reactive({
   userName: '',
-  realName: '',
   oldPwd: '',
   newPwd: '',
   confirmNewPwd: '',
@@ -109,12 +107,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       const user: IServerSysUser = {
         id: userView.value.id, //id,主键
         userName: '', //user_name,学号或工号等，用户登录ID
-        realName: ruleForm.newPwd, //real_name,用户名称
         password: ruleForm.oldPwd, //pwd,密码
         companyRole: '', //公司内角色
         licensedInfo: '', //律师执业证信息
         details: '', //详细信息
-        email: '', //电子邮件
         photo: '', //照片
         auth: 0, //权限
       };
@@ -159,10 +155,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
     >
       <el-form-item label="Login Id" prop="userName">
         <el-input v-model="ruleForm.userName" disabled />
-      </el-form-item>
-
-      <el-form-item label="Real Name" prop="realName">
-        <el-input v-model="ruleForm.realName" disabled />
       </el-form-item>
 
       <el-form-item label="Old Password" prop="oldPwd">

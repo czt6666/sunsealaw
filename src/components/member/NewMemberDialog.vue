@@ -44,12 +44,10 @@ const props = withDefaults(defineProps<Props>(), {
 const form = reactive<IServerSysUser>({
   id: 0,
   userName: '',
-  realName: '',
   password: '123456',
   companyRole: '',
   licensedInfo: '',
   details: '',
-  email: '',
   photo: '',
   auth: 0,
 });
@@ -59,11 +57,9 @@ const formRef = ref<FormInstance>();
 // 表单验证规则
 const rules = reactive<FormRules>({
   userName: [{ required: true, message: 'User Name', trigger: 'blur' }],
-  realName: [{ required: true, message: 'Real Name', trigger: 'blur' }],
   password: [{ required: true, message: 'Password', trigger: 'blur' }],
   companyRole: [{ required: true, message: 'Company Role', trigger: 'blur' }],
   licensedInfo: [{ required: true, message: 'Licensed Info', trigger: 'blur' }],
-  email: [{ required: true, message: 'Email', trigger: 'blur' }],
   photo: [{ required: true, message: 'Photo', trigger: 'blur' }],
   auth: [{ required: true, message: 'Auth', trigger: 'blur' }],
 });
@@ -107,12 +103,10 @@ const onOk = () => {
         const sysUser: IServerSysUser = {
           id: 0,
           userName: form.userName,
-          realName: form.realName,
           password: form.password,
           companyRole: form.companyRole,
           licensedInfo: form.licensedInfo,
           details: form.details,
-          email: form.email,
           photo: form.photo,
           auth: form.auth,
         };
@@ -235,10 +229,6 @@ const httpRequest = async (options: UploadRequestOptions) => {
         <el-input v-model="form.userName" placeholder="Please input user name" />
       </el-form-item>
 
-      <el-form-item label="Real Name" prop="realName">
-        <el-input v-model="form.realName" placeholder="Please input real name" />
-      </el-form-item>
-
       <!--密码默认为123456-->
       <el-form-item label="Password" prop="password" style="display: none">
         <el-input v-model="form.password" placeholder="Please input password" />
@@ -254,10 +244,6 @@ const httpRequest = async (options: UploadRequestOptions) => {
 
       <el-form-item label="Details" prop="details">
         <el-input v-model="form.details" type="textarea" autosize :rows="4" placeholder="Please input details" />
-      </el-form-item>
-
-      <el-form-item label="Email" prop="email">
-        <el-input v-model="form.email" placeholder="Please input email" />
       </el-form-item>
 
       <el-form-item label="Photo" prop="photo">

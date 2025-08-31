@@ -25,12 +25,10 @@ const userId = ref<number>(0);
 const userData = ref<IServerSysUser>({
   id: 0,
   userName: '',
-  realName: '',
   password: '',
   companyRole: '',
   licensedInfo: '',
   details: '',
-  email: '',
   photo: '',
   auth: 0,
 });
@@ -97,8 +95,6 @@ const getUserDataFromSever = async (id: number) => {
     <!--头像-->
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
       <UserPhoto :user="userData" :img-width="300"></UserPhoto>
-
-      <div style="margin-top: 10px; font-size: 1.2em">{{ userData.email }}</div>
     </div>
     <div class="user-text-container">
       <!--姓名及注册信息等-->
@@ -106,7 +102,6 @@ const getUserDataFromSever = async (id: number) => {
         <div class="user-container-inner">
           <!--姓名-->
           <div style="display: flex; align-items: baseline">
-            <div style="font-size: 2em">{{ userData.realName }}</div>
             <div style="margin: 0 30px; width: 2px; height: 20px; background-color: lightslategray"></div>
             <div style="font-size: 1.5em; color: midnightblue">{{ userData.companyRole }}</div>
           </div>

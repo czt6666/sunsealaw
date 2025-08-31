@@ -73,12 +73,10 @@ export interface IServerSysUserLoginResult {
 export interface IServerSysUser {
   id: number; //id,主键
   userName: string; //user_name,学号或工号等，用户登录ID
-  realName: string; //real_name,用户名称
   password: string; //pwd,密码
   companyRole: string; //公司内角色
   licensedInfo: string; //律师执业证信息
   details: string; //详细信息
-  email: string; //email,电子邮件
   photo: string; //照片
   auth: number; //权限
 }

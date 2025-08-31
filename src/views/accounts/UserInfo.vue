@@ -67,18 +67,16 @@ const getSysUserFromServer = async () => {
       userView.value = ret.data;
 
       form.userName = ret.data.userName;
-      form.realName = ret.data.realName;
       form.companyRole = ret.data.companyRole; //公司内角色
       form.licensedInfo = ret.data.licensedInfo; //律师执业证信息
       form.details = ret.data.details; //详细信息
-      form.email = ret.data.email; //email,电子邮件
       form.photo = ret.data.photo; //照片
       form.auth = ret.data.auth; //权限
 
-      let res = await serverGetUserPhotoFileById(ret.data.id);
-      if (res && res.code == 200 && res.data) {
-        fileList.value.push({ name: form.photo, url: res.data });
-      }
+      // let res = await serverGetUserPhotoFileById(ret.data.id);
+      // if (res && res.code == 200 && res.data) {
+      //   fileList.value.push({ name: form.photo, url: res.data });
+      // }
     }
   }
 };
@@ -89,12 +87,10 @@ const ruleFormRef = ref<FormInstance>();
 
 const form = reactive({
   userName: '',
-  realName: '',
   password: '', //pwd,密码
   companyRole: '', //公司内角色
   licensedInfo: '', //律师执业证信息
   details: '', //详细信息
-  email: '', //email,电子邮件
   photo: '', //照片
   auth: 0, //权限
 });
@@ -102,11 +98,9 @@ const form = reactive({
 // 表单验证规则
 const rules = reactive<FormRules>({
   userName: [{ required: true, message: 'User Name', trigger: 'blur' }],
-  realName: [{ required: true, message: 'Real Name', trigger: 'blur' }],
   password: [{ required: true, message: 'Password', trigger: 'blur' }],
   companyRole: [{ required: true, message: 'Company Role', trigger: 'blur' }],
   licensedInfo: [{ required: true, message: 'Licensed Info', trigger: 'blur' }],
-  email: [{ required: true, message: 'Email', trigger: 'blur' }],
   photo: [{ required: true, message: 'Photo', trigger: 'blur' }],
   auth: [{ required: true, message: 'Auth', trigger: 'blur' }],
 });
@@ -119,12 +113,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       const user: IServerSysUser = {
         id: userView.value.id, //id,主键
         userName: userView.value.userName, //user_name,学号或工号等，用户登录ID
-        realName: form.realName, //real_name,用户名称
         password: '', //pwd,密码
         companyRole: form.companyRole, //公司内角色
         licensedInfo: form.licensedInfo, //律师执业证信息
         details: form.details, //详细信息
-        email: form.email, //email,电子邮件
         photo: form.photo, //照片
         auth: userView.value.auth, //权限
       };
@@ -239,20 +231,12 @@ const httpRequest = async (options: UploadRequestOptions) => {
         <el-input v-model="form.userName" placeholder="Please input user name" disabled />
       </el-form-item>
 
-      <el-form-item label="Real Name" prop="realName">
-        <el-input v-model="form.realName" placeholder="Please input real name" />
-      </el-form-item>
-
       <el-form-item label="Company Role" prop="companyRole">
         <el-input v-model="form.companyRole" placeholder="Please input company role" disabled />
       </el-form-item>
 
       <el-form-item label="Licensed Info" prop="licensedInfo">
         <el-input v-model="form.licensedInfo" placeholder="Please input licensed info" />
-      </el-form-item>
-
-      <el-form-item label="Email" prop="email">
-        <el-input v-model="form.email" placeholder="Please input email" />
       </el-form-item>
 
       <el-form-item label="Photo" prop="photo">
