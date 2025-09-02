@@ -34,12 +34,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/news-detail/:id',
 
-    component: () => import('@/views/news/NewsDetail2.vue'),
-  },
-  {
-    path: '/news-detail2/:id',
-
-    component: () => import('@/views/news/NewsDetail2.vue'),
+    component: () => import('@/views/news/NewsDetail.vue'),
   },
 
   //新闻管理
