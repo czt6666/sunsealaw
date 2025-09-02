@@ -50,11 +50,18 @@ import wills from '@/assets/wills.png';
 import civil from '@/assets/civil.png';
 
 const carouselArray = ref<IServerCarousel[]>([]);
+const windowWidth = ref(window.innerWidth);
 
 onMounted(async () => {
   getCarouselAllDataFromServer();
   getUserAllDataFromServer();
   getTopNewsDataFromServer();
+});
+
+const visibleCards = computed(() => {
+  if (windowWidth.value >= 1080) return 4; // 大屏显示 4 张
+  if (windowWidth.value >= 800) return 3; // 中屏显示 3 张
+  return 1; // 超小屏显示 1 张
 });
 
 const getCarouselAllDataFromServer = async () => {
@@ -189,7 +196,7 @@ const services = ref([
       </div>
     </div>
 
-    <MemberSwiper :users="userList"></MemberSwiper>
+    <MemberSwiper :users="userList" :visibleCards="visibleCards"></MemberSwiper>
   </section>
 
   <!--Service Area-->

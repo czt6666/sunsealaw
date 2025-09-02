@@ -221,9 +221,9 @@ onBeforeUnmount(() => {
 .lawyer-card {
   flex: 0 0 auto;
   width: var(--card-width); /* 用 CSS 变量代替固定值 */
+  aspect-ratio: 2 / 3;
   margin: 0 10px;
   background: white;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   opacity: 0.7;
   transform: scale(0.92) translateY(10px);
@@ -233,7 +233,6 @@ onBeforeUnmount(() => {
 .lawyer-card.active {
   opacity: 1;
   transform: scale(1) translateY(0);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   z-index: 2;
 }
 
