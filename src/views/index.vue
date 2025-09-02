@@ -396,7 +396,7 @@ const services = ref([
 
 .news-item {
   overflow: hidden;
-  width: 440px;
+  width: 360px;
   padding-bottom: 12px;
   cursor: pointer;
   border: 1px solid #e4e4e4;

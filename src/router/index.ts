@@ -197,6 +197,13 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { left: 0, top: 0 };
+    }
+  },
 });
 
 const IS_MAINTENANCE = import.meta.env.VITE_MAINTENANCE === 'true';

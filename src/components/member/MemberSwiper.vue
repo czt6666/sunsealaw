@@ -66,7 +66,7 @@ const props = withDefaults(
     interval?: number;
   }>(),
   {
-    visibleCards: 3,
+    visibleCards: 4,
     interval: 5000,
   },
 );
@@ -76,7 +76,7 @@ const carouselRef = ref<HTMLElement>();
 const currentIndex = ref(0);
 const isPlaying = ref(true);
 const isTransition = ref(true);
-const cardWidth = ref(360); // 320px + 40px margin
+const cardWidth = ref(0);
 
 let autoTimer: number | null = null;
 
@@ -98,6 +98,7 @@ const trackStyle = computed(() => {
   return {
     transform: `translateX(${translateX}px)`,
     width: `${loopedUsers.value.length * cardWidth.value}px`,
+    '--card-width': `${cardWidth.value - 20}px`, // 减去 margin，避免超出
   };
 });
 
@@ -176,7 +177,10 @@ function startAutoPlay() {
 
 // 生命周期
 onMounted(() => {
-  console.log(props.users);
+  if (carouselRef.value) {
+    const containerWidth = carouselRef.value.offsetWidth;
+    cardWidth.value = containerWidth / props.visibleCards;
+  }
   startAutoPlay();
 });
 
@@ -216,9 +220,8 @@ onBeforeUnmount(() => {
 
 .lawyer-card {
   flex: 0 0 auto;
-  width: 320px;
-  height: 440px;
-  margin: 0 20px;
+  width: var(--card-width); /* 用 CSS 变量代替固定值 */
+  margin: 0 10px;
   background: white;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
