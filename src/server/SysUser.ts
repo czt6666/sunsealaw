@@ -379,6 +379,18 @@ export async function serverDeleteUserPhotoUploadTempFilesByAuthenticatedUser(
   }
 }
 
+/** * 修改用户编号,用户修改显示次序 * @param sysUsers 用户显示的次序 * @returns */ export async function serverUserUpdateOrder(
+  sysUsers: IServerSysUser[],
+): Promise<IServerResponseData<number>> {
+  try {
+    let res = await axios.post<any, IServerResponseData<number>>(BASEURL.sysuser + 'admin/update-order', sysUsers);
+    return res;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 export async function serverGetUserPhotoFileInBase64ById(userId: number): Promise<IServerResponseData<string>> {
   try {
     let res = await axios.get<any, IServerResponseData<string>>(BASEURL.sysuser + 'download-photo-file-in-base64', {

@@ -158,6 +158,37 @@ const handleUpdateMemberCancel = () => {
 const goBack = () => {
   history.back();
 };
+
+// 新增导入
+import { serverUserUpdateOrder } from '@/server/SysUser';
+
+// 上移
+const onRowMoveUp = async (userIndex: number) => {
+  if (!pageData.value) return;
+  if (userIndex === 0) return; // 第一条不能上移
+
+  const users = [...pageData.value.content];
+  [users[userIndex - 1], users[userIndex]] = [users[userIndex], users[userIndex - 1]];
+
+  pageData.value.content = users;
+
+  // 调用后端更新顺序
+  await serverUserUpdateOrder(users);
+};
+
+// 下移
+const onRowMoveDown = async (userIndex: number) => {
+  if (!pageData.value) return;
+  if (userIndex === pageData.value.content.length - 1) return; // 最后一条不能下移
+
+  const users = [...pageData.value.content];
+  [users[userIndex + 1], users[userIndex]] = [users[userIndex], users[userIndex + 1]];
+
+  pageData.value.content = users;
+
+  // 调用后端更新顺序
+  await serverUserUpdateOrder(users);
+};
 </script>
 
 <template>
@@ -233,6 +264,7 @@ const goBack = () => {
 
         <el-row
           v-for="(userItem, userIndex) in tableData"
+          :key="userItem.id"
           style="
             width: 100%;
             font: 0.8em sans-serif;
@@ -327,6 +359,27 @@ const goBack = () => {
                 {{ t('app.reset_password') }}
               </el-button>
             </div>
+          </el-col>
+
+          <!-- 上移下移按钮 -->
+          <el-col :span="1">
+            <el-button
+              size="small"
+              type="info"
+              style="margin-left: 0px; margin-top: 5px"
+              @click="onRowMoveUp(userIndex)"
+            >
+              ↑ move up
+            </el-button>
+
+            <el-button
+              size="small"
+              type="info"
+              style="margin-left: 0px; margin-top: 5px"
+              @click="onRowMoveDown(userIndex)"
+            >
+              ↓ move down
+            </el-button>
           </el-col>
         </el-row>
       </div>
