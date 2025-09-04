@@ -261,7 +261,7 @@ onBeforeUnmount(stopAutoPlay);
 
 .indicators {
   position: absolute;
-  bottom: 140px;
+  bottom: 90px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

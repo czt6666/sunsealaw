@@ -311,7 +311,7 @@ onBeforeUnmount(() => {
 
 .lawyer-name {
   width: 100%;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   margin: 0;
   color: #0c162f;
@@ -321,7 +321,7 @@ onBeforeUnmount(() => {
 
 .lawyer-role {
   width: 100%;
-  font-size: 16px;
+  font-size: 18px;
   color: #0c162f;
   font-weight: 400;
   margin: 0;
