@@ -83,13 +83,14 @@ let autoTimer: number | null = null;
 const totalItems = computed(() => props.users.length);
 
 const loopedUsers = computed(() => {
-  if (totalItems.value <= props.visibleCards) return props.users;
+  const orderUsers = [...props.users].sort((a, b) => (a.showOrder ?? 0) - (b.showOrder ?? 0));
+  if (totalItems.value <= props.visibleCards) return orderUsers;
 
   // 为了实现无缝循环，在前后各添加 visibleCards 数量的卡片
-  const beforeItems = props.users.slice(-props.visibleCards);
-  const afterItems = props.users.slice(0, props.visibleCards);
+  const beforeItems = orderUsers.slice(-props.visibleCards);
+  const afterItems = orderUsers.slice(0, props.visibleCards);
 
-  return [...beforeItems, ...props.users, ...afterItems];
+  return [...beforeItems, ...orderUsers, ...afterItems];
 });
 
 const trackStyle = computed(() => {

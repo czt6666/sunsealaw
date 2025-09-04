@@ -42,16 +42,12 @@ const getUserPageDataFromSever = async () => {
 };
 
 const tableData = computed(() => {
-  const ret = pageData.value?.content ?? [];
-  if (ret.length > 0) {
-    for (let i = 0; i < ret.length; i++) {
-      if (ret[i].userName == 'admin') {
-        ret.splice(i, 1);
-        i--;
-        break;
-      }
-    }
-  }
+  const ret = (pageData.value?.content ?? [])
+    // 过滤掉 admin
+    .filter((item) => item.userName !== 'admin')
+    // 排序
+    .sort((a, b) => (a.showOrder ?? 0) - (b.showOrder ?? 0));
+
   return ret;
 });
 
@@ -150,7 +146,7 @@ const goBack = () => {
       @click="onMemberClick(userItem)"
     >
       <!--成员主要信息-->
-      <div style="display: flex; align-items: center; justify-content: center; flex-direction: column">
+      <div style="display: flex; width: 100%; align-items: center; justify-content: center; flex-direction: column">
         <!--头像-->
         <div class="member-photo">
           <UserPhoto :user="userItem" :img-width="300" :img-height="300"></UserPhoto>
@@ -159,8 +155,7 @@ const goBack = () => {
         <div class="user-container-outter" @click="onMemberClick(userItem)">
           <div class="user-container-inner">
             <!--公司内角色---->
-            <div style="margin: 10px">{{ userItem.companyRole }}</div>
-
+            <div style="margin: 10px">{{ userItem.userName }} | {{ userItem.companyRole }}</div>
             <!--注册信息-->
             <div style="margin: 10px">{{ userItem.licensedInfo }}</div>
           </div>
@@ -224,11 +219,14 @@ const goBack = () => {
 
 .user-container-outter {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: center;
 }
 .user-container-inner {
   display: flex;
+  width: 100%;
+  padding-left: 20px;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;

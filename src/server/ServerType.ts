@@ -79,6 +79,7 @@ export interface IServerSysUser {
   details: string; //详细信息
   photo: string; //照片
   auth: number; //权限
+  showOrder: number; //显示顺序
 }
 
 // 用户视图
