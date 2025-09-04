@@ -102,6 +102,7 @@ const getUserDataFromSever = async (id: number) => {
         <div class="user-container-inner">
           <!--姓名-->
           <div style="display: flex; align-items: baseline">
+            <div style="font-size: 1.5em; color: midnightblue">{{ userData.userName }}</div>
             <div style="margin: 0 30px; width: 2px; height: 20px; background-color: lightslategray"></div>
             <div style="font-size: 1.5em; color: midnightblue">{{ userData.companyRole }}</div>
           </div>

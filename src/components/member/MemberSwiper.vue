@@ -19,10 +19,9 @@
           :class="{ active: isCardActive(index) }"
           @click="() => router.push({ path: `/team-member/${user.id}` })"
         >
-          <div class="lawyer-image-container">
+          <div class="lawyer-container">
             <div class="image-wrapper">
               <img :src="getUserPhotoUrlBySysUser(user)" :alt="user.userName || 'Lawyer'" class="lawyer-image" />
-              <div class="image-overlay"></div>
             </div>
 
             <div class="lawyer-info">
@@ -167,12 +166,11 @@ function resumeAutoPlay() {
 }
 
 function startAutoPlay() {
-  if (totalItems.value <= props.visibleCards) return;
-
-  if (autoTimer) clearInterval(autoTimer);
-  autoTimer = setInterval(() => {
-    if (isPlaying.value) nextSlide();
-  }, props.interval);
+  // if (totalItems.value <= props.visibleCards) return;
+  // if (autoTimer) clearInterval(autoTimer);
+  // autoTimer = setInterval(() => {
+  //   if (isPlaying.value) nextSlide();
+  // }, props.interval);
 }
 
 // 生命周期
@@ -221,7 +219,6 @@ onBeforeUnmount(() => {
 .lawyer-card {
   flex: 0 0 auto;
   width: var(--card-width); /* 用 CSS 变量代替固定值 */
-  aspect-ratio: 2 / 3;
   margin: 0 10px;
   background: white;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -236,7 +233,7 @@ onBeforeUnmount(() => {
   z-index: 2;
 }
 
-.lawyer-image-container {
+.lawyer-container {
   position: relative;
   width: 100%;
   height: 100%;
@@ -245,7 +242,7 @@ onBeforeUnmount(() => {
 .image-wrapper {
   position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 2 / 3;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   overflow: hidden;
@@ -262,16 +259,6 @@ onBeforeUnmount(() => {
 
 .lawyer-card:hover .lawyer-image {
   transform: scale(1.05);
-}
-
-.image-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60%;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
 }
 
 .lawyer-badge {
@@ -320,41 +307,24 @@ onBeforeUnmount(() => {
 }
 
 .lawyer-info {
-  height: 120px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9));
-  z-index: 3;
 }
 
 .lawyer-name {
   width: 100%;
-  font-size: 36px;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0 0 8px 0;
-  color: #333;
+  margin: 0;
+  color: #0c162f;
   line-height: 1.2;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  left: 50%;
-  bottom: 5px;
-  transform: translateX(-50%);
 }
 
 .lawyer-role {
   width: 100%;
-  font-size: 22px;
-  color: #d4af37;
-  font-weight: 600;
+  font-size: 16px;
+  color: #0c162f;
+  font-weight: 400;
   margin: 0;
-  letter-spacing: 0.5px;
-  position: absolute;
-  left: 50%;
-  bottom: -30px;
-  transform: translateX(-50%);
-  z-index: 99;
 }
 
 .nav-btn {
@@ -410,7 +380,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 
 .indicator {

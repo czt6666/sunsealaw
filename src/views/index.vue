@@ -263,19 +263,10 @@ const services = ref([
   </section>
 
   <!--Conclusion-->
-  <section class="section-card">
+  <!-- <section class="section-card">
     <div style="display: flex">
-      <div style="font-size: x-large; text-align: left">
-        At SUNSEA LAW, we are dedicated to providing high-quality, client-focused legal services across diverse practice
-        areas. Our experienced attorneys deliver strategic, practical solutions for businesses, investors, and
-        individuals navigating complex legal and regulatory landscapes. We value long-term partnerships built on trust,
-        collaboration, and shared success.
-      </div>
-      <!-- <div style="flex: 1">
-        <img :src="logoImg" style="width: 200px" />
-      </div> -->
     </div>
-  </section>
+  </section> -->
 </template>
 <style lang="scss" scoped>
 * {
